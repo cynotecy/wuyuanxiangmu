@@ -11,3 +11,6 @@ Desktop.ini
 *.pkl
 dist
 build
+
+#others
+PicoScope6_r6_13_6.exe
