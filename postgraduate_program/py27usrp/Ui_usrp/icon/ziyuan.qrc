@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="图标">
+    <file>loading2.gif</file>
+    <file>ooopic_1521110980.ico</file>
+    <file>Power.png</file>
+    <file>Remove.png</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,16 @@
+<RCC>
+  <qresource prefix="图标">
+    <file>openfile.png</file>
+    <file>Remove.png</file>
+    <file>Power.png</file>
+    <file>loading3.gif</file>
+    <file>loading2.gif</file>
+    <file>loading1.gif</file>
+    <file>ESMD辐射.bmp</file>
+    <file>loading.gif</file>
+    <file>ooopic_1521110980.ico</file>
+    <file>jiazai.gif</file>
+    <file>skin.ico</file>
+    <file>timg.jpg</file>
+  </qresource>
+</RCC>

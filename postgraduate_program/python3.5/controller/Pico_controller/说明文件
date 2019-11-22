@@ -1,0 +1,5 @@
+（1）history_feature_data 文件夹存放历史上的数据提取的特征，csv文件，
+    用于将新采集的数据的归一化
+（2）model_saved文件夹存放训练好的模型
+（3）test_data文件夹存放测试数据
+ (4)pico_jicheng_test.py 是最终的测试程序

@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5455c2af-7abb-49a2-81b8-51745224f6c8" name="Default" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/python3_5$AboutQSSDialog__1_.coverage" NAME="AboutQSSDialog (1) Coverage Results" MODIFIED="1528971224581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/资料/PYQT5/Load-QSS" />
+    <SUITE FILE_PATH="coverage/python3_5$Test.coverage" NAME="Test Coverage Results" MODIFIED="1528878416108" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/PyQt-master/无边框自定义标题栏窗口" />
+    <SUITE FILE_PATH="coverage/python3_5$Message.coverage" NAME="Message Coverage Results" MODIFIED="1551092654295" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$FramelessWindow.coverage" NAME="FramelessWindow Coverage Results" MODIFIED="1528878353214" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/PyQt-master/无边框自定义标题栏窗口" />
+    <SUITE FILE_PATH="coverage/python3_5$PyQt5app.coverage" NAME="PyQt5app Coverage Results" MODIFIED="1551098536616" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="F:/Anaconda3/Lib/site-packages/cx_Freeze/samples/PyQt5" />
+    <SUITE FILE_PATH="coverage/python3_5$CallDialogMainWin2.coverage" NAME="CallDialogMainWin2 Coverage Results" MODIFIED="1529053879677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/资料/Python学习/PyQt5-master/Chapter07/transParam" />
+    <SUITE FILE_PATH="coverage/python3_5$Ui_MainWindow.coverage" NAME="Ui_MainWindow Coverage Results" MODIFIED="1521110757585" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$MatplotlibWidget.coverage" NAME="MatplotlibWidget Coverage Results" MODIFIED="1522383474800" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$MainWindow__2_.coverage" NAME="MainWindow Coverage Results" MODIFIED="1551097672703" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$theme_change.coverage" NAME="theme_change Coverage Results" MODIFIED="1528984648879" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$WaveRead.coverage" NAME="WaveRead Coverage Results" MODIFIED="1521114859787" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="F:/python/Main" />
+    <SUITE FILE_PATH="coverage/python3_5$WaveCut.coverage" NAME="WaveCut Coverage Results" MODIFIED="1521013620835" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$MatplotlibWidget__1_.coverage" NAME="MatplotlibWidget (1) Coverage Results" MODIFIED="1521120915945" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/新建文件夹/Python学习/PyQt5-master/Chapter09" />
+    <SUITE FILE_PATH="coverage/python3_5$TEST.coverage" NAME="TEST Coverage Results" MODIFIED="1554369942140" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$SNR_Estimate_finally.coverage" NAME="SNR_Estimate_finally Coverage Results" MODIFIED="1551084740962" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/判断信噪比" />
+    <SUITE FILE_PATH="coverage/python3_5$evalte_model.coverage" NAME="evalte_model Coverage Results" MODIFIED="1524020351132" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$.coverage" NAME="新建文本文档 Coverage Results" MODIFIED="1537867097041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop" />
+    <SUITE FILE_PATH="coverage/python3_5$function.coverage" NAME="function Coverage Results" MODIFIED="1524019324461" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$main_action.coverage" NAME="main_action Coverage Results" MODIFIED="1551094902028" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$MainWindow__1_.coverage" NAME="MainWindow (1) Coverage Results" MODIFIED="1521012547775" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Main" />
+    <SUITE FILE_PATH="coverage/python3_5$OpencvWidget.coverage" NAME="OpencvWidget Coverage Results" MODIFIED="1528878299773" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/PyQt-master/人脸描点检测" />
+    <SUITE FILE_PATH="coverage/python3_5$mysql.coverage" NAME="mysql Coverage Results" MODIFIED="1536910498638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="F:/python" />
+    <SUITE FILE_PATH="coverage/python3_5$untitled.coverage" NAME="untitled Coverage Results" MODIFIED="1529653408397" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$LoadQSS.coverage" NAME="LoadQSS Coverage Results" MODIFIED="1528879016173" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/Load-QSS-master" />
+    <SUITE FILE_PATH="coverage/python3_5$Wave.coverage" NAME="Wave Coverage Results" MODIFIED="1521190816879" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$Load_QSS.coverage" NAME="Load_QSS Coverage Results" MODIFIED="1528970492495" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/资料/PYQT5/Load-QSS-master/gui/generated" />
+    <SUITE FILE_PATH="coverage/python3_5$AboutQSSDialog.coverage" NAME="AboutQSSDialog Coverage Results" MODIFIED="1528970664128" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/资料/PYQT5/Load-QSS-master" />
+    <SUITE FILE_PATH="coverage/python3_5$MainWindow.coverage" NAME="MainWindow Coverage Results" MODIFIED="1555032989621" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$demo.coverage" NAME="demo Coverage Results" MODIFIED="1536910531654" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$pyQSS.coverage" NAME="pyQSS Coverage Results" MODIFIED="1528879405878" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/PyQSS-master" />
+    <SUITE FILE_PATH="coverage/python3_5$DateDialog2.coverage" NAME="DateDialog2 Coverage Results" MODIFIED="1529053645412" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/资料/Python学习/PyQt5-master/Chapter07/transParam" />
+    <SUITE FILE_PATH="coverage/python3_5$helpers.coverage" NAME="helpers Coverage Results" MODIFIED="1528879417310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/PyQSS-master" />
+    <SUITE FILE_PATH="coverage/python3_5$SNR_Estimate_finally__1_.coverage" NAME="SNR_Estimate_finally (1) Coverage Results" MODIFIED="1551091926541" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SNR" />
+    <SUITE FILE_PATH="coverage/python3_5$setup.coverage" NAME="setup Coverage Results" MODIFIED="1551098364978" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="F:/Anaconda3/Lib/site-packages/cx_Freeze/samples/PyQt5" />
+    <SUITE FILE_PATH="coverage/python3_5$esmd_shibie.coverage" NAME="esmd_shibie Coverage Results" MODIFIED="1551096257653" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/esmd_controller" />
+    <SUITE FILE_PATH="coverage/python3_5$qt05_webview01.coverage" NAME="qt05_webview01 Coverage Results" MODIFIED="1533876985515" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="E:/win7系统备份文件/资料/Python学习/PyQt5-master/Chapter05" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="demotest@localhost" type="feb32156:DbDataSourceImpl" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="python3.5" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1TSYqsUg6D6PZXDrtjC3GC1DXkh" />
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://F:/python3.5/nets/resnet_net.py" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="database.console.LAST_STATE" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="python.debugger.dataview.coloredbydefault" value="false" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\postgraduate_program\python3.5\demo\qtableView+checkbox" />
+      <recent name="D:\postgraduate_program\python3.5\controller\Pico_controller" />
+      <recent name="D:\postgraduate_program\python3.5\controller\Pico_controller\model_saved" />
+      <recent name="D:\postgraduate_program\python3.5\controller\usrp_controller\steadyStateInterference_shibie" />
+      <recent name="D:\postgraduate_program\python3.5\controller\usrp_controller\specEnvelope_shibie" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\myPrograms\postgraduate_program\python3.5\controller\usrp_controller\specEnvelope_shibie" />
+      <recent name="D:\postgraduate_program\python3.5\controller\Pico_controller" />
+      <recent name="D:\postgraduate_program\python3.5\controller\Pico_controller\model_saved" />
+      <recent name="D:\postgraduate_program\python3.5\controller\usrp_controller\logs" />
+      <recent name="D:\postgraduate_program\python3.5\controller\usrp_controller\usrp_shibie" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.MainWindow">
+    <configuration name="MainWindow" type="PythonConfigurationType" factoryName="Python">
+      <module name="python3.5" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/MainWindow.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="WaterFall" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="python3.5" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/monitor/waterfall" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/monitor/waterfall/WaterFall.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="exer" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="python3.5" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/demo" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/demo/exer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="exercise" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="python3.5" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/demo" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/demo/exercise.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pico_jicheng_offline_v2" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="python3.5" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/controller/Pico_controller" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/controller/Pico_controller/pico_jicheng_offline_v2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pico_jicheng_online_pack_v2" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="python3.5" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/controller/Pico_controller" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/controller/Pico_controller/pico_jicheng_online_pack_v2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.MainWindow" />
+      <item itemvalue="Python.exercise" />
+      <item itemvalue="Python.pico_jicheng_online_pack_v2" />
+      <item itemvalue="Python.pico_jicheng_offline_v2" />
+      <item itemvalue="Python.WaterFall" />
+      <item itemvalue="Python.exer" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.exer" />
+        <item itemvalue="Python.WaterFall" />
+        <item itemvalue="Python.pico_jicheng_online_pack_v2" />
+        <item itemvalue="Python.pico_jicheng_offline_v2" />
+        <item itemvalue="Python.exercise" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5455c2af-7abb-49a2-81b8-51745224f6c8" name="Default" comment="" />
+      <created>1520943323122</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1520943323122</updated>
+      <workItem from="1555038773838" duration="3853000" />
+      <workItem from="1555052386221" duration="8259000" />
+      <workItem from="1555062973733" duration="976000" />
+      <workItem from="1555064001219" duration="45000" />
+      <workItem from="1555064119246" duration="100000" />
+      <workItem from="1555064250339" duration="15616000" />
+      <workItem from="1555123223181" duration="3639000" />
+      <workItem from="1555127444030" duration="202000" />
+      <workItem from="1555159604467" duration="4134000" />
+      <workItem from="1555206683730" duration="1242000" />
+      <workItem from="1555226573644" duration="5119000" />
+      <workItem from="1555247955157" duration="2402000" />
+      <workItem from="1555289996042" duration="16527000" />
+      <workItem from="1555377819899" duration="20761000" />
+      <workItem from="1555464579095" duration="2715000" />
+      <workItem from="1555659758075" duration="7940000" />
+      <workItem from="1555725272024" duration="9766000" />
+      <workItem from="1555751141833" duration="2582000" />
+      <workItem from="1555830971660" duration="8560000" />
+      <workItem from="1555896097900" duration="2557000" />
+      <workItem from="1556005586909" duration="7795000" />
+      <workItem from="1556074615712" duration="943000" />
+      <workItem from="1556201757688" duration="879000" />
+      <workItem from="1556243062459" duration="17825000" />
+      <workItem from="1557145851672" duration="21000" />
+      <workItem from="1557494849762" duration="622000" />
+      <workItem from="1557558127011" duration="36000" />
+      <workItem from="1557578947265" duration="1713000" />
+      <workItem from="1557639750340" duration="615000" />
+      <workItem from="1557739145031" duration="2925000" />
+      <workItem from="1557747571063" duration="933000" />
+      <workItem from="1557748936122" duration="2176000" />
+      <workItem from="1557754716245" duration="1388000" />
+      <workItem from="1557756139049" duration="2667000" />
+      <workItem from="1557797860453" duration="24000" />
+      <workItem from="1558016075483" duration="718000" />
+      <workItem from="1558059793559" duration="146000" />
+      <workItem from="1558161575716" duration="7078000" />
+      <workItem from="1558179177104" duration="24000" />
+      <workItem from="1558185223985" duration="599000" />
+      <workItem from="1558246384194" duration="2100000" />
+      <workItem from="1558354563472" duration="3484000" />
+      <workItem from="1558402079428" duration="7871000" />
+      <workItem from="1558421156716" duration="2879000" />
+      <workItem from="1558439536183" duration="1007000" />
+      <workItem from="1558441980315" duration="1734000" />
+      <workItem from="1558444582271" duration="1520000" />
+      <workItem from="1558489806089" duration="5938000" />
+      <workItem from="1558506930291" duration="11024000" />
+      <workItem from="1558574507907" duration="304000" />
+      <workItem from="1558576181010" duration="5488000" />
+      <workItem from="1558594533829" duration="17147000" />
+      <workItem from="1558660692896" duration="7113000" />
+      <workItem from="1558918892361" duration="9437000" />
+      <workItem from="1558940345921" duration="20569000" />
+      <workItem from="1558964652220" duration="2099000" />
+      <workItem from="1559006016811" duration="8817000" />
+      <workItem from="1559025357303" duration="1997000" />
+      <workItem from="1559030818436" duration="1919000" />
+      <workItem from="1559041580540" duration="6037000" />
+      <workItem from="1559092377938" duration="4988000" />
+      <workItem from="1559111156080" duration="12096000" />
+      <workItem from="1559179257887" duration="4868000" />
+      <workItem from="1559197494474" duration="7060000" />
+      <workItem from="1559266117454" duration="2092000" />
+      <workItem from="1559285265037" duration="5525000" />
+      <workItem from="1559360550597" duration="1807000" />
+      <workItem from="1559524590400" duration="25000" />
+      <workItem from="1559564727169" duration="2169000" />
+      <workItem from="1559612307253" duration="683000" />
+      <workItem from="1559698542347" duration="37000" />
+      <workItem from="1559737256342" duration="4370000" />
+      <workItem from="1559809729565" duration="6138000" />
+      <workItem from="1560131076325" duration="5580000" />
+      <workItem from="1560138454241" duration="1070000" />
+      <workItem from="1560148355615" duration="4046000" />
+      <workItem from="1560167611448" duration="1772000" />
+      <workItem from="1560177068953" duration="466000" />
+      <workItem from="1560217678445" duration="944000" />
+      <workItem from="1560218708380" duration="3236000" />
+      <workItem from="1560224581893" duration="3644000" />
+      <workItem from="1560229318722" duration="2198000" />
+      <workItem from="1560233550709" duration="1316000" />
+      <workItem from="1560234889187" duration="225000" />
+      <workItem from="1560235217798" duration="375000" />
+      <workItem from="1560235658873" duration="5229000" />
+      <workItem from="1560241559949" duration="144000" />
+      <workItem from="1560241746260" duration="887000" />
+      <workItem from="1560303317404" duration="3972000" />
+      <workItem from="1560307421509" duration="94000" />
+      <workItem from="1560307538439" duration="1221000" />
+      <workItem from="1560308789312" duration="14961000" />
+      <workItem from="1560425993367" duration="5401000" />
+      <workItem from="1560478027197" duration="14303000" />
+      <workItem from="1560689813302" duration="1179000" />
+      <workItem from="1560691015227" duration="976000" />
+      <workItem from="1560692041845" duration="619000" />
+      <workItem from="1560692700289" duration="1359000" />
+      <workItem from="1560735063574" duration="1379000" />
+      <workItem from="1560738538551" duration="6875000" />
+      <workItem from="1560823301826" duration="5580000" />
+      <workItem from="1560906923973" duration="13103000" />
+      <workItem from="1560932886129" duration="330000" />
+      <workItem from="1560934176323" duration="8324000" />
+      <workItem from="1560993947132" duration="7690000" />
+      <workItem from="1561002977551" duration="4175000" />
+      <workItem from="1561081912795" duration="13675000" />
+      <workItem from="1561340013082" duration="17376000" />
+      <workItem from="1561427049658" duration="15494000" />
+      <workItem from="1561513245851" duration="12861000" />
+      <workItem from="1561602007400" duration="3657000" />
+      <workItem from="1561686767699" duration="1146000" />
+      <workItem from="1561944496322" duration="24572000" />
+      <workItem from="1562031152437" duration="22802000" />
+      <workItem from="1562122956318" duration="9414000" />
+      <workItem from="1562235559737" duration="12425000" />
+      <workItem from="1562323045042" duration="10671000" />
+      <workItem from="1562382825355" duration="26965000" />
+      <workItem from="1562475643041" duration="4518000" />
+      <workItem from="1562585787145" duration="8738000" />
+      <workItem from="1562723598633" duration="37058000" />
+      <workItem from="1562846257401" duration="4377000" />
+      <workItem from="1562927027647" duration="16214000" />
+      <workItem from="1562990396972" duration="25480000" />
+      <workItem from="1563081367516" duration="25595000" />
+      <workItem from="1563153136407" duration="24195000" />
+      <workItem from="1563194973271" duration="194000" />
+      <workItem from="1563276721873" duration="18643000" />
+      <workItem from="1563328692352" duration="14865000" />
+      <workItem from="1563344861729" duration="3901000" />
+      <workItem from="1563454367148" duration="14000" />
+      <workItem from="1563454419809" duration="1453000" />
+      <workItem from="1563698471527" duration="649000" />
+      <workItem from="1563968185844" duration="3708000" />
+      <workItem from="1564023945401" duration="4298000" />
+      <workItem from="1564117624068" duration="1112000" />
+      <workItem from="1564400170733" duration="5075000" />
+      <workItem from="1564458522495" duration="980000" />
+      <workItem from="1565265269685" duration="2736000" />
+      <workItem from="1565314431055" duration="22172000" />
+      <workItem from="1565572696657" duration="25340000" />
+      <workItem from="1565659833041" duration="22669000" />
+      <workItem from="1565748145358" duration="1073000" />
+      <workItem from="1565750360684" duration="16458000" />
+      <workItem from="1565777958736" duration="7000" />
+      <workItem from="1565777995363" duration="1218000" />
+      <workItem from="1565839268230" duration="14848000" />
+      <workItem from="1565918702669" duration="11882000" />
+      <workItem from="1566134902622" duration="2111000" />
+      <workItem from="1566178393126" duration="1864000" />
+      <workItem from="1566201480857" duration="8929000" />
+      <workItem from="1566266498456" duration="19055000" />
+      <workItem from="1566350448333" duration="47000" />
+      <workItem from="1566350614842" duration="13630000" />
+      <workItem from="1566391181662" duration="2515000" />
+      <workItem from="1566450589969" duration="11722000" />
+      <workItem from="1566537454029" duration="582000" />
+      <workItem from="1566783433648" duration="1203000" />
+      <workItem from="1566905695570" duration="1937000" />
+      <workItem from="1566977803961" duration="16837000" />
+      <workItem from="1567005050568" duration="8865000" />
+      <workItem from="1567048711218" duration="6325000" />
+      <workItem from="1567129535034" duration="1983000" />
+      <workItem from="1567586090368" duration="2452000" />
+      <workItem from="1567658717494" duration="12028000" />
+      <workItem from="1567735338165" duration="7121000" />
+      <workItem from="1567837015563" duration="5093000" />
+      <workItem from="1567939759707" duration="5314000" />
+      <workItem from="1567993044661" duration="17164000" />
+      <workItem from="1568084085955" duration="13056000" />
+      <workItem from="1568189272100" duration="6055000" />
+      <workItem from="1568264307706" duration="4053000" />
+      <workItem from="1568289857247" duration="8186000" />
+      <workItem from="1568353079210" duration="11939000" />
+      <workItem from="1568439164223" duration="1048000" />
+      <workItem from="1568441307389" duration="4224000" />
+      <workItem from="1568598627100" duration="3641000" />
+      <workItem from="1568620516876" duration="8000000" />
+      <workItem from="1568684978009" duration="1328000" />
+      <workItem from="1568709794402" duration="2286000" />
+      <workItem from="1568722549371" duration="1365000" />
+      <workItem from="1568764874295" duration="449000" />
+      <workItem from="1568788961498" duration="15810000" />
+      <workItem from="1568878672370" duration="1230000" />
+      <workItem from="1568957293743" duration="1542000" />
+      <workItem from="1569041485038" duration="275000" />
+      <workItem from="1569132097551" duration="1832000" />
+      <workItem from="1569136441333" duration="644000" />
+      <workItem from="1569138904561" duration="91000" />
+      <workItem from="1569139012803" duration="4070000" />
+      <workItem from="1569207669706" duration="6703000" />
+      <workItem from="1569481369235" duration="2060000" />
+      <workItem from="1571715367899" duration="2343000" />
+      <workItem from="1572070724279" duration="7702000" />
+      <workItem from="1572230498891" duration="9809000" />
+      <workItem from="1572407779086" duration="2844000" />
+      <workItem from="1572492054339" duration="140000" />
+      <workItem from="1572528357617" duration="1323000" />
+      <workItem from="1572588036721" duration="5469000" />
+      <workItem from="1572767514112" duration="585000" />
+      <workItem from="1572846698026" duration="2349000" />
+      <workItem from="1572930137191" duration="3248000" />
+      <workItem from="1573133062609" duration="221000" />
+      <workItem from="1573434192972" duration="1795000" />
+      <workItem from="1573455160033" duration="737000" />
+      <workItem from="1573472469115" duration="1374000" />
+      <workItem from="1573524012212" duration="1311000" />
+      <workItem from="1573542776344" duration="6177000" />
+      <workItem from="1573696331414" duration="6510000" />
+      <workItem from="1573782269671" duration="11485000" />
+      <workItem from="1573823768962" duration="832000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="pytest_in_oc_shibie_v1_py - 2019.09.09 at 21h 00m 32s.xml">
+      <configuration name="pytest in oc_shibie_v1.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_oc_shibie_v1_py - 2019.09.10 at 10h 57m 53s.xml">
+      <configuration name="pytest in oc_shibie_v1.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_oc_shibie_v1_py - 2019.09.12 at 21h 25m 24s.xml">
+      <configuration name="pytest in oc_shibie_v1.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_oc_shibie_v1_py - 2019.09.12 at 21h 42m 40s.xml">
+      <configuration name="pytest in oc_shibie_v1.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_usrp_shibie_v3_py - 2019.09.13 at 15h 56m 09s.xml">
+      <configuration name="pytest in usrp_shibie_v3.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_for_oc_shibie_v1_test_model - 2019.09.13 at 20h 21m 11s.xml">
+      <configuration name="pytest for oc_shibie_v1.test_model" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_usrp_shibie_v3_py - 2019.09.16 at 11h 15m 19s.xml">
+      <configuration name="pytest in usrp_shibie_v3.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_oc_shibie_for1file_py - 2019.09.16 at 19h 01m 31s.xml">
+      <configuration name="pytest in oc_shibie_for1file.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_oc_shibie_v2_py - 2019.09.17 at 16h 52m 55s.xml">
+      <configuration name="pytest in oc_shibie_v2.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_oc_shibie_v2_py - 2019.09.17 at 16h 54m 29s.xml">
+      <configuration name="pytest in oc_shibie_v2.py" configurationId="tests" />
+    </history-entry>
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/monitor/The48hRealPart/getcoord2.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/python3_5$manage.coverage" NAME="manage Coverage Results" MODIFIED="1555676245854" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../EMIproject" />
+    <SUITE FILE_PATH="coverage/python3_5$envelopeDialog.coverage" NAME="envelopeDialog Coverage Results" MODIFIED="1566987465516" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/database_upload" />
+    <SUITE FILE_PATH="coverage/python3_5$the_48h_realpart.coverage" NAME="the_48h_realpart Coverage Results" MODIFIED="1562753527066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor/The48hRealPart" />
+    <SUITE FILE_PATH="coverage/python3_5$pico_jicheng_offline_v2.coverage" NAME="pico_jicheng_offline_v2 Coverage Results" MODIFIED="1572767795472" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/Pico_controller" />
+    <SUITE FILE_PATH="coverage/python3_5$oc_list_display_v1.coverage" NAME="oc_list_display_v1 Coverage Results" MODIFIED="1568598762393" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$steadyDialog.coverage" NAME="steadyDialog Coverage Results" MODIFIED="1566459266404" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/database_upload" />
+    <SUITE FILE_PATH="coverage/python3_5$equipDialog.coverage" NAME="equipDialog Coverage Results" MODIFIED="1568959370055" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/database_upload" />
+    <SUITE FILE_PATH="coverage/python3_5$spectrum_analyze__1_.coverage" NAME="spectrum_analyze (1) Coverage Results" MODIFIED="1562125628671" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spectrum_analyze" />
+    <SUITE FILE_PATH="coverage/python3_5$MainWindow.coverage" NAME="MainWindow Coverage Results" MODIFIED="1573801874795" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$48h_realpart.coverage" NAME="48h_realpart Coverage Results" MODIFIED="1561106333499" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$MessageForOc.coverage" NAME="MessageForOc Coverage Results" MODIFIED="1568264992612" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$waveExercise.coverage" NAME="waveExercise Coverage Results" MODIFIED="1568362179665" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$display.coverage" NAME="display Coverage Results" MODIFIED="1563294951400" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$pytest_in_test_0528_py.coverage" NAME="pytest in test_0528.py Coverage Results" MODIFIED="1559021008158" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller" />
+    <SUITE FILE_PATH="coverage/python3_5$getcoord.coverage" NAME="getcoord Coverage Results" MODIFIED="1561106324516" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$specEnvelope_drawpic.coverage" NAME="specEnvelope_drawpic Coverage Results" MODIFIED="1566292732456" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/specEnvelope_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$SNR_estimate3_1_.coverage" NAME="SNR_estimate3(1) Coverage Results" MODIFIED="1566354839253" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../snr对接" />
+    <SUITE FILE_PATH="coverage/python3_5$multiple_test.coverage" NAME="multiple_test Coverage Results" MODIFIED="1567685150683" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../IQ识别对接" />
+    <SUITE FILE_PATH="coverage/python3_5$test.coverage" NAME="test Coverage Results" MODIFIED="1562247700721" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$exercise__2_.coverage" NAME="exercise (2) Coverage Results" MODIFIED="1568018793495" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$time2specWaterfall.coverage" NAME="time2specWaterfall Coverage Results" MODIFIED="1562395262238" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor" />
+    <SUITE FILE_PATH="coverage/python3_5$num_guess.coverage" NAME="num_guess Coverage Results" MODIFIED="1559187869147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../pyExercise/num_guess_game" />
+    <SUITE FILE_PATH="coverage/python3_5$getcoord__1_.coverage" NAME="getcoord (1) Coverage Results" MODIFIED="1561340051126" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor" />
+    <SUITE FILE_PATH="coverage/python3_5$qtableView_checkBox.coverage" NAME="qtableView+checkBox Coverage Results" MODIFIED="1567761943253" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$exercise.coverage" NAME="exercise Coverage Results" MODIFIED="1572230707476" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$MainWindow__1_.coverage" NAME="MainWindow (1) Coverage Results" MODIFIED="1555747803184" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../pyExercise" />
+    <SUITE FILE_PATH="coverage/python3_5$spectrum_analyze.coverage" NAME="spectrum_analyze Coverage Results" MODIFIED="1562423579668" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spectrum_analyze" />
+    <SUITE FILE_PATH="coverage/python3_5$mainwindowExercise.coverage" NAME="mainwindowExercise Coverage Results" MODIFIED="1568360163290" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$display_v2.coverage" NAME="display_v2 Coverage Results" MODIFIED="1563333985295" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$pico_jicheng_offline.coverage" NAME="pico_jicheng_offline Coverage Results" MODIFIED="1565752424051" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/Pico_controller" />
+    <SUITE FILE_PATH="coverage/python3_5$SNR_Estimate.coverage" NAME="SNR_Estimate Coverage Results" MODIFIED="1566358031688" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SNR" />
+    <SUITE FILE_PATH="coverage/python3_5$steadyFirst_draw.coverage" NAME="steadyFirst_draw Coverage Results" MODIFIED="1565573218561" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$pytest_in_oc_shibie_v2_py.coverage" NAME="pytest in oc_shibie_v2.py Coverage Results" MODIFIED="1568710468502" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$oc_shibie_for1file.coverage" NAME="oc_shibie_for1file Coverage Results" MODIFIED="1568631747469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$pytest_in_oc_shibie_v1_py.coverage" NAME="pytest in oc_shibie_v1.py Coverage Results" MODIFIED="1568295760164" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$Wave.coverage" NAME="Wave Coverage Results" MODIFIED="1568363921043" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$oc_shibie_v1.coverage" NAME="oc_shibie_v1 Coverage Results" MODIFIED="1568622111146" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$pico_jicheng_online_pack_v2.coverage" NAME="pico_jicheng_online_pack_v2 Coverage Results" MODIFIED="1573545532909" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/Pico_controller" />
+    <SUITE FILE_PATH="coverage/python3_5$specEnvelope_shibie_v3.coverage" NAME="specEnvelope_shibie_v3 Coverage Results" MODIFIED="1566991831763" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/specEnvelope_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$Loading.coverage" NAME="Loading Coverage Results" MODIFIED="1558608652283" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Ui/file_ui" />
+    <SUITE FILE_PATH="coverage/python3_5$WaterFallForPico.coverage" NAME="WaterFallForPico Coverage Results" MODIFIED="1568811274140" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor/waterfall" />
+    <SUITE FILE_PATH="coverage/python3_5$draw_siginalpic.coverage" NAME="draw_siginalpic Coverage Results" MODIFIED="1565754100654" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/Pico_controller/draw_pic" />
+    <SUITE FILE_PATH="coverage/python3_5$waterfallDataUpload.coverage" NAME="waterfallDataUpload Coverage Results" MODIFIED="1564405925054" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/database_upload" />
+    <SUITE FILE_PATH="coverage/python3_5$48h_realpart__1_.coverage" NAME="48h_realpart (1) Coverage Results" MODIFIED="1561341613584" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor" />
+    <SUITE FILE_PATH="coverage/python3_5$pytest_in_usrp_shibie_py.coverage" NAME="pytest in usrp_shibie.py Coverage Results" MODIFIED="1565596038226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$usrp_shibie__1_.coverage" NAME="usrp_shibie (1) Coverage Results" MODIFIED="1560741874444" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$DBtest.coverage" NAME="DBtest Coverage Results" MODIFIED="1560328256130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$test_0616.coverage" NAME="test_0616 Coverage Results" MODIFIED="1560738955713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$DBtest2.coverage" NAME="DBtest2 Coverage Results" MODIFIED="1560338230267" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$steadyStateInterference_shibie.coverage" NAME="steadyStateInterference_shibie Coverage Results" MODIFIED="1567050599603" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$online_recognize.coverage" NAME="online_recognize Coverage Results" MODIFIED="1562760932607" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/WeChat Files/muyuzean/FileStorage/File/2019-07" />
+    <SUITE FILE_PATH="coverage/python3_5$pytest_in_usrp_shibie_v3_py.coverage" NAME="pytest in usrp_shibie_v3.py Coverage Results" MODIFIED="1568603717438" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$display_v4.coverage" NAME="display_v4 Coverage Results" MODIFIED="1567011501572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$usrp_saocai.coverage" NAME="usrp_saocai Coverage Results" MODIFIED="1558947342136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller" />
+    <SUITE FILE_PATH="coverage/python3_5$Message.coverage" NAME="Message Coverage Results" MODIFIED="1558926107167" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$exer.coverage" NAME="exer Coverage Results" MODIFIED="1573801055235" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$Timer.coverage" NAME="Timer Coverage Results" MODIFIED="1563116349152" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/plotTools" />
+    <SUITE FILE_PATH="coverage/python3_5$the_48h_realpart_inQt.coverage" NAME="the_48h_realpart_inQt Coverage Results" MODIFIED="1569140616717" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor/The48hRealPart" />
+    <SUITE FILE_PATH="coverage/python3_5$multiple_test__1_.coverage" NAME="multiple_test (1) Coverage Results" MODIFIED="1567994338360" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$remote_test2.coverage" NAME="remote_test2 Coverage Results" MODIFIED="1558959418727" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller" />
+    <SUITE FILE_PATH="coverage/python3_5$pico_shibie.coverage" NAME="pico_shibie Coverage Results" MODIFIED="1560497180232" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/Pico_controller" />
+    <SUITE FILE_PATH="coverage/python3_5$spec_analyze_v2.coverage" NAME="spec_analyze_v2 Coverage Results" MODIFIED="1568808375327" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spectrum_analyze" />
+    <SUITE FILE_PATH="coverage/python3_5$draw_pic__1_.coverage" NAME="draw_pic (1) Coverage Results" MODIFIED="1562749822152" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/Pico_controller/draw_pic" />
+    <SUITE FILE_PATH="coverage/python3_5$pico_jicheng_online_pack.coverage" NAME="pico_jicheng_online_pack Coverage Results" MODIFIED="1567056845788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/Pico_controller" />
+    <SUITE FILE_PATH="coverage/python3_5$oc_list_getting_v1.coverage" NAME="oc_list_getting_v1 Coverage Results" MODIFIED="1568446840538" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$test_1_.coverage" NAME="test(1) Coverage Results" MODIFIED="1560739268481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$display_v3.coverage" NAME="display_v3 Coverage Results" MODIFIED="1565318290160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$wirelessDialog.coverage" NAME="wirelessDialog Coverage Results" MODIFIED="1566990896471" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/database_upload" />
+    <SUITE FILE_PATH="coverage/python3_5$WaterFallPlot_1_.coverage" NAME="WaterFallPlot(1) Coverage Results" MODIFIED="1562242294394" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/WeChat Files/muyuzean/FileStorage/File/2019-07" />
+    <SUITE FILE_PATH="coverage/python3_5$pyqt5_matplotlib2.coverage" NAME="pyqt5+matplotlib2 Coverage Results" MODIFIED="1561343740650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$exercise2.coverage" NAME="exercise2 Coverage Results" MODIFIED="1562052930197" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$pytest_for_usrp_shibie_v3_test_model.coverage" NAME="pytest for usrp_shibie_v3.test_model Coverage Results" MODIFIED="1566993778035" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$pico_jicheng_end.coverage" NAME="pico_jicheng_end Coverage Results" MODIFIED="1556281917047" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pico_jicheng" />
+    <SUITE FILE_PATH="coverage/python3_5$UItest1butt.coverage" NAME="UItest1butt Coverage Results" MODIFIED="1568298585337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$read_csv.coverage" NAME="read_csv Coverage Results" MODIFIED="1563028029274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.." />
+    <SUITE FILE_PATH="coverage/python3_5$pytest_in_test_0616_py.coverage" NAME="pytest in test_0616.py Coverage Results" MODIFIED="1560692970909" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$trayIcon.coverage" NAME="trayIcon Coverage Results" MODIFIED="1555380535726" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$pyqt5_matplotlib.coverage" NAME="pyqt5+matplotlib Coverage Results" MODIFIED="1561340839807" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$pytest_for_oc_shibie_v1_test_model.coverage" NAME="pytest for oc_shibie_v1.test_model Coverage Results" MODIFIED="1568377271058" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$WaterFall.coverage" NAME="WaterFall Coverage Results" MODIFIED="1573732116027" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor/waterfall" />
+    <SUITE FILE_PATH="coverage/python3_5$usrp_shibie.coverage" NAME="usrp_shibie Coverage Results" MODIFIED="1565598409739" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$envelopePlot.coverage" NAME="envelopePlot Coverage Results" MODIFIED="1566380000810" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$usrp_shibie_v3.coverage" NAME="usrp_shibie_v3 Coverage Results" MODIFIED="1568603733217" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$exercise__1_.coverage" NAME="exercise (1) Coverage Results" MODIFIED="1567757668147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$pytest_for_test_0528__test_model.coverage" NAME="pytest for test_0528_.test_model Coverage Results" MODIFIED="1559023789156" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller" />
+    <SUITE FILE_PATH="coverage/python3_5$exercise1.coverage" NAME="exercise1 Coverage Results" MODIFIED="1561977084171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$displayTest.coverage" NAME="displayTest Coverage Results" MODIFIED="1567993174097" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$antenna_draw.coverage" NAME="antenna_draw Coverage Results" MODIFIED="1566271922423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/plotTools" />
+    <SUITE FILE_PATH="coverage/python3_5$draw_samplepic.coverage" NAME="draw_samplepic Coverage Results" MODIFIED="1562746094060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/Pico_controller/draw_pic" />
+    <SUITE FILE_PATH="coverage/python3_5$getcoord2.coverage" NAME="getcoord2 Coverage Results" MODIFIED="1561340127199" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor" />
+    <SUITE FILE_PATH="coverage/python3_5$getData.coverage" NAME="getData Coverage Results" MODIFIED="1562237121874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/WeChat Files/muyuzean/FileStorage/File/2019-07" />
+    <SUITE FILE_PATH="coverage/python3_5$online_new.coverage" NAME="online_new Coverage Results" MODIFIED="1563280313090" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../specEnvelopeNew" />
+    <SUITE FILE_PATH="coverage/python3_5$pickle.coverage" NAME="pickle Coverage Results" MODIFIED="1566998878419" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="D:/Anaconda3/envs/py35/Lib" />
+    <SUITE FILE_PATH="coverage/python3_5$steadyResult_draw.coverage" NAME="steadyResult_draw Coverage Results" MODIFIED="1563188424898" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$interface_recognition.coverage" NAME="interface_recognition Coverage Results" MODIFIED="1563085465084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../USRP_袁超" />
+    <SUITE FILE_PATH="coverage/python3_5$show_png.coverage" NAME="show_png Coverage Results" MODIFIED="1555832712038" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$specEnvelope_shibie_v2.coverage" NAME="specEnvelope_shibie_v2 Coverage Results" MODIFIED="1563282238885" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/specEnvelope_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$oc_shibie_v2.coverage" NAME="oc_shibie_v2 Coverage Results" MODIFIED="1568710611942" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$pytest_in_oc_shibie_for1file_py.coverage" NAME="pytest in oc_shibie_for1file.py Coverage Results" MODIFIED="1568631690531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$draw_pic.coverage" NAME="draw_pic Coverage Results" MODIFIED="1568800222380" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/Pico_controller/draw_pic" />
+    <SUITE FILE_PATH="coverage/python3_5$IQ.coverage" NAME="IQ Coverage Results" MODIFIED="1563454676237" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/plotTools" />
+    <SUITE FILE_PATH="coverage/python3_5$displayWith.coverage" NAME="displayWith Coverage Results" MODIFIED="1563285716289" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../steadyInterference" />
+    <SUITE FILE_PATH="coverage/python3_5$WaterFallPlot_2_.coverage" NAME="WaterFallPlot(2) Coverage Results" MODIFIED="1562325563731" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/WeChat Files/muyuzean/FileStorage/File/2019-07" />
+    <SUITE FILE_PATH="coverage/python3_5$spec.coverage" NAME="spec Coverage Results" MODIFIED="1567670603182" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/plotTools" />
+    <SUITE FILE_PATH="coverage/python3_5$specEnvelope_shibie.coverage" NAME="specEnvelope_shibie Coverage Results" MODIFIED="1562940425449" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/specEnvelope_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$WaterFallPlot.coverage" NAME="WaterFallPlot Coverage Results" MODIFIED="1562395769197" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor" />
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

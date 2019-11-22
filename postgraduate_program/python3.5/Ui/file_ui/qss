@@ -1,0 +1,3 @@
+QWidget#customWidget {background: rgb(0, 0, 0);}
+QWidget#centerWidget {background: rgb(0, 0, 0);}
+QWidget#mainWindow {border: 1px solid rgb(111, 156, 207);background: rgb(0, 0, 0);}
