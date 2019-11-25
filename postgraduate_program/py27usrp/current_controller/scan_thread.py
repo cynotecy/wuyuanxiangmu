@@ -5,12 +5,12 @@ import struct
 import crcmod
 
 class Send(object):
-    def __init__(self, starts, end, pointnum, pub_socket):
+    def __init__(self, starts, end, pub_socket):
         super(Send, self).__init__()
         self.starts = starts
         self.end = end
-        self.pointnum = pointnum
         self.socket = pub_socket
+        self.pointnum = 10000000
     def run(self):
         print 'start scan_send at:', ctime()
         crc16_ibm = crcmod.mkCrcFun(0x18005, rev=True, initCrc=0x0000, xorOut=0x0000)

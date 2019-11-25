@@ -717,24 +717,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     ##############
                     self.path = ""
 
-    # def processdialog(self):
-    #     progress = QProgressDialog(self)
-    #     progress.setWindowTitle("请稍等")
-    #     progress.setLabelText("正在操作...")
-    #     progress.setCancelButtonText("取消")
-    #     progress.setMinimumDuration(5)
-    #     progress.setWindowModality(Qt.WindowModal)
-    #     progress.setRange(0, 1000000)
-    #
-    #     for i in range(1000000):
-    #         progress.setValue(i)
-    #         if progress.wasCanceled():
-    #             QMessageBox.warning(self, "提示", "操作失败")
-    #             break
-    #     else:
-    #         progress.setValue(1000000)
-    #         QMessageBox.information(self, "提示", "操作成功")
-
     # PicoScope6示波器采集按键
     def on_pushButton_clicked_19(self):
         try:
@@ -814,9 +796,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         # 标志位为1时清空图区
                         self.verticalLayout_20.removeWidget(self.samplefig)
                         sip.delete(self.samplefig)
-                        # print(self.path)
-                        # signal_path = self.get_latest_file(target_file)
-                        # print(signal_path)
                         self.samplefig = draw_pic.ApplicationWindow(target_file, self.pulse_sample_fig_id)
                         self.verticalLayout_20.addWidget(self.samplefig)
                         self.pic_flag = 1

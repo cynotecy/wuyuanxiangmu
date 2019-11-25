@@ -13,12 +13,12 @@ def connect(address, mode):
         subSocket.connect(subAddress)
         subSocket.setsockopt(zmq.SUBSCRIBE, '')
         socket = subSocket
-    elif mode == 'REQ':
-        reqAddress = address
-        reqContext = zmq.Context()
-        reqSocket = reqContext.socket(zmq.REQ)
-        reqSocket.bind(reqAddress)
-        socket = reqSocket
+    elif mode == 'REP':
+        repAddress = address
+        repContext = zmq.Context()
+        repSocket = repContext.socket(zmq.REP)
+        repSocket.bind(repAddress)
+        socket = repSocket
     else:
         socket = 'socket type error'
         

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1641</width>
-    <height>965</height>
+    <height>1040</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -181,29 +181,7 @@ border:0px;
            <attribute name="title">
             <string>USRP信号采集与识别</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_28">
-            <item>
-             <widget class="QLabel" name="label_31">
-              <property name="maximumSize">
-               <size>
-                <width>200</width>
-                <height>30</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <family>宋体</family>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::RightToLeft</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
+           <layout class="QVBoxLayout" name="verticalLayout_13">
             <item>
              <widget class="QScrollArea" name="scrollArea_4">
               <property name="widgetResizable">
@@ -1159,6 +1137,28 @@ border:0px;
                 </item>
                </layout>
               </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_31">
+              <property name="maximumSize">
+               <size>
+                <width>200</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>宋体</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
              </widget>
             </item>
            </layout>

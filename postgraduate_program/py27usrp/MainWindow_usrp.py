@@ -122,7 +122,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         point_num = self.lineEdit_4.text()
         if not(freq_start.isEmpty() or freq_end.isEmpty() or point_num.isEmpty()):
             self.scan_recv = scan_thread.Recv(self.q, self.sub_socket)
-            self.scan_send = scan_thread.Send(freq_start, freq_end, point_num, self.pub_socket)
+            self.scan_send = scan_thread.Send(freq_start, freq_end, self.pub_socket)
             self.scan_recv.start()
             self.scan_send.run()
             loading = Message.Loading(self.q)
