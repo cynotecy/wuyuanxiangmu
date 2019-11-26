@@ -16,8 +16,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
-        py2 = py2Thread()
-        py2.run()
+        # py2 = py2Thread()
+        # py2.run()
         self.zmqLocal = zmqLocal.localZMQ()
         self.pushButton_1.clicked.connect(self.on_pushButton_clicked_1)  # 扫频
         # self.pushButton_5.clicked.connect(self.on_pushButton_clicked_5)  # 选择文件
@@ -38,7 +38,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 startfreq = startfreq*1000000
                 endfreq = endfreq*1000000
 
-                reslt = self.zmqLocal.sendMessege('1,scan,IQ' + str(startfreq) + ";" +str(endfreq))
+                reslt = self.zmqLocal.sendMessege('2,scan,IQ,' + str(startfreq) + ";" +str(endfreq))
                 # print(reslt)
                 if reslt == "超时":
                     QMessageBox.warning(self,
@@ -59,11 +59,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
 
-class py2Thread(Thread):
-    def __init__(self):
-        super(py2Thread, self).__init__()
-    def run(self):
-        os.system(r'python2 D:\myPrograms\CASTProgram\postgraduate_program\py27usrp\socketTest\demo.py')
+# class py2Thread(Thread):
+#     def __init__(self):
+#         super(py2Thread, self).__init__()
+#     def run(self):
+#         os.system(r'python2 D:\myPrograms\CASTProgram\postgraduate_program\py27usrp\socketTest\demo.py')
 
 app = QApplication(sys.argv)
 ui = MainWindow()
