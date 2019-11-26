@@ -9,6 +9,7 @@ Desktop.ini
 *.egg
 *.egg-info
 *.pkl
+*.spec
 dist
 build
 

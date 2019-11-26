@@ -1,5 +1,6 @@
 import sys
-
+from threading import Thread
+import os
 import zmq
 from PyQt5.QtCore import Qt, QFileInfo, QTimer
 from PyQt5.QtGui import QCursor, QIcon, QGuiApplication
@@ -15,6 +16,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
+        py2 = py2Thread()
+        py2.run()
         self.zmqLocal = zmqLocal.localZMQ()
         self.pushButton_1.clicked.connect(self.on_pushButton_clicked_1)  # 扫频
         # self.pushButton_5.clicked.connect(self.on_pushButton_clicked_5)  # 选择文件
@@ -27,7 +30,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_pushButton_clicked_1(self):
         startfreq = self.lineEdit_1.text()
         endfreq = self.lineEdit_2.text()
-        freqFilePath = self.lineEdit_3.text()
+        # freqFilePath = self.lineEdit_3.text()
         if isNum(startfreq) and isNum(endfreq):
             startfreq = float(startfreq)
             endfreq = float(endfreq)
@@ -55,6 +58,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 "请输入正确参数！",
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
+
+class py2Thread(Thread):
+    def __init__(self):
+        super(py2Thread, self).__init__()
+    def run(self):
+        os.system(r'python2 D:\myPrograms\CASTProgram\postgraduate_program\py27usrp\socketTest\demo.py')
 
 app = QApplication(sys.argv)
 ui = MainWindow()

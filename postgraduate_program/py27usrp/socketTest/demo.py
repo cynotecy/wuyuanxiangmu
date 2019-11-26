@@ -1,10 +1,12 @@
-# -*- coding: UTF-8 -*-
-import zmq
-import thread
+import sys
 import time
-from current_controller import scan_thread
+
 import Queue
+import thread
+import zmq
+from current_controller import scan_thread
 from socketTest import socket
+
 
 def threadControl():
     localQueue = Queue.Queue()
@@ -62,40 +64,13 @@ def threadControl():
                 freq_list = localQueue.get()
                 bins = [c - 11 for c in bins]
 
-                f = open(r'D:\postgraduate_program\usrp_recvfiles\threshold\%s.txt' % id, 'w+')
+                f = open(r'D:\postgraduate_program\usrp_recvfiles\%s.txt' % id, 'w+')
                 for i in range(len(freq_list)):
                     f.write(str(freq_list[i]) + ' ')
                 f.write('\n')
                 for i in range(len(bins)):
                     f.write(str(bins[i]) + ' ')
                 f.close()
-
-
-
-        # if localRecv == 'hello server':
-        #     # 同步完成
-        #     localQueue.put('synchronization')
-        #     reqSocket.close()
-        #     break
-        # else:
-        #     # repSocket.send('nothing')
-        #     time.sleep(1)
-
-
-    
-# def syncThread(q):
-#     recv = ''
-#     while 1:
-#         repSocket.send('hello client')
-#         recv = repSocket.recv()
-#         if recv == 'hello server':
-#             # 同步完成
-#             q.put('synchronization')
-#             repSocket.close()
-#             break
-#         else:
-#             # repSocket.send('nothing')
-#             time.sleep(1)
 
 if __name__ == '__main__':
     threadControl()
