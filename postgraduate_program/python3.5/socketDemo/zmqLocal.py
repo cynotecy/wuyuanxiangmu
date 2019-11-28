@@ -12,7 +12,7 @@ class localZMQ():
 
     def sendMessege(self, messege):
         self.socket.send(str.encode(messege))
-        socks = dict(self.poll.poll(7000))
+        socks = dict(self.poll.poll(700000))
         if socks.get(self.socket) == zmq.POLLIN:
             result = bytes.decode(self.socket.recv())
             print(result)

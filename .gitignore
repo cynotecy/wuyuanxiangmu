@@ -11,6 +11,7 @@ Desktop.ini
 *.pkl
 *.spec
 dist
+*.dat
 build
 
 #others

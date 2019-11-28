@@ -1,5 +1,6 @@
 import sys
 from threading import Thread
+import datetime
 import os
 import sip
 import queue
@@ -34,6 +35,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.pushButton_4.clicked.connect(self.on_pushButton_clicked_4)  # 离线识别
 
     def on_pushButton_clicked_1(self):
+        starttime = datetime.datetime.now()
         startfreq = self.lineEdit_1.text()
         endfreq = self.lineEdit_2.text()
         # freqFilePath = self.lineEdit_3.text()
@@ -65,6 +67,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.getPosition = plotWithCursor.getPos(specPath, self.picQ)
                         self.verticalLayout.addWidget(self.getPosition)
                         self.specPicFlag = 1
+                    endtime = datetime.datetime.now()
+                    strTime = 'funtion time use:%dms' % (
+                            (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                    print(strTime)
             else:
                 QMessageBox.warning(self,
                                     '错误',

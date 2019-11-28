@@ -2,15 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7810345c-250a-4cab-bd2b-d559d19078cb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../python3.5/exer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../emc" beforeDir="false" afterPath="$PROJECT_DIR$/../emc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainWindow_steadyStateInterference.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow_steadyStateInterference.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/socketTest/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/demo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/MainWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/demo/exer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/socketDemo/localDemoUi.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/socketDemo/localDemoUi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/socketDemo/zmqLocal.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/socketDemo/zmqLocal.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -316,7 +312,7 @@
       <workItem from="1574128164583" duration="612000" />
       <workItem from="1574664225277" duration="7668000" />
       <workItem from="1574746302453" duration="8983000" />
-      <workItem from="1574835491291" duration="5620000" />
+      <workItem from="1574835491291" duration="6903000" />
     </task>
     <servers />
   </component>
