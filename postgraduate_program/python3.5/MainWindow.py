@@ -1742,11 +1742,13 @@ class usrpScan_antenna_mode2(Thread):
         super(usrpScan_antenna_mode2, self).__init__()
     def run(self):
         os.system('python2 ..\py27usrp\MainWindow_antenna_usrp2.py')
+
 class usrpScan_antenna_mode12(Thread):
     def __init__(self):
         super(usrpScan_antenna_mode12, self).__init__()
     def run(self):
         os.system('python2 ..\py27usrp\MainWindow_antenna_usrp1and2.py')
+
 class OcCollectThread(QThread):
     def __init__(self):
         super(OcCollectThread, self).__init__()

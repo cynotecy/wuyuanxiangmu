@@ -1,10 +1,12 @@
 # -*- coding: UTF-8 -*-
 import sys
 import time
+import os
 
 import Queue
 import thread
 import zmq
+sys.path.append("..\..\py27usrp")
 from current_controller import scan_thread
 from socketTest import socket
 from functions import filesOrDirsOperate
@@ -80,7 +82,8 @@ def threadControl():
                 for i in range(len(bins)):
                     f.write(str(bins[i]) + ' ')
                 f.close()
-        repSocket.send('filePath')
+        repSocket.send(os.path.abspath(filePath))
 
 if __name__ == '__main__':
+    # print "working demo"
     threadControl()

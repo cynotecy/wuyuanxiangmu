@@ -52,7 +52,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.sub_socket.setsockopt(zmq.SUBSCRIBE, '')
         self.q = Queue.Queue()
 
-        self.synchronization()
+        # self.synchronization()
 
         self.pushButton_1.clicked.connect(self.on_pushButton_clicked_1)
 
