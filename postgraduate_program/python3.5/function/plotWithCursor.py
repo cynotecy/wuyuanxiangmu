@@ -10,11 +10,12 @@ from matplotlib.widgets import Cursor
 import sys
 
 class getPos(QWidget):
-    def __init__(self, path, q, parent=None):
+    def __init__(self, x, y, q, parent=None):
         super(getPos, self).__init__(parent)
         matplotlib.rcParams['font.family'] = ['SimHei']  # 用来正常显示中文标签
         matplotlib.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
-        self.path = path
+        self.x = x
+        self.y = y
         self.q = q
         layout = QtWidgets.QVBoxLayout(self)  # 实例化布局，用来塞画布
         self.freqCanvas = FigureCanvas(Figure(figsize=(12, 6)))  # 实例化画布
@@ -49,7 +50,9 @@ class getPos(QWidget):
         return x, y
 
     def draw(self):
-        x, y = self.getData()
+        # x, y = self.getData()
+        x = self.x
+        y = self.y
         self.axs.cla()
         self.axs.plot(x, y)
         self.axs.figure.canvas.draw()

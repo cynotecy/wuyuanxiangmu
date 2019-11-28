@@ -53,18 +53,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                         QMessageBox.Yes,
                                         QMessageBox.Yes)
                 else:
-                    specPath = reslt
+                    # specPath = reslt
+
                     # 根据地址绘图
-                    print('specPath:', specPath)
+                    # print('specPath:', specPath)
+                    # 根据数值绘图
+                    resltList = reslt.split(' ')
+                    # print(len(resltList))
+                    x = [float(i) for i in resltList[0:int(len(resltList)/2-1)]]
+                    # print(len(x))
+                    y = [float(i) for i in resltList[int(len(resltList)/2):-1]]
+                    # print(len(y))
                     #####置入绘图####
                     if self.specPicFlag:
                         self.verticalLayout.removeWidget(self.getPosition)
                         # sip.delete(self.getPosition)
-                        self.getPosition = plotWithCursor.getPos(specPath, self.picQ)
+                        self.getPosition = plotWithCursor.getPos(x, y, self.picQ)
                         self.verticalLayout.addWidget(self.getPosition)
                         self.specPicFlag = 1
                     else:
-                        self.getPosition = plotWithCursor.getPos(specPath, self.picQ)
+                        self.getPosition = plotWithCursor.getPos(x, y, self.picQ)
                         self.verticalLayout.addWidget(self.getPosition)
                         self.specPicFlag = 1
                     endtime = datetime.datetime.now()

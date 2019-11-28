@@ -15,7 +15,7 @@ class localZMQ():
         socks = dict(self.poll.poll(700000))
         if socks.get(self.socket) == zmq.POLLIN:
             result = bytes.decode(self.socket.recv())
-            print(result)
+            # print(result)
         else:
             self.socket.setsockopt(zmq.LINGER, 0)
             self.socket.close()

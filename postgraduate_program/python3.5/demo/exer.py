@@ -1,10 +1,12 @@
+from socketDemo import zmqLocal
 import os
-from threading import Thread
-class py2Thread(Thread):
-    def __init__(self):
-        super(py2Thread, self).__init__()
-    def run(self):
-        os.system('python2 ..\..\py27usrp\socketTest\demo.py')
-if __name__ == '__main__':
-    a = py2Thread()
-    a.start()
+
+# os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
+
+zmqLocal = zmqLocal.localZMQ()
+startfreq = 50
+endfreq = 70
+startfreq = startfreq*1000000
+endfreq = endfreq*1000000
+reslt = zmqLocal.sendMessege('2,scan,IQ,' + str(startfreq) + ";" +str(endfreq))
+print(reslt)

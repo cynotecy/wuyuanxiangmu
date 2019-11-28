@@ -68,21 +68,27 @@ def threadControl():
                 pass
             else:
                 bins = localQueue.get()
-                freq_list = localQueue.get()
+                freq_list = list(localQueue.get())
                 bins = [c - 11 for c in bins]
-                # 将回传的频谱保存成中间文件
-                dirPath = r'..\..\usrp_recvfiles\specfiles'
-                filesOrDirsOperate.makesureDirExist(dirPath)
-                local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
-                filePath = dirPath + r'\%s.dat' % local_time
-                f = open(filePath, 'w')
-                for i in range(len(freq_list)):
-                    f.write(str(freq_list[i]) + ' ')
-                f.write('\n')
-                for i in range(len(bins)):
-                    f.write(str(bins[i]) + ' ')
-                f.close()
-        repSocket.send(os.path.abspath(filePath))
+                # print "freqlist类型", type(freq_list)
+                # print type(bins)
+                # 将回传的频谱直接发给py3
+                freqbinslist = [str(i) for i in freq_list+bins]
+                freqbins = " ".join(freqbinslist)
+                repSocket.send(freqbins)
+                # # 将回传的频谱保存成中间文件
+                # dirPath = r'..\..\usrp_recvfiles\specfiles'
+                # filesOrDirsOperate.makesureDirExist(dirPath)
+                # local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+                # filePath = dirPath + r'\%s.dat' % local_time
+                # f = open(filePath, 'w')
+                # for i in range(len(freq_list)):
+                #     f.write(str(freq_list[i]) + ' ')
+                # f.write('\n')
+                # for i in range(len(bins)):
+                #     f.write(str(bins[i]) + ' ')
+                # f.close()
+        # repSocket.send(os.path.abspath(filePath))
 
 if __name__ == '__main__':
     # print "working demo"
