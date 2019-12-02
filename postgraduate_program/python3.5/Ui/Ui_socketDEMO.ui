@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1243</width>
-    <height>906</height>
+    <height>831</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,9 +24,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-449</y>
          <width>1198</width>
-         <height>1251</height>
+         <height>1513</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -38,12 +38,53 @@
            </font>
           </property>
           <property name="text">
-           <string>扫频</string>
+           <string>自动识别</string>
           </property>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="label_9">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>一体化单元</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_2">
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
+            </property>
+            <item>
+             <property name="text">
+              <string>1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>3</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>4</string>
+             </property>
+            </item>
+           </widget>
+          </item>
           <item>
            <widget class="QLabel" name="label_2">
             <property name="font">
@@ -52,7 +93,7 @@
              </font>
             </property>
             <property name="text">
-             <string>起始频率</string>
+             <string>起始频率(MHz)</string>
             </property>
            </widget>
           </item>
@@ -82,7 +123,7 @@
              </font>
             </property>
             <property name="text">
-             <string>截止频率</string>
+             <string>截止频率(MHz)</string>
             </property>
            </widget>
           </item>
@@ -214,13 +255,13 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>441</height>
+            <height>550</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>441</height>
+            <height>16777215</height>
            </size>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -258,17 +299,105 @@
          </widget>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QLabel" name="label_7">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>门限值(dBM)：</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_6">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>14</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_8">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>125</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>超频点查看</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_7">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>125</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>自动识别</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <widget class="QWidget" name="widget_2" native="true">
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>441</height>
+            <height>550</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>441</height>
+            <height>16777215</height>
            </size>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -320,12 +449,53 @@
            </font>
           </property>
           <property name="text">
-           <string>采集</string>
+           <string>手动识别</string>
           </property>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="label_10">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>一体化单元</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_3">
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
+            </property>
+            <item>
+             <property name="text">
+              <string>1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>3</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>4</string>
+             </property>
+            </item>
+           </widget>
+          </item>
           <item>
            <widget class="QLabel" name="label_5">
             <property name="font">
@@ -334,7 +504,7 @@
              </font>
             </property>
             <property name="text">
-             <string>中心频率</string>
+             <string>中心频率(MHz)</string>
             </property>
            </widget>
           </item>
@@ -364,42 +534,12 @@
              </font>
             </property>
             <property name="text">
-             <string>带宽</string>
+             <string>带宽(MHz)</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLineEdit" name="lineEdit_5">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>35</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-              <pointsize>14</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_7">
-            <property name="font">
-             <font>
-              <pointsize>14</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>采样率</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEdit_6">
             <property name="minimumSize">
              <size>
               <width>0</width>

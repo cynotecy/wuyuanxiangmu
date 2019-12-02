@@ -6,10 +6,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/socketTest/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/demo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/demo/exer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/function/plotWithCursor.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/function/plotWithCursor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/socketDemo/localDemoUi.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/socketDemo/localDemoUi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/socketDemo/zmqLocal.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/socketDemo/zmqLocal.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -315,7 +315,8 @@
       <workItem from="1574128164583" duration="612000" />
       <workItem from="1574664225277" duration="7668000" />
       <workItem from="1574746302453" duration="8983000" />
-      <workItem from="1574835491291" duration="11108000" />
+      <workItem from="1574835491291" duration="13254000" />
+      <workItem from="1575260337212" duration="3197000" />
     </task>
     <servers />
   </component>
@@ -365,7 +366,7 @@
     <SUITE FILE_PATH="coverage/py27usrp$usrp_saomiao.coverage" NAME="usrp_saomiao Coverage Results" MODIFIED="1559011161026" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/py27usrp$test.coverage" NAME="test Coverage Results" MODIFIED="1567667312039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/像素获取" />
     <SUITE FILE_PATH="coverage/py27usrp$getPos.coverage" NAME="getPos Coverage Results" MODIFIED="1573824402313" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cursorPos" />
-    <SUITE FILE_PATH="coverage/py27usrp$demo.coverage" NAME="demo Coverage Results" MODIFIED="1574932158018" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/socketTest" />
+    <SUITE FILE_PATH="coverage/py27usrp$demo.coverage" NAME="demo Coverage Results" MODIFIED="1574943893062" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/socketTest" />
     <SUITE FILE_PATH="coverage/py27usrp$MainWindow_antenna.coverage" NAME="MainWindow_antenna Coverage Results" MODIFIED="1565939529621" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/py27usrp$MainWindow_realtime_spec.coverage" NAME="MainWindow_realtime_spec Coverage Results" MODIFIED="1565940390106" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/py27usrp$MainWindow_antenna_usrp1.coverage" NAME="MainWindow_antenna_usrp1 Coverage Results" MODIFIED="1566269986403" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

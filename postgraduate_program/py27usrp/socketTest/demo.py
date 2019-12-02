@@ -24,21 +24,30 @@ def threadControl():
     subAddress3 = 'tcp://127.0.0.1:5555'
     
     repAddress = 'tcp://127.0.0.1:6667'
-    # try:
-    # pubSocket1 = socket.connect(pubAddress1, 'PUB')
-    pubSocket2 = socket.connect(pubAddress2, 'PUB')
-    # pubSocket3 = socket.connect(pubAddress3, 'PUB')
-
-    # subSocket1 = socket.connect(subAddress1, 'SUB')
-    subSocket2 = socket.connect(subAddress2, 'SUB')
-    # subSocket3 = socket.connect(subAddress3, 'SUB')
-
+    # 定义连接字典
     socketDic = dict()
-    # socketDic[0] = [pubSocket1, subSocket1]
-    socketDic[1] = [pubSocket2, subSocket2]
-    # socketDic[2] = [pubSocket3, subSocket3]
-    # except:
-    #     pass
+
+    try:
+        pubSocket1 = socket.connect(pubAddress1, 'PUB')
+        subSocket1 = socket.connect(subAddress1, 'SUB')
+        socketDic[0] = [pubSocket1, subSocket1]
+    except:
+        pass
+
+    try:
+        pubSocket2 = socket.connect(pubAddress2, 'PUB')
+        subSocket2 = socket.connect(subAddress2, 'SUB')
+        socketDic[1] = [pubSocket2, subSocket2]
+    except:
+        pass
+
+    try:
+        pubSocket3 = socket.connect(pubAddress3, 'PUB')
+        subSocket3 = socket.connect(subAddress3, 'SUB')
+        socketDic[2] = [pubSocket3, subSocket3]
+    except:
+        pass
+
     repSocket = socket.connect(repAddress, 'REP')
 
     while 1:
@@ -57,6 +66,7 @@ def threadControl():
         print instructionInfo
         instructionInfoList = instructionInfo.split(';')
         print instructionInfoList
+        # 扫频模式
         if mode == 'scan':
             startFreq = instructionInfoList[0]
             endFreq = instructionInfoList[1]
@@ -88,7 +98,10 @@ def threadControl():
                 # for i in range(len(bins)):
                 #     f.write(str(bins[i]) + ' ')
                 # f.close()
-        # repSocket.send(os.path.abspath(filePath))
+                # repSocket.send(os.path.abspath(filePath))
+        # 采集模式
+        elif mode == 'collect':
+            pass
 
 if __name__ == '__main__':
     # print "working demo"
