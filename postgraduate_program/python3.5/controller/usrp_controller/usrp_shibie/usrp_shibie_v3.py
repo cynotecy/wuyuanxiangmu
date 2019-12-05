@@ -50,7 +50,7 @@ def read_file(file_path):
     test_data = np.expand_dims(test_data, axis=1)
     return torch.from_numpy(test_data).float(), data_freq, bandwidth, P
 
-def test_model(model, logdir, inputs):
+def model_test(model, logdir, inputs):
     # print('Evaluating model...')
 
     test_input, freq, bandwidth, P = inputs
@@ -242,8 +242,8 @@ def test_model(model, logdir, inputs):
         else:
             radio_name = 'null'
             u = 0.0
-        print('u=',end='')
-        print(u)
+        # print('u=',end='')
+        # print(u)
         out = out + u * prior_p
         pred = np.argmax(out, axis=1)
         pred_cunt = Counter(pred)
@@ -287,7 +287,7 @@ def test_model(model, logdir, inputs):
             # print('freq:{:.4f} MHz : {}:{:.2f}%, {}:{:.2f}%, {}:{:.2f}%'.format(signal_freq, classes[top_3[0][0]], int(top_3[0][1]) / batch_size * 100,
             #       classes[top_3[1][0]], int(top_3[1][1]) / batch_size * 100, classes[top_3[2][0]], int(top_3[2][1]) / batch_size * 100))
 
-def test_(file_path):
+def play(file_path):
 
     net = ResNet(Bottleneck,
                  [[(16, 32, 2), (32, 64, 1)] * 1,
@@ -295,11 +295,13 @@ def test_(file_path):
                   ])
     if use_cuda:
         net = net.cuda()
-
-    logdir = r'..\python3.5\controller\usrp_controller\logs\0709_5p.pkl'
+    currentPath = os.path.dirname(__file__)
+    fatherPath = os.path.dirname(currentPath)
+    # logdir = r'..\..\python3.5\controller\usrp_controller\logs\0709_5p.pkl'
+    logdir = os.path.join(fatherPath, r'logs\0709_5p.pkl')
 
     input_data = read_file(file_path)
-    reslt = test_model(net, logdir, inputs=input_data)
+    reslt = model_test(net, logdir, inputs=input_data)
     print(reslt)
     return reslt
 
@@ -307,5 +309,5 @@ def test_(file_path):
 
 if __name__ == '__main__':
     file_path = r"..\usrp_recvfiles\未命名_20190829115602.dat"
-    a = test_(file_path)
+    a = play(file_path)
     print(a)

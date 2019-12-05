@@ -49,15 +49,15 @@ class Loading(QDialog):
     def on_pushButton_clicked_1(self):
         pass
 
-# if __name__ == '__main__':
-#     import sys
-#
-#     app = QApplication(sys.argv)
-#     # ui = Loading()
-#     ui = Usrp_scan()
-#     # ui = Usrp_collect()
-#     # styleFile = 'white_style.qss'
-#     # style = CommonHelper.readQss(styleFile)
-#     # ui.setStyleSheet(style)
-#     ui.show()
-#     sys.exit(app.exec_())
+if __name__ == '__main__':
+    import sys
+
+    app = QApplication(sys.argv)
+    ui = Loading()
+    # ui = Usrp_scan()
+    # ui = Usrp_collect()
+    # styleFile = 'white_style.qss'
+    # style = CommonHelper.readQss(styleFile)
+    # ui.setStyleSheet(style)
+    ui.show()
+    sys.exit(app.exec_())

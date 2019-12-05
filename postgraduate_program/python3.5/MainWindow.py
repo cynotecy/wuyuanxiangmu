@@ -46,6 +46,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.showFullScreen()
         self.showMaximized()
         self.showMaximized()
+        self.pushButton_16.setEnabled(True)
+        self.pushButton_26.setEnabled(True)
+        self.pushButton_50.setEnabled(True)
         ## 初始化socket连接，用来检测仪器连接状况
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REQ)

@@ -6,11 +6,14 @@ import os
 import Queue
 import thread
 import zmq
-sys.path.append("..\..\py27usrp")
-from current_controller import scan_thread
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from current_controller import scan_thread, collect_thread
 from socketTest import socket
 from functions import filesOrDirsOperate
-
+"""
+加个远程连接检测
+"""
 
 def threadControl():
     localQueue = Queue.Queue()
@@ -31,6 +34,7 @@ def threadControl():
         pubSocket1 = socket.connect(pubAddress1, 'PUB')
         subSocket1 = socket.connect(subAddress1, 'SUB')
         socketDic[0] = [pubSocket1, subSocket1]
+        print "socket1 连接"
     except:
         pass
 
@@ -38,6 +42,7 @@ def threadControl():
         pubSocket2 = socket.connect(pubAddress2, 'PUB')
         subSocket2 = socket.connect(subAddress2, 'SUB')
         socketDic[1] = [pubSocket2, subSocket2]
+        print "socket2 连接"
     except:
         pass
 
@@ -45,6 +50,7 @@ def threadControl():
         pubSocket3 = socket.connect(pubAddress3, 'PUB')
         subSocket3 = socket.connect(subAddress3, 'SUB')
         socketDic[2] = [pubSocket3, subSocket3]
+        print "socket3 连接"
     except:
         pass
 
@@ -61,29 +67,27 @@ def threadControl():
         pubSock = socketDic[usrpNum - 1][0]
         subSock = socketDic[usrpNum - 1][1]
         mode = msg[1]  # scan
-        action = localRecv[2]  # IQ
+        action = msg[2]  # IQ
         instructionInfo = msg[3]
-        print instructionInfo
         instructionInfoList = instructionInfo.split(';')
-        print instructionInfoList
         # 扫频模式
         if mode == 'scan':
             startFreq = instructionInfoList[0]
             endFreq = instructionInfoList[1]
-            scan_recv = scan_thread.Recv(localQueue, subSock)
-            scan_send = scan_thread.Send(startFreq, endFreq, pubSock)
-            scan_recv.start()
-            scan_send.run()
+            scanRecv = scan_thread.Recv(localQueue, subSock)
+            scanSend = scan_thread.Send(startFreq, endFreq, pubSock)
+            scanRecv.start()
+            scanSend.run()
             while localQueue.empty():
                 pass
             else:
                 bins = localQueue.get()
-                freq_list = list(localQueue.get())
-                bins = [c - 11 for c in bins]
+                freqList = list(localQueue.get())
+                bins = [c - 11 for c in bins]  # 定标
                 # print "freqlist类型", type(freq_list)
                 # print type(bins)
                 # 将回传的频谱直接发给py3
-                freqbinslist = [str(i) for i in freq_list+bins]
+                freqbinslist = [str(i) for i in freqList+bins]
                 freqbins = " ".join(freqbinslist)
                 repSocket.send(freqbins)
                 # # 将回传的频谱保存成中间文件
@@ -101,7 +105,30 @@ def threadControl():
                 # repSocket.send(os.path.abspath(filePath))
         # 采集模式
         elif mode == 'collect':
-            pass
+            if action == 'IQoc':
+                centreFreq = float(instructionInfoList[0])
+                bdWdith = float(instructionInfoList[1])
+                currentPath = os.path.dirname(__file__)
+                fatherPath = os.path.dirname(currentPath)
+                grandPath = os.path.dirname(fatherPath)
+                dirPath = os.path.join(grandPath, r'usrp_recvfiles\auto_recognize')
+                filesOrDirsOperate.makesureDirExist(dirPath)
+                local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+                filePath = os.path.join(dirPath, r'oc_collect_{}.txt'.format(local_time))
+                print "oc文件路径", filePath
+                localQueue.queue.clear()
+                collectRecv = collect_thread.Recv(localQueue, subSock, path=filePath)
+                collectRecv.start()
+                while 1:
+                    if collectRecv.is_alive():
+                        collectSend = collect_thread.Send(str(centreFreq), str(bdWdith), '12.5e6', pubSock)
+                        collectSend.start()
+                        break
+                while localQueue.empty():
+                    pass
+                else:
+                    print 'localQueue:'+localQueue.get()
+                    repSocket.send(filePath)
 
 if __name__ == '__main__':
     # print "working demo"

@@ -112,9 +112,6 @@ class Recv(QThread):
                 print len(real_part)
                 print 'write worked'
                 recvFlag = 1
-                # flag = 1
-                # if flag == 1:
-                    # break
         except KeyboardInterrupt:
             pass
         print 'end collect_recv at:', ctime()

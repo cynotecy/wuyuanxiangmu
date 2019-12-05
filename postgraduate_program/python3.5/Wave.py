@@ -115,7 +115,7 @@ class UsrpProcess(Thread):
         self.data = ''
         self.q = q
     def run(self):
-        a = usrp_shibie_v3.test_(self.path)
+        a = usrp_shibie_v3.play(self.path)
         print(a)
         self.q.put(a)
 
@@ -124,7 +124,7 @@ class OcUsrpProcess(Thread):
         super(OcUsrpProcess, self).__init__()
         self.q = q
     def run(self):
-        a = oc_shibie_v2.test_()
+        a = oc_shibie_v2.play()
         print(a)
         self.q.put(a)
 

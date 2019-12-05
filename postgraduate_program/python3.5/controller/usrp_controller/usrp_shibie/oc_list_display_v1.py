@@ -64,7 +64,6 @@ class WindowClass(QWidget):
 
     # 更新table入口，参数为[[(),()...]]
     def pushButton(self, lists):
-        # lists = [[(2404.4067, 2418.5515, 2412.555, -73.214405), (2437.5, 2444.635, 2437.5122, -66.43583699999999), (2471.1792, 2471.2402, 2471.2158, -84.82172), (2471.2463, 2471.3103, 2471.2585, -84.887955)]]  # 测试数据，删掉传参
 
         print("push button")
         self.tableWidget.setRowCount(len(lists[0]))  # 行数
@@ -107,5 +106,8 @@ if __name__ == "__main__":
     rN = queue.Queue()
     app = QApplication(sys.argv)
     win = WindowClass()
+    lists = [[(57.7453613283, 57.7575683595, 57.7514648439, -67.2741775513),
+             (64.2456054689, 64.2578125001, 64.2486572267, -66.8712921143)]]  # 测试数据，删掉传参
+    win.pushButton(lists)
     win.show()
     sys.exit(app.exec_())

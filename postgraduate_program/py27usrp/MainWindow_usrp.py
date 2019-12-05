@@ -38,25 +38,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
         # 定义发布、订阅和同步的地址
-        # self.pub_address = 'tcp://192.168.0.100:7777'
+        self.pub_address = 'tcp://192.168.0.100:7777'
         # self.pub_address = 'tcp://192.168.0.100:6666'
-        self.pub_address = 'tcp://127.0.0.1:6666'
+        # self.pub_address = 'tcp://127.0.0.1:6666'
 
-        # self.sub_address = 'tcp://192.168.0.5:9999'
+        self.sub_address = 'tcp://192.168.0.5:9999'
         # self.sub_address = 'tcp://192.168.0.5:5555'
-        self.sub_address = 'tcp://127.0.0.1:5555'
+        # self.sub_address = 'tcp://127.0.0.1:5555'
 
         # self.rep_address = 'tcp://192.168.0.100:7778'
         # self.rep_address = 'tcp://192.168.0.100:6667'
-        self.rep_address = 'tcp://127.0.0.1:6667'
+        # self.rep_address = 'tcp://127.0.0.1:6667'
 
         self.pub_context = zmq.Context()
         self.pub_socket = self.pub_context.socket(zmq.PUB)
         self.pub_socket.bind(self.pub_address)
 
-        self.rep_socket = self.pub_context.socket(zmq.REQ)
-        self.rep_socket.bind(self.rep_address)
-        # time.sleep(1)
+        # self.rep_socket = self.pub_context.socket(zmq.REQ)
+        # self.rep_socket.bind(self.rep_address)
+        # # time.sleep(1)
 
         self.sub_context = zmq.Context()
         self.sub_socket = self.sub_context.socket(zmq.SUB)

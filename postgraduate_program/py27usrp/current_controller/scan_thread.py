@@ -3,6 +3,7 @@ from PyQt4.QtCore import QThread
 from time import ctime
 import struct
 import crcmod
+from functions.spectrum_smooth import spectrum_v4
 
 class Send(object):
     def __init__(self, starts, end, pub_socket):
@@ -87,7 +88,9 @@ class Recv(QThread):
                 bins = struct.unpack('!%s' % ('f' * n_freq,), DATA[12:12 + n_freq * 4])
                 freq_list = struct.unpack('!%s' % ('d' * n_freq,), DATA[12 + n_freq * 4:12 + n_freq * (4 + 8)])
                 # Do what you want to do, here is a example.
-                bins = [c + 4 for c in bins]
+                # 去毛刺
+                bins = spectrum_v4.smoothMain(freq_list, bins)
+                bins = [c + 4 for c in list(bins)]
                 self.q.put(bins)
                 self.q.put(freq_list)
                 if 1:
