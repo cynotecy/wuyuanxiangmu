@@ -2,6 +2,7 @@
 from time import ctime
 import datetime
 import struct
+# from future_builtins import map
 import crcmod
 import scipy
 from PyQt4.QtCore import QThread
@@ -42,7 +43,7 @@ class Send(Thread):
         print 'end collect_send at:', ctime()
 
 class Recv(Thread):
-    def __init__(self, q, sub_socket, path):
+    def __init__(self, q, sub_socket, path=0):
         super(Recv, self).__init__()
         self.q = q
         self.socket = sub_socket
@@ -111,20 +112,22 @@ class Recv(Thread):
                 print strTime
 
                 starttime1 = datetime.datetime.now()
+                collectInfo = str(freq) + ' '+ str(bandwidth) + ' ' + str(samp_rate)+' '
+                real_part_strlist = map(str, list(real_part))
+                realPartStr = " ".join(real_part_strlist)
+                reslt = collectInfo + realPartStr
+                if self.path:
+                    f = open(self.path, 'w')
+                    f.write(reslt)
+                    f.close()
+                    self.q.put("recvd")
+                else:
 
-                f = open(self.path, 'w+')
-                f.write(str(freq) + ' '+ str(bandwidth) + ' ' + str(samp_rate)+' ' )
-                for i in range(len(real_part)):
-                    f.write(str(real_part[i]) + ' ')
-                f.write('\n')
-                f.close()
+                    self.q.put(reslt)
                 endtime1 = datetime.datetime.now()
                 strTime1 = "写入花费：{}ms".format((endtime1 - starttime1).seconds * 1000
                                              + (endtime1 - starttime1).microseconds / 1000)
                 print strTime1
-                print len(real_part)
-                print 'write worked'
-                self.q.put("recvd")
                 break
         except KeyboardInterrupt:
             pass

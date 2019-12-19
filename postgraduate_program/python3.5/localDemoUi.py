@@ -1,9 +1,12 @@
 import sys
 from threading import Thread
+from multiprocessing import Process
 import datetime
 import os
+import time
 import sip
 import queue
+from multiprocessing import Process, Queue as mq
 import threading
 import zmq
 from PyQt5.QtCore import Qt, QFileInfo, QTimer
@@ -12,12 +15,13 @@ from PyQt5.QtWidgets import QMainWindow, QSystemTrayIcon, QMessageBox, QTableWid
     QApplication
 
 import Message
-from function import plotWithCursor
+from function import plotWithCursor, filesOrDirsOperate
 from Ui.UitoPy.Ui_socketDEMO import Ui_MainWindow
 from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,
                                                     usrp_shibie_v3)
 from function.numOrLetters import *
 from socketDemo import zmqLocal
+import algorithmThreads
 
 class MainWindow(QMainWindow, Ui_MainWindow):
 
@@ -28,40 +32,37 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         py2 = py2Thread()
         py2.start()
 
-
+        # 初始化当前路径和其父路径，用于拼接后续地址进行非文件夹依赖的寻址
         self.currentPath = os.path.dirname(__file__)
         self.fatherPath = os.path.dirname(self.currentPath)
-        # self.specPicQ = queue.Queue()
-        self.overThresholdQ = queue.Queue()
-        self.ocCollectPathQ = queue.Queue()
-        self.ocLoadingQ = queue.Queue()
+        # 初始化队列
+        self.zmqLocalQ = mq()
+        self.algorithmProcessQ = mq()  # 算法线程队列，用来判断算法线程是否结束
+        self.savingProcessQ = mq()  # 算法线程队列，用来判断算法线程是否结束
+        self.overThresholdQ = mq()
+        self.ocCollectPathQ = mq()
+        self.ocLoadingQ = mq()
         # 绘图布局标志位，为0表示布局中没有绘图，为1表示布局中有在线扫频图，为2表示布局中有离线频谱图
         self.specPicFlag = 0
         self.ocTableDisplayFlag = 0
 
         self.zmqLocal = zmqLocal.localZMQ()
         self.pushButton_1.clicked.connect(self.on_pushButton_clicked_1)  # 扫频
-        self.pushButton_5.clicked.connect(self.on_pushButton_clicked_5)  # 选择文件
+        self.pushButton_9.clicked.connect(self.on_pushButton_clicked_9)  # 保存频谱
+        self.pushButton_5.clicked.connect(self.on_pushButton_clicked_5)  # 频谱选择文件
         self.pushButton_6.clicked.connect(self.on_pushButton_clicked_6)  # 查看频谱图
         self.pushButton_8.clicked.connect(self.on_pushButton_clicked_8)  # 超频点查看
         self.pushButton_7.clicked.connect(self.on_pushButton_clicked_7)  # IQ自动识别
         #
         self.pushButton_2.clicked.connect(self.on_pushButton_clicked_2)  # 采集识别
-        # self.pushButton_3.clicked.connect(self.on_pushButton_clicked_3)  # 选择文件
-        # self.pushButton_4.clicked.connect(self.on_pushButton_clicked_4)  # 离线识别
-
-
-    def on_pushButton_clicked_2(self):
-
-        defultPath = os.path.join(self.fatherPath, 'usrp_recvfiles', 'usrp_scan')
-        print(defultPath)
+        self.pushButton_3.clicked.connect(self.on_pushButton_clicked_3)  # IQ选择文件
+        self.pushButton_4.clicked.connect(self.on_pushButton_clicked_4)  # 离线识别
 
     # 扫频按键
     def on_pushButton_clicked_1(self):
         starttime = datetime.datetime.now()
         startfreq = self.lineEdit_1.text()
         endfreq = self.lineEdit_2.text()
-        # freqFilePath = self.lineEdit_3.text()
         if isNum(startfreq) and isNum(endfreq):
             startfreq = float(startfreq)
             endfreq = float(endfreq)
@@ -69,45 +70,49 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 startfreq = startfreq*1000000
                 endfreq = endfreq*1000000
                 usrpNum = self.comboBox_2.currentText()
-                reslt = self.zmqLocal.sendMessege(usrpNum + ',scan,IQ,'
-                                                  + str(startfreq) + ";" +str(endfreq))
-                if reslt == "超时":
-                    QMessageBox.warning(self,
-                                        '错误',
-                                        "本地连接超时！",
-                                        QMessageBox.Yes,
-                                        QMessageBox.Yes)
+                msg = (usrpNum + ',scan,IQ,'
+                          + str(startfreq) + ";" +str(endfreq))
+                zmqThread = threading.Thread(target=zmqLocal.zmqThread, args=(self.zmqLocal, msg, self.zmqLocalQ))
+                zmqThread.start()
+                # 调用识别loading
+                loading = Message.Loading()
+                loading.setWindowModality(Qt.ApplicationModal)
+                loading.show()
+                gui = QGuiApplication.processEvents
+                # while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
+                while self.zmqLocalQ.empty():
+                    gui()
                 else:
-                    # specPath = reslt
-
-                    # 根据地址绘图
-                    # print('specPath:', specPath)
-                    # 根据数值绘图
-                    resltList = reslt.split(' ')
-                    # print(len(resltList))
-                    self.onlineSpecX = [float(i) for i in resltList[0:int(len(resltList)/2-1)]]
-                    # print(len(x))
-                    self.onlineSpecY = [float(i) for i in resltList[int(len(resltList)/2):-1]]
-                    # print(len(y))
-                    #####置入绘图####
-                    if self.specPicFlag:
-                        self.verticalLayout.removeWidget(self.getPosition)
-                        # sip.delete(self.getPosition)
-                        self.getPosition = plotWithCursor.getPos(self.onlineSpecX,
-                                                                 self.onlineSpecY,
-                                                                 self.lineEdit_6)
-                        self.verticalLayout.addWidget(self.getPosition)
-                        self.specPicFlag = 1
+                    loading.close()
+                    reslt = self.zmqLocalQ.get()
+                    if reslt == "超时":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "本地连接超时！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
                     else:
-                        self.getPosition = plotWithCursor.getPos(self.onlineSpecX,
-                                                                 self.onlineSpecY,
-                                                                 self.lineEdit_6)
-                        self.verticalLayout.addWidget(self.getPosition)
-                        self.specPicFlag = 1
-                    endtime = datetime.datetime.now()
-                    strTime = 'funtion time use:%dms' % (
-                            (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                    print(strTime)
+                        resltList = reslt.split(' ')
+                        self.onlineSpecX = [float(i) for i in resltList[0:int(len(resltList)/2-1)]]
+                        self.onlineSpecY = [float(i) for i in resltList[int(len(resltList)/2):-1]]
+                        #####置入绘图####
+                        if self.specPicFlag:
+                            self.verticalLayout.removeWidget(self.getPosition)
+                            self.getPosition = plotWithCursor.getPos(self.onlineSpecX,
+                                                                     self.onlineSpecY,
+                                                                     self.lineEdit_6)
+                            self.verticalLayout.addWidget(self.getPosition)
+                            self.specPicFlag = 1
+                        else:
+                            self.getPosition = plotWithCursor.getPos(self.onlineSpecX,
+                                                                     self.onlineSpecY,
+                                                                     self.lineEdit_6)
+                            self.verticalLayout.addWidget(self.getPosition)
+                            self.specPicFlag = 1
+                        endtime = datetime.datetime.now()
+                        strTime = 'funtion time use:%dms' % (
+                                (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                        print(strTime)
             else:
                 QMessageBox.warning(self,
                                     '错误',
@@ -121,19 +126,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
 
-    # 选择文件&查看频谱图按键
+    # 保存频谱
+    def on_pushButton_clicked_9(self):
+        if self.specPicFlag == 1:
+            dirPath = os.path.join(self.fatherPath, r'usrp_recvfiles\usrp_scan')
+            filesOrDirsOperate.makesureDirExist(dirPath)
+            localTime = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+            filePath = os.path.join(dirPath, r'scan_spectrum_{}.txt'.format(localTime))
+            freqList = list(map(str, self.onlineSpecX))
+            binsList = list(map(str, self.onlineSpecY))
+            freqStr = " ".join(freqList)
+            binsStr = " ".join(binsList)
+            with open(filePath, 'w') as f:
+                f.write(freqStr)
+                f.write('\n')
+                f.write(binsStr)
+        else:
+            QMessageBox.warning(self,
+                                '提示',
+                                "请先扫频！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
+    # 频谱选择文件
     def on_pushButton_clicked_5(self):
         self.lineEdit_3.clear()
         defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles\usrp_scan')
-        # print(defultPath)
         filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
-                                                  defultPath, "*.dat")
+                                                  defultPath, "*.txt")
         self.path = filename
         fileinfo = QFileInfo(filename)
         self.name = fileinfo.fileName()
         print("IQ频谱图查看选择文件：", filename)
         self.lineEdit_3.setText(self.path)
 
+    # 查看频谱图
     def on_pushButton_clicked_6(self):
         if self.lineEdit_3.text():
             path = self.lineEdit_3.text()
@@ -148,8 +175,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.getPosition = plotWithCursor.getPos(path)
                         self.verticalLayout.addWidget(self.getPosition)
                     self.specPicFlag = 2
-                    del self.onlineSpecX
-                    del self.onlineSpecY
                 except:
                     QMessageBox.warning(self,
                                         '错误',
@@ -248,9 +273,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.ocRowNumSelectList = self.ocTableDisplay.getRow()
             print('用户选中的行为:', self.ocRowNumSelectList)
             if self.ocRowNumSelectList:
-                self.ocLoadingQ.queue.clear()
-                collectThread = threading.Thread(target=self.ocCollectThread, name='自动识别采集线程')
-                recognizeThread = threading.Thread(target=self.ocRecognizeThread, name='自动识别识别线程')
+                while not self.ocLoadingQ.empty():
+                    self.ocLoadingQ.get()
+                # collectThread = threading.Thread(target=self.ocCollectThread, name='自动识别采集线程')
+                # recognizeThread = threading.Thread(target=self.ocRecognizeThread, name='自动识别识别线程')
+                usrpNum = self.comboBox_2.currentText()
+                # 创建行号-IQ识别结果字典
+                self.ocRsltDict = dict.fromkeys(self.ocRowNumSelectList, 'null')
+                collectThread = algorithmThreads.OcCollectThread(usrpNum,self.ocRsltDict,
+                                              self.ocOverThresholdList, self.zmqLocal, self.ocCollectPathQ)
+                recognizeThread = algorithmThreads.OcRecognizeThread(self.ocRsltDict,
+                                                                     self.ocCollectPathQ, self.ocLoadingQ)
                 collectThread.start()
                 recognizeThread.start()
                 # 调用识别loading
@@ -262,6 +295,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     gui()
                 else:
                     loading.close()
+                    self.ocRsltDict = self.ocLoadingQ.get()
                     for row in self.ocRsltDict:
                         rowName = int(row)
                         item1 = QTableWidgetItem(self.ocRsltDict[rowName][2])  # 调制方式
@@ -284,54 +318,136 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 "请先查看超频点列表！",
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
-        pass
 
-    def ocCollectThread(self):
-        """
-        IQ自动识别线程1，根据表格选中行生成采集参数list，并依次发送lsit中的采集指令
-        :return:无返回值，将IQ文件的存储路径存入FIFO队列ocCollectPathQ
-        """
-        # if self.ocTableDisplayFlag:
-        #     # 获取行号
-        #     self.ocRowNumSelectList = self.ocTableDisplay.getRow()
-        #     print('用户选中的行为:', self.ocRowNumSelectList)
-        # 创建行号-IQ识别结果字典
-        self.ocRsltDict = dict.fromkeys(self.ocRowNumSelectList, 'null')
-        for i in self.ocRsltDict:
-            startFreq = float(self.ocOverThresholdList[0][i][0])*1000000
-            endFreq = float(self.ocOverThresholdList[0][i][1])*1000000
-            centreFreq = float(self.ocOverThresholdList[0][i][2])*1000000
-            bdWidth = endFreq - startFreq
 
-            usrpNum = self.comboBox_2.currentText()
-            msg = usrpNum + ',collect,IQoc,' + str(centreFreq) + ";" + str(bdWidth)
-            reslt = self.zmqLocal.sendMessege(msg)
-
-            if reslt == "超时":
+    # IQ手动识别（并行）
+    def on_pushButton_clicked_2(self):
+        starttime = datetime.datetime.now()
+        centrefreq = self.lineEdit_4.text()
+        bdwidth = self.lineEdit_5.text()
+        samprate = self.lineEdit_8.text()
+        if isNum(centrefreq) and isNum(bdwidth) and isNum(samprate):
+            centrefreq = float(centrefreq)
+            bdwidth = float(bdwidth)
+            samprate = float(samprate)
+            if centrefreq <= 5000 and centrefreq >= 30:
+                centrefreq = centrefreq * 1000000
+                bdwidth = bdwidth * 1000000
+                samprate = samprate * 1000000
+                usrpNum = self.comboBox_3.currentText()
+                msg = (usrpNum + ',collect,IQsingle,'+ str(centrefreq) + ";" + str(bdwidth)
+                      + ";" + str(samprate))
+                zmqThread = threading.Thread(target=zmqLocal.zmqThread,args=(self.zmqLocal, msg, self.zmqLocalQ))
+                zmqThread.start()
+                # 调用识别loading
+                loading = Message.Loading()
+                loading.setWindowModality(Qt.ApplicationModal)
+                loading.show()
+                gui = QGuiApplication.processEvents
+                # while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
+                while self.zmqLocalQ.empty():
+                    gui()
+                else:
+                    reslt = self.zmqLocalQ.get()
+                    if reslt == "超时":
+                        loading.close()
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "本地连接超时！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                    else:
+                        print('data type=', str(type(reslt)))
+                        while not self.algorithmProcessQ.empty():
+                            self.algorithmProcessQ.get()
+                        while not self.savingProcessQ.empty():
+                            self.savingProcessQ.get()
+                        # 开启识别进程/线程
+                        recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ)
+                        recognizeProcess.start()
+                        # 开启存储进程/线程
+                        savingProcess = algorithmThreads.IQDataSaveProcess(reslt, self.savingProcessQ)
+                        savingProcess.start()
+                        while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
+                            pass
+                        else:
+                            loading.close()
+                            dataPath = self.savingProcessQ.get()
+                            print("IQ数据存储于：", dataPath)
+                            recognizeResult = self.algorithmProcessQ.get()
+                            item1 = QTableWidgetItem("%.1f" % float(recognizeResult[0]))  # 中心频率
+                            item2 = QTableWidgetItem("%.1f" % float(recognizeResult[1]))  # 带宽
+                            item3 = QTableWidgetItem(recognizeResult[2])  # 调制方式
+                            item4 = QTableWidgetItem(recognizeResult[3])  # 频点识别
+                            self.tableWidget_3.setItem(0, 1, item1)
+                            self.tableWidget_3.setItem(0, 2, item2)
+                            self.tableWidget_3.setItem(0, 3, item3)
+                            self.tableWidget_3.setItem(0, 4, item4)
+                            endtime = datetime.datetime.now()
+                            strTime = '并行识别花费:%dms' % (
+                                    (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                            print(strTime)
+            else:
                 QMessageBox.warning(self,
                                     '错误',
-                                    "本地连接超时！",
+                                    "请输入正确参数！",
                                     QMessageBox.Yes,
                                     QMessageBox.Yes)
-            else:
-                self.ocCollectPathQ.put(reslt)
+        else:
+            QMessageBox.warning(self,
+                                '错误',
+                                "请输入正确参数！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
 
-    def ocRecognizeThread(self):
-        """
-        自动识别线程，共识别len(self.ocRowNumSelectList)次，从self.ocCollectPathQ队列中取文件地址并识别
-        将识别结果存在dic中
-        :return:
-        """
-        for num in self.ocRsltDict:
-            while 1:
-                if self.ocCollectPathQ.empty():
-                    continue
-                else:
-                    path = self.ocCollectPathQ.get()
-                    recognizeResult = usrp_shibie_v3.play(path)
-                    self.ocRsltDict[int(num)] = recognizeResult
-                    break
-        self.ocLoadingQ.put('ok')
+    # IQ选择文件
+    def on_pushButton_clicked_3(self):
+        self.lineEdit_7.clear()
+        defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles')
+        filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
+                                                  defultPath, "*.txt")
+        self.path = filename
+        fileinfo = QFileInfo(filename)
+        self.name = fileinfo.fileName()
+        print("IQ频谱图查看选择文件：", filename)
+        self.lineEdit_7.setText(self.path)
+
+    # IQ手动离线识别
+    def on_pushButton_clicked_4(self):
+        starttime = datetime.datetime.now()
+        if self.lineEdit_7.text():
+            filePath = self.lineEdit_7.text()
+            recognizeProcess = algorithmThreads.IQSingleProcess(filePath, self.algorithmProcessQ)
+            recognizeProcess.start()
+            # 调用识别loading
+            loading = Message.Loading()
+            loading.setWindowModality(Qt.ApplicationModal)
+            loading.show()
+            gui = QGuiApplication.processEvents
+            while self.algorithmProcessQ.empty():
+                gui()
+            else:
+                loading.close()
+                recognizeResult = self.algorithmProcessQ.get()
+                item1 = QTableWidgetItem("%.1f" % float(recognizeResult[0]))  # 中心频率
+                item2 = QTableWidgetItem("%.1f" % float(recognizeResult[1]))  # 带宽
+                item3 = QTableWidgetItem(recognizeResult[2])  # 调制方式
+                item4 = QTableWidgetItem(recognizeResult[3])  # 频点识别
+                self.tableWidget_3.setItem(0, 1, item1)
+                self.tableWidget_3.setItem(0, 2, item2)
+                self.tableWidget_3.setItem(0, 3, item3)
+                self.tableWidget_3.setItem(0, 4, item4)
+                endtime = datetime.datetime.now()
+                strTime = 'funtion time use:%dms' % (
+                        (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                print(strTime)
+        else:
+            QMessageBox.warning(self,
+                                '提示',
+                                "请先选择文件！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
 
     # 重写关闭事件
     def closeEvent(self, event):
@@ -348,7 +464,9 @@ class py2Thread(Thread):
         scriptPath = os.path.join(self.fatherPath, r'py27usrp/socketTest/demo.py')
         os.system('python2 {}'.format(scriptPath))
 
-app = QApplication(sys.argv)
-ui = MainWindow()
-ui.show()
-sys.exit(app.exec_())
+if __name__ == '__main__':
+
+    app = QApplication(sys.argv)
+    ui = MainWindow()
+    ui.show()
+    sys.exit(app.exec_())

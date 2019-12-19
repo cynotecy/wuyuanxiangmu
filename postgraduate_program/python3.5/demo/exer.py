@@ -1,3 +1,7 @@
-list = ['1', '2', '3']
-a = [i for i in range(len(list)) if i < 3]
-print(a)
+def A():
+    a = 1
+    b = 2
+    c = 3
+    return a, b, c
+aa = A()
+print(aa)

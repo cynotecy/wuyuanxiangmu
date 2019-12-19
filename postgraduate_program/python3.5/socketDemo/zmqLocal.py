@@ -12,7 +12,7 @@ class localZMQ():
 
     def sendMessege(self, messege):
         self.socket.send(str.encode(messege))
-        socks = dict(self.poll.poll(700000))
+        socks = dict(self.poll.poll(20000))
         if socks.get(self.socket) == zmq.POLLIN:
             result = bytes.decode(self.socket.recv())
             # print(result)
@@ -29,3 +29,7 @@ class localZMQ():
             self.poll.register(self.socket, zmq.POLLIN)
             result = "超时"
         return result
+
+def zmqThread(socket, msg, q):
+    reslt = socket.sendMessege(msg)
+    q.put(reslt)

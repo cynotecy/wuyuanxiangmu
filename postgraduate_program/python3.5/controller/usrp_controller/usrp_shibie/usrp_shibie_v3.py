@@ -299,8 +299,32 @@ def play(file_path):
     fatherPath = os.path.dirname(currentPath)
     # logdir = r'..\..\python3.5\controller\usrp_controller\logs\0709_5p.pkl'
     logdir = os.path.join(fatherPath, r'logs\0709_5p.pkl')
-
-    input_data = read_file(file_path)
+    if " " in file_path:
+        dataList = file_path.split(' ')
+        txt = np.array(dataList)
+        freq = txt[0]
+        bandwidth = np.float32(txt[1])
+        sample_rate = np.float32(txt[2])
+        data = txt[3:]
+        data = data.astype(np.float32)
+        P = np.mean(pow(data[4096:8192], 2))
+        data = gonglv(data)
+        data = smooth(data, 3)
+        data = butter_bandpass_filter(data, 1, bandwidth, sample_rate, 2)
+        data = np.expand_dims(normalization(data), axis=0)
+        dim1, dim2 = data.shape
+        test_data = []
+        data_freq = []
+        for i in range(dim1):
+            for j in range(min(int(dim2 / 4096), 100)):
+                test_data.append(data[i][j * 4096:(j + 1) * 4096])
+                data_freq.append(freq)
+        test_data = np.asarray(test_data)
+        data_freq = np.asarray(data_freq)
+        test_data = np.expand_dims(test_data, axis=1)
+        input_data = (torch.from_numpy(test_data).float(), data_freq, bandwidth, P)
+    else:
+        input_data = read_file(file_path)
     reslt = model_test(net, logdir, inputs=input_data)
     print(reslt)
     return reslt
@@ -308,6 +332,6 @@ def play(file_path):
 
 
 if __name__ == '__main__':
-    file_path = r"..\usrp_recvfiles\未命名_20190829115602.dat"
+    file_path = r"D:\myPrograms\CASTProgram\postgraduate_program\usrp_recvfiles\single_collect_20191219104125.txt"
     a = play(file_path)
     print(a)

@@ -1,4 +1,4 @@
-# 判断是不是数字
+# 判断输入的是不是数字
 def isNum(text):
     try:
         num = float(text)

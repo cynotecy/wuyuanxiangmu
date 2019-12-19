@@ -3,7 +3,7 @@ from PyQt4.QtCore import QThread
 from time import ctime
 import struct
 import crcmod
-from functions.spectrum_smooth import spectrum_v4
+from functions.spectrum_smooth import spectrum_smooth_v4
 
 class Send(object):
     def __init__(self, starts, end, pub_socket):
@@ -43,10 +43,11 @@ class Send(object):
         print 'end scan_send at:', ctime()
 
 class Recv(QThread):
-    def __init__(self, q, sub_socket):
+    def __init__(self, q, sub_socket, standard):
         super(Recv, self).__init__()
         self.q = q
         self.socket = sub_socket
+        self.standard = float(standard)
     def run(self):
         print 'start scan_recv at:', ctime()
         try:
@@ -89,12 +90,13 @@ class Recv(QThread):
                 freq_list = struct.unpack('!%s' % ('d' * n_freq,), DATA[12 + n_freq * 4:12 + n_freq * (4 + 8)])
                 # Do what you want to do, here is a example.
                 # 去毛刺
-                bins = spectrum_v4.smoothMain(freq_list, bins)
-                bins = [c + 4 for c in list(bins)]
+                bins = spectrum_smooth_v4.smoothMain(freq_list, bins)
+                bins = list(bins)
+                bins = [c + self.standard for c in bins]  # 定标
+                freq_list = list(freq_list)
                 self.q.put(bins)
                 self.q.put(freq_list)
-                if 1:
-                    break
+                break
         except KeyboardInterrupt:
             pass
         print 'end scan_recv at:', ctime()
