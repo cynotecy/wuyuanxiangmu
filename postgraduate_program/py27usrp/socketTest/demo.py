@@ -16,6 +16,7 @@ from functions import filesOrDirsOperate
 """
 
 def threadControl():
+    standar = '-11'
     localQueue = Queue.Queue()
     remoteQueue = Queue.Queue()
     pubAddress1 = 'tcp://192.168.0.100:6666'
@@ -76,7 +77,7 @@ def threadControl():
             if action == 'IQ':
                 startFreq = instructionInfoList[0]
                 endFreq = instructionInfoList[1]
-                scanRecv = scan_thread.Recv(localQueue, subSock, '-11')
+                scanRecv = scan_thread.Recv(localQueue, subSock, standar)
                 scanSend = scan_thread.Send(startFreq, endFreq, pubSock)
                 scanRecv.start()
                 scanSend.run()
@@ -91,7 +92,21 @@ def threadControl():
                     repSocket.send(freqbins)
             # 频谱包络识别扫频
             elif action == 'specEnvelope':
-                pass
+                startFreq = instructionInfoList[0]
+                endFreq = instructionInfoList[1]
+                scanRecv = scan_thread.Recv(localQueue, subSock, standar)
+                scanSend = scan_thread.Send(startFreq, endFreq, pubSock)
+                scanRecv.start()
+                scanSend.run()
+                while localQueue.empty():
+                    pass
+                else:
+                    bins = localQueue.get()
+                    freqList = localQueue.get()
+                    # 将回传的频谱直接发给py3
+                    freqbinslist = [str(i) for i in freqList+bins]
+                    freqbins = " ".join(freqbinslist)
+                    repSocket.send(freqbins)
             # 稳态干扰识别扫频
             elif action == 'steadyStateInterference':
                 pass
@@ -131,33 +146,6 @@ def threadControl():
                 else:
                     print 'localQueue:'+localQueue.get()
                     repSocket.send(filePath)
-            # # 单个采集（串行，返回存储地址）
-            # elif action == 'IQsingle':
-            #     centreFreq = float(instructionInfoList[0])
-            #     bdWdith = float(instructionInfoList[1])
-            #     samprate = float(instructionInfoList[2])
-            #     currentPath = os.path.dirname(__file__)
-            #     fatherPath = os.path.dirname(currentPath)
-            #     grandPath = os.path.dirname(fatherPath)
-            #     dirPath = os.path.join(grandPath, r'usrp_recvfiles')
-            #     filesOrDirsOperate.makesureDirExist(dirPath)
-            #     local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
-            #     filePath = os.path.join(dirPath, r'single_collect_{}.txt'.format(local_time))
-            #     print "single collect文件路径", filePath
-            #     localQueue.queue.clear()
-            #     collectRecv = collect_thread.Recv(localQueue, subSock, path=filePath)
-            #     collectRecv.start()
-            #     while 1:
-            #         if collectRecv.is_alive():
-            #             collectSend = collect_thread.Send(str(centreFreq), str(bdWdith), samprate, pubSock)
-            #             collectSend.start()
-            #             break
-            #     while localQueue.empty():
-            #         pass
-            #     else:
-            #         print 'localQueue:' + localQueue.get()
-            #         repSocket.send(filePath)
-
             # 单个采集（并行，返回采集数据）
             elif action == 'IQsingle':
                 centreFreq = float(instructionInfoList[0])

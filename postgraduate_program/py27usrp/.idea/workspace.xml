@@ -4,10 +4,15 @@
     <list default="true" id="7810345c-250a-4cab-bd2b-d559d19078cb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../emc" beforeDir="false" afterPath="$PROJECT_DIR$/../emc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socketTest/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/demo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/MainWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/algorithmThreads.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/algorithmThreads.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/usrp_shibie/oc_list_getting_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/usrp_shibie/oc_list_getting_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/demo/exer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/specEnvelope_shibie/specEnvelope_drawpic.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/specEnvelope_shibie/specEnvelopeDrawpic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/specEnvelope_shibie/specEnvelope_shibie_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/specEnvelope_shibie/specEnvelope_shibie_v3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/usrp_shibie/usrp_shibie_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/usrp_shibie/usrp_shibie_v3.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/localDemoUi.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/localDemoUi.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -334,7 +339,7 @@
       <workItem from="1576136527886" duration="4372000" />
       <workItem from="1576635254904" duration="2427000" />
       <workItem from="1576719344694" duration="6079000" />
-      <workItem from="1576814968596" duration="3619000" />
+      <workItem from="1576814968596" duration="5782000" />
     </task>
     <servers />
   </component>

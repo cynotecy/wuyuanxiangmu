@@ -299,7 +299,7 @@ def play(file_path):
     fatherPath = os.path.dirname(currentPath)
     # logdir = r'..\..\python3.5\controller\usrp_controller\logs\0709_5p.pkl'
     logdir = os.path.join(fatherPath, r'logs\0709_5p.pkl')
-    if " " in file_path:
+    if not ('\\' in file_path or '/' in file_path):
         dataList = file_path.split(' ')
         txt = np.array(dataList)
         freq = txt[0]

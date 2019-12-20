@@ -27,7 +27,7 @@ from Ui.UitoPy.Ui_MainWindow import Ui_MainWindow
 from Ui.file_ui import show_png
 from Wave import UsrpProcess, OcUsrpProcess, PicoProcess_online, PicoProcess_offline, specEnvelopeProcess, steadyStateInterference
 from controller.Pico_controller.draw_pic import draw_pic
-from controller.usrp_controller.specEnvelope_shibie import specEnvelope_drawpic
+from controller.usrp_controller.specEnvelope_shibie import specEnvelopeDrawpic
 from controller.usrp_controller.steadyStateInterference_shibie import steadyFirst_draw, steadyResult_draw, display_v4
 from database_upload import wirelessDialog, equipDialog, envelopeDialog, steadyDialog
 from monitor.The48hRealPart import the_48h_realpart_inQt
@@ -611,17 +611,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         # 标志位为1时清空图区
                         self.verticalLayout_22.removeWidget(self.specEnvelope_samplefig)
                         sip.delete(self.specEnvelope_samplefig)
-                        self.specEnvelope_samplefig = specEnvelope_drawpic.ApplicationWindow(self.path,
-                                                                                             self.specEnvelope_sample_fig_id, sampleInner_id
-                                                                                             , signalLimit, sampleLimit)
+                        self.specEnvelope_samplefig = specEnvelopeDrawpic.ApplicationWindow(self.path,
+                                                                                            self.specEnvelope_sample_fig_id, sampleInner_id
+                                                                                            , signalLimit, sampleLimit)
                         self.verticalLayout_22.addWidget(self.specEnvelope_samplefig)
                         self.specEnvelope_flag = 1
                         self.specEnvelope_sample_fig_id = ''
                         self.path = ''
                     elif self.specEnvelope_sample_fig_id:
-                        self.specEnvelope_samplefig = specEnvelope_drawpic.ApplicationWindow(self.path,
-                                                                                             self.specEnvelope_sample_fig_id, sampleInner_id
-                                                                                             , signalLimit, sampleLimit)
+                        self.specEnvelope_samplefig = specEnvelopeDrawpic.ApplicationWindow(self.path,
+                                                                                            self.specEnvelope_sample_fig_id, sampleInner_id
+                                                                                            , signalLimit, sampleLimit)
                         self.verticalLayout_22.addWidget(self.specEnvelope_samplefig)
                         self.specEnvelope_flag = 1
                         self.path = ''
@@ -704,15 +704,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             # 标志位为1时清空图区
                             self.verticalLayout_22.removeWidget(self.specEnvelope_samplefig)
                             sip.delete(self.specEnvelope_samplefig)
-                            self.specEnvelope_samplefig = specEnvelope_drawpic.ApplicationWindow(self.path, self.specEnvelope_sample_fig_id, sampleInner_id
-                                                                                                 , signalLimit, sampleLimit)
+                            self.specEnvelope_samplefig = specEnvelopeDrawpic.ApplicationWindow(self.path, self.specEnvelope_sample_fig_id, sampleInner_id
+                                                                                                , signalLimit, sampleLimit)
                             self.verticalLayout_22.addWidget(self.specEnvelope_samplefig)
                             self.specEnvelope_flag = 1
                             self.specEnvelope_sample_fig_id = ''
                             self.path = ''
                         elif self.specEnvelope_sample_fig_id:
-                            self.specEnvelope_samplefig = specEnvelope_drawpic.ApplicationWindow(self.path,self.specEnvelope_sample_fig_id, sampleInner_id
-                                                                                                 , signalLimit, sampleLimit)
+                            self.specEnvelope_samplefig = specEnvelopeDrawpic.ApplicationWindow(self.path, self.specEnvelope_sample_fig_id, sampleInner_id
+                                                                                                , signalLimit, sampleLimit)
                             self.verticalLayout_22.addWidget(self.specEnvelope_samplefig)
                             self.specEnvelope_flag = 1
                             self.path = ''

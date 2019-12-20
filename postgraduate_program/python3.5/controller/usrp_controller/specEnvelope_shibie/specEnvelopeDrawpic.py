@@ -77,24 +77,26 @@ class ApplicationWindow(QWidget):
         print(results)
         self.path = '..\EMCfile\data\sample_data\%s' % results
         print(self.path)
-
-
-        print(self.filepath)
-        file = open(self.filepath)
-        # x = file.readline().split(" ")
-        xy1 = file.read().split('\n')
-        x1 = xy1[0]
-        x1 = x1.split(' ')
-        y1 = xy1[1]
-        y1 = y1.split(' ')
-        x1.pop(len(x1) - 1)
-        y1.pop(len(y1) - 1)
-        x1 = np.array([float(x1) for x1 in x1])
-        y1 = np.array([float(y1) for y1 in y1])
+        if "\\" in self.filepath or '/' in self.filepath:
+            print(self.filepath)
+            file = open(self.filepath)
+            # x = file.readline().split(" ")
+            xy1 = file.read().split('\n')
+            x1 = xy1[0]
+            x1 = x1.split(' ')
+            y1 = xy1[1]
+            y1 = y1.split(' ')
+            x1.pop(len(x1) - 1)
+            y1.pop(len(y1) - 1)
+            x1 = np.array([float(x1) for x1 in x1])
+            y1 = np.array([float(y1) for y1 in y1])
+        else:
+            dataList = self.filepath.split(r' ')
+            data = np.array(dataList)
+            data = data.astype(np.float32)
+            x1 = data[0:int(len(data)) / 2 - 1]
+            y1 = data[int(len(data)) / 2:-1]
         # 生成需要标红部分的列表
-        x1RedIndex = []
-        # x1RedIndex.append(np.argwhere(x1 == self.signalLimit[0]))
-        # x1RedIndex.append(np.argwhere(x1 == self.signalLimit[1]))
         x1Red = x1[self.signalLimit[0]:self.signalLimit[1]]
         y1Red = y1[self.signalLimit[0]:self.signalLimit[1]]
 

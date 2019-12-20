@@ -4,8 +4,15 @@ import matplotlib.pyplot as plt
 base = ['GSM900', 'WCDMA', 'WLAN(2.4G)', 'CDMA800', 'GSM1800', 'FDD_LTE', 'TD_SCDMA']
 freq = [[935, 960], [2130, 2145], [2400, 2483], [870, 880], [1805, 1840], [1850, 1875], [2010, 2025]]
 def baoluoshibie(file_path):
-    x_lable = read_dat_hang(file_path,0)
-    y_lable = read_dat_hang(file_path, 1)
+    if not ('\\' in file_path or '/' in file_path):
+        dataList = file_path.split(r' ')
+        data = np.array(dataList)
+        data = data.astype(np.float32)
+        x_lable = data[0:int(len(data))/2 - 1]
+        y_lable = data[int(len(data))/2:-1]
+    else:
+        x_lable = read_dat_hang(file_path,0)
+        y_lable = read_dat_hang(file_path, 1)
     L = len(x_lable)
     c = x_lable[-1] - x_lable[0]
     print('待检测信号的频段范围：', x_lable[0],'——', x_lable[-1],'频段长度',c)
