@@ -15,7 +15,7 @@ from controller.usrp_controller.usrp_shibie import oc_list_display_v1
 matplotlib.use('Qt5Agg')
 
 
-def position(x, y, threshold, q):
+def position(x, y, threshold):
     user_amps = float(threshold)
     fres = np.array(x)
     amps = np.array(y)
@@ -60,9 +60,9 @@ def position(x, y, threshold, q):
         ccc = float(cc[0]), float(cc[1]), float(cc[2]), float(cc[3])
         d.append(ccc)
     e.append(d)
-    if not q.empty():
-        q.get()
-    q.put('超频点判断完毕')
+    # if not q.empty():
+    #     q.get()
+    # q.put('超频点判断完毕')
     return e
 
 if __name__ == '__main__':

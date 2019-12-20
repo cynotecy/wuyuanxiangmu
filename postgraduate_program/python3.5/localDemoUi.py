@@ -226,8 +226,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                     QMessageBox.Yes)
             else:
                 if threshold > min(self.onlineSpecY) and threshold < max(self.onlineSpecY):
-                    overThresholdThread = threading.Thread(target=self.IQOverThreshold,
-                                                           name="超频点判断线程", args=(threshold, ))
+                    # 启用超频点判断线程
+                    overThresholdThread = algorithmThreads.IQOverThreshold(self.onlineSpecX,
+                                                                         self.onlineSpecY, threshold,
+                                                                         self.overThresholdQ)
                     overThresholdThread.start()
                     loading = Message.Loading()
                     loading.setWindowModality(Qt.ApplicationModal)
@@ -236,7 +238,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     while self.overThresholdQ.empty():
                         gui()
                     else:
-                        self.overThresholdQ.get()
+                        self.ocOverThresholdList = self.overThresholdQ.get()
                         loading.close()
                         if self.ocOverThresholdList:
                             # 置入超频点列表
@@ -261,9 +263,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                         QMessageBox.Yes,
                                         QMessageBox.Yes)
 
-    def IQOverThreshold(self, thre):
-        self.ocOverThresholdList = oc_list_getting_v2.position(self.onlineSpecX, self.onlineSpecY,
-                                                   thre, self.overThresholdQ)
+
 
     # IQ自动识别
     def on_pushButton_clicked_7(self):
@@ -318,7 +318,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 "请先查看超频点列表！",
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
-
 
     # IQ手动识别（并行）
     def on_pushButton_clicked_2(self):

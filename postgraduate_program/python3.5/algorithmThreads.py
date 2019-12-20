@@ -6,17 +6,6 @@ import os
 from threading import Thread
 from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,
                                                     usrp_shibie_v3)
-# # IQ识别进程
-# class IQSingleProcess(Process):
-#     def __init__(self, path, q):
-#         super(IQSingleProcess, self).__init__()
-#         self.path = path
-#         self.data = ''
-#         self.q = q
-#     def run(self):
-#         print('process')
-#         rslt = usrp_shibie_v3.play(self.path)
-#         self.q.put(rslt)
 
 # IQ识别线程
 class IQSingleProcess(Thread):
@@ -34,26 +23,6 @@ class IQSingleProcess(Thread):
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
         print(strTime)
         self.q.put(rslt)
-
-# # IQ存储线程
-# class IQDataSaveProcess(Thread):
-#     def __init__(self, data, q):
-#         super(IQDataSaveProcess, self).__init__()
-#         currentPath = os.path.dirname(__file__)
-#         fatherPath = os.path.dirname(currentPath)
-#         dirPath = os.path.join(fatherPath, r'usrp_recvfiles')
-#         filesOrDirsOperate.makesureDirExist(dirPath)
-#         local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
-#         filePath = os.path.join(dirPath, r'single_collect_{}.txt'.format(local_time))
-#         self.path = filePath
-#         self.data = data
-#         self.q = q
-#     def run(self):
-#         print('saving thread:', self.path)
-#         f = open(self.path, 'w')
-#         f.write(self.data)
-#         f.close()
-#         self.q.put(self.path)
 
 # IQ存储进程
 class IQDataSaveProcess(Process):
@@ -74,6 +43,19 @@ class IQDataSaveProcess(Process):
         f.write(self.data)
         f.close()
         self.q.put(self.path)
+
+# 超频点判断线程
+class IQOverThreshold(Thread):
+    def __init__(self, onlineSpecX, onlineSpecY, thre, overThresholdQ):
+        super(self, IQOverThreshold).__init__()
+        self.onlineSpecX = onlineSpecX
+        self.onlineSpecY = onlineSpecY
+        self.thre = thre
+        self.overThresholdQ = overThresholdQ
+    def run(self):
+        ocOverThresholdList = oc_list_getting_v2.position(self.onlineSpecX, self.onlineSpecY,
+                                                   self.thre)
+        self.overThresholdQ.put(ocOverThresholdList)
 
 # 批量采集进程
 class OcCollectThread(Thread):
