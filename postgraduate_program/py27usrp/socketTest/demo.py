@@ -2,7 +2,7 @@
 import sys
 import time
 import os
-
+import datetime
 import Queue
 import thread
 import zmq
@@ -58,6 +58,7 @@ def threadControl():
     repSocket = socket.connect(repAddress, 'REP')
 
     while 1:
+        print 'py2 waiting msg'
         localRecv = repSocket.recv()
         print '收到信息' + localRecv
 
@@ -73,39 +74,32 @@ def threadControl():
         instructionInfoList = instructionInfo.split(';')
         # 扫频模式
         if mode == 'scan':
-            # IQ扫频
-            if action == 'IQ':
+            # IQ&频谱包络识别扫频
+            if action == 'IQ' or 'specEnvelope':
                 startFreq = instructionInfoList[0]
                 endFreq = instructionInfoList[1]
                 scanRecv = scan_thread.Recv(localQueue, subSock, standar)
                 scanSend = scan_thread.Send(startFreq, endFreq, pubSock)
                 scanRecv.start()
                 scanSend.run()
+                startTime = datetime.datetime.now()
                 while localQueue.empty():
-                    pass
+                    nowTime = datetime.datetime.now()
+                    period = (nowTime - startTime).seconds
+                    if period > 20:
+                        scanRecv.stop()
+                        repSocket.send('超时')
+                        break
                 else:
                     bins = localQueue.get()
                     freqList = localQueue.get()
                     # 将回传的频谱直接发给py3
-                    freqbinslist = [str(i) for i in freqList+bins]
-                    freqbins = " ".join(freqbinslist)
-                    repSocket.send(freqbins)
-            # 频谱包络识别扫频
-            elif action == 'specEnvelope':
-                startFreq = instructionInfoList[0]
-                endFreq = instructionInfoList[1]
-                scanRecv = scan_thread.Recv(localQueue, subSock, standar)
-                scanSend = scan_thread.Send(startFreq, endFreq, pubSock)
-                scanRecv.start()
-                scanSend.run()
-                while localQueue.empty():
-                    pass
-                else:
-                    bins = localQueue.get()
-                    freqList = localQueue.get()
-                    # 将回传的频谱直接发给py3
-                    freqbinslist = [str(i) for i in freqList+bins]
-                    freqbins = " ".join(freqbinslist)
+                    bins = [str(i) for i in bins]
+                    freqlist = [str(i) for i in freqList]
+                    binStr = " ".join(bins)
+                    freqStr = " ".join(freqlist)
+                    freqbinsList = [freqStr, binStr]
+                    freqbins = ';'.join(freqbinsList)
                     repSocket.send(freqbins)
             # 稳态干扰识别扫频
             elif action == 'steadyStateInterference':

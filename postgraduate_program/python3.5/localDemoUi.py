@@ -30,7 +30,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
         os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
-        py2 = py2Thread()
+        # py2 = algorithmThreads.py2Thread()
+        py2 = Thread(target=algorithmThreads.py2Thread, args=(), daemon=True)
         py2.start()
 
         # 初始化当前路径和其父路径，用于拼接后续地址进行非文件夹依赖的寻址
@@ -38,6 +39,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.fatherPath = os.path.dirname(self.currentPath)
         # 初始化队列
         self.zmqLocalQ = mq()
+        self.dataQ = mq()
         self.algorithmProcessQ = mq()  # 算法线程队列，用来判断算法线程是否结束
         self.savingProcessQ = mq()  # 算法线程队列，用来判断算法线程是否结束
         self.overThresholdQ = mq()
@@ -85,7 +87,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                           + str(startfreq) + ";" +str(endfreq))
                 zmqThread = threading.Thread(target=zmqLocal.zmqThread, args=(self.zmqLocal, msg, self.zmqLocalQ))
                 zmqThread.start()
-                # 调用识别loading
+                # 调用loading
                 loading = Message.Loading()
                 loading.setWindowModality(Qt.ApplicationModal)
                 loading.show()
@@ -103,9 +105,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             QMessageBox.Yes,
                                             QMessageBox.Yes)
                     else:
-                        resltList = reslt.split(' ')
-                        self.onlineSpecX = [float(i) for i in resltList[0:int(len(resltList)/2-1)]]
-                        self.onlineSpecY = [float(i) for i in resltList[int(len(resltList)/2):-1]]
+                        print(type(reslt))
+                        resltList = reslt.split(';')
+                        self.scanRslt = resltList
+                        freqList = resltList[0].split(' ')
+                        binsList = resltList[1].split(" ")
+                        self.onlineSpecX = [float(i) for i in freqList]
+                        self.onlineSpecY = [float(i) for i in binsList]
                         #####置入绘图####
                         if self.specPicFlag:
                             self.verticalLayout.removeWidget(self.getPosition)
@@ -144,14 +150,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             filesOrDirsOperate.makesureDirExist(dirPath)
             localTime = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
             filePath = os.path.join(dirPath, r'scan_spectrum_{}.txt'.format(localTime))
-            freqList = list(map(str, self.onlineSpecX))
-            binsList = list(map(str, self.onlineSpecY))
-            freqStr = " ".join(freqList)
-            binsStr = " ".join(binsList)
+            # freqList = list(map(str, self.onlineSpecX))
+            # binsList = list(map(str, self.onlineSpecY))
+            # freqStr = " ".join(freqList)
+            # binsStr = " ".join(binsList)
             with open(filePath, 'w') as f:
-                f.write(freqStr)
+                f.write(self.scanRslt[0])
                 f.write('\n')
-                f.write(binsStr)
+                f.write(self.scanRslt[1])
         else:
             QMessageBox.warning(self,
                                 '提示',
@@ -287,7 +293,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 usrpNum = self.comboBox_2.currentText()
                 # 创建行号-IQ识别结果字典
                 self.ocRsltDict = dict.fromkeys(self.ocRowNumSelectList, 'null')
-                collectThread = algorithmThreads.OcCollectThread(usrpNum,self.ocRsltDict,
+                collectThread = algorithmThreads.OcCollectThread(usrpNum, self.ocRsltDict,
                                               self.ocOverThresholdList, self.zmqLocal, self.ocCollectPathQ)
                 recognizeThread = algorithmThreads.OcRecognizeThread(self.ocRsltDict,
                                                                      self.ocCollectPathQ, self.ocLoadingQ)
@@ -458,116 +464,109 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # 频谱包络在线识别
     def on_pushButton_clicked_12(self):
         self.tableWidget_7.clearContents()
+        # 清空数据队列
         while not self.zmqLocalQ.empty():
             self.zmqLocalQ.get()
+        # 清空识别结果队列
+        while not self.algorithmProcessQ.empty():
+            self.algorithmProcessQ.get()
+        # 清空存储地址队列
+        while not self.savingProcessQ.empty():
+            self.savingProcessQ.get()
         starttime = datetime.datetime.now()
         startfreq = self.lineEdit_10.text()
         endfreq = self.lineEdit_11.text()
         if isNum(startfreq) and isNum(endfreq):
             startfreq = float(startfreq)
             endfreq = float(endfreq)
-            if (startfreq < endfreq and startfreq >= 30
-                    and endfreq <= 6000 and (endfreq - startfreq) <= 150):
+            if startfreq < endfreq and startfreq >= 30 and endfreq <= 6000 and (endfreq - startfreq) <= 150:
                 startfreq = startfreq * 1000000
                 endfreq = endfreq * 1000000
                 usrpNum = self.comboBox_4.currentText()
                 msg = (usrpNum + ',scan,specEnvelope,'
                        + str(startfreq) + ";" + str(endfreq))
-                zmqThread = threading.Thread(target=zmqLocal.zmqThread, args=(self.zmqLocal, msg, self.zmqLocalQ))
-                zmqThread.start()
+                specEnvelopThread = algorithmThreads.specEnvelopeOnlineProcess(self.zmqLocal,
+                                                                         msg, self.dataQ,
+                                                                         self.algorithmProcessQ,
+                                                                         self.savingProcessQ)
+                specEnvelopThread.start()
                 # 调用识别loading
                 loading = Message.Loading()
                 loading.setWindowModality(Qt.ApplicationModal)
                 loading.show()
                 gui = QGuiApplication.processEvents
-                while self.zmqLocalQ.empty():
+                while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
                     gui()
                 else:
-                    reslt = self.zmqLocalQ.get()
-                    if reslt == "超时":
+                    loading.close()
+                    recognizeResult = self.algorithmProcessQ.get()
+                    print("识别结果：", recognizeResult)
+                    saveResult = self.savingProcessQ.get()
+                    print("包络文件存储于", saveResult)
+                    data = self.dataQ.get()
+                    if recognizeResult == '超时':
                         QMessageBox.warning(self,
                                             '错误',
                                             "本地连接超时！",
                                             QMessageBox.Yes,
                                             QMessageBox.Yes)
-                    else:
-                        while not self.algorithmProcessQ.empty():
-                            self.algorithmProcessQ.get()
-                        while not self.savingProcessQ.empty():
-                            self.savingProcessQ.get()
-                        # 开启识别进程/线程
-                        recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ)
-                        recognizeProcess.start()
-                        # 开启存储进程/线程
-                        savingProcess = algorithmThreads.specEnvelopeDataSaveProcess(reslt, self.savingProcessQ)
-                        savingProcess.start()
-                        while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
-                            pass
-                        else:
-                            loading.close()
-                            dataPath = self.savingProcessQ.get()
-                            print("频谱包络数据存储于：", dataPath)
-                            recognizeResult = self.algorithmProcessQ.get()
-                            ########################################################
-                        if len(recognizeResult) == 1:
-                            # print(recognizeResult)
-                            # print(type(recognizeResult))
-                            newItem1 = QTableWidgetItem(str(recognizeResult[0]))
-                            self.tableWidget_7.setItem(0, 1, newItem1)
-                            # 识别不出结果或超限时，且图区有图，则清空图区
-                            if self.specEnvelopeFlag:
-                                self.verticalLayout_22.removeWidget(self.specEnvelopeSampleFig)
-                                # sip.delete(self.specEnvelopeSampleFig)
-                                self.specEnvelopeFlag = 0
-                        elif len(recognizeResult) == 6:
-                            newItem1 = QTableWidgetItem(recognizeResult[0])
-                            newItem2 = QTableWidgetItem(str(recognizeResult[1]))
-                            newItem3 = QTableWidgetItem(str(recognizeResult[5][0]) + ',' + str(recognizeResult[5][1]))
-                            self.tableWidget_7.setItem(0, 1, newItem1)
-                            self.tableWidget_7.setItem(0, 2, newItem2)
-                            self.tableWidget_7.setItem(0, 3, newItem3)
-                            signalLimit = recognizeResult[2]
-                            sampleLimit = recognizeResult[3]
-                            sampleInnerId = recognizeResult[4]
-                            ##############画信号图###############
-                            # 生成对应的样本图id
-                            if len(recognizeResult) == 6 and recognizeResult[0] == 'GSM900':
-                                self.specEnvelopeSampleFigId = 5
-                            elif len(recognizeResult) == 6 and recognizeResult[0] == 'WCDMA':
-                                self.specEnvelopeSampleFigId = 11
-                            elif len(recognizeResult) == 6 and recognizeResult[0] == 'WLAN(2.4G)':
-                                self.specEnvelopeSampleFigId = 17
-                            elif len(recognizeResult) == 6 and recognizeResult[0] == 'CDMA800':
-                                self.specEnvelopeSampleFigId = 23
-                            elif len(recognizeResult) == 6 and recognizeResult[0] == 'TD_SCDMA':
-                                self.specEnvelopeSampleFigId = 29
-                            elif len(recognizeResult) == 6 and recognizeResult[0] == 'FDD_LTE':
-                                self.specEnvelopeSampleFigId = 32
-                            elif len(recognizeResult) == 6 and recognizeResult[0] == 'GSM1800':
-                                self.specEnvelopeSampleFigId = 36
+                    elif len(recognizeResult) == 1:
+                        newItem1 = QTableWidgetItem(str(recognizeResult[0]))
+                        self.tableWidget_7.setItem(0, 1, newItem1)
+                        # 识别不出结果或超限时，且图区有图，则清空图区
+                        if self.specEnvelopeFlag:
+                            self.verticalLayout_22.removeWidget(self.specEnvelopeSampleFig)
+                            self.specEnvelopeFlag = 0
+                    elif len(recognizeResult) == 6:
+                        # 表格显示识别结果
+                        newItem1 = QTableWidgetItem(recognizeResult[0])# 识别结果
+                        newItem2 = QTableWidgetItem(str(recognizeResult[1]))# 相似度
+                        # 起止频率
+                        newItem3 = QTableWidgetItem(str(recognizeResult[5][0]) + ',' + str(recognizeResult[5][1]))
+                        self.tableWidget_7.setItem(0, 1, newItem1)
+                        self.tableWidget_7.setItem(0, 2, newItem2)
+                        self.tableWidget_7.setItem(0, 3, newItem3)
+                        signalLimit = recognizeResult[2] # 相似信号范围
+                        sampleLimit = recognizeResult[3] # 相似模板范围
+                        sampleInnerId = recognizeResult[4] # 相似编号
+                        ##############画信号图###############
+                        # 生成对应的样本图id
+                        if recognizeResult[0] == 'GSM900':
+                            self.specEnvelopeSampleFigId = 5
+                        elif recognizeResult[0] == 'WCDMA':
+                            self.specEnvelopeSampleFigId = 11
+                        elif recognizeResult[0] == 'WLAN(2.4G)':
+                            self.specEnvelopeSampleFigId = 17
+                        elif recognizeResult[0] == 'CDMA800':
+                            self.specEnvelopeSampleFigId = 24
+                        elif recognizeResult[0] == 'TD_SCDMA':
+                            self.specEnvelopeSampleFigId = 30
+                        elif recognizeResult[0] == 'FDD_LTE':
+                            self.specEnvelopeSampleFigId = 33
+                        elif recognizeResult[0] == 'GSM1800':
+                            self.specEnvelopeSampleFigId = 37
 
-                            # 画信号图和样本图
-                            if self.specEnvelopeSampleFigId and self.specEnvelopeFlag:
-                                # 标志位为1时清空图区
-                                self.verticalLayout_22.removeWidget(self.specEnvelopeSampleFig)
-                                # sip.delete(self.specEnvelopeSampleFig)
-                                self.specEnvelopeSampleFig = specEnvelopeDrawpic.ApplicationWindow(recognizeResult,
-                                                                                                   self.specEnvelopeSampleFigId,
-                                                                                                   sampleInnerId,
-                                                                                                   signalLimit,
-                                                                                                   sampleLimit)
-                                self.verticalLayout_22.addWidget(self.specEnvelopeSampleFig)
-                                self.specEnvelopeFlag = 1
-                                self.specEnvelopeSampleFigId = ''
-                            elif self.specEnvelopeSampleFigId:
-                                self.specEnvelopeSampleFig = specEnvelopeDrawpic.ApplicationWindow(recognizeResult,
-                                                                                                   self.specEnvelopeSampleFigId,
-                                                                                                   sampleInnerId,
-                                                                                                   signalLimit,
-                                                                                                   sampleLimit)
-                                self.verticalLayout_22.addWidget(self.specEnvelopeSampleFig)
-                                self.specEnvelopeFlag = 1
-                                self.specEnvelopeSampleFigId = ''
+                        # 画信号图和样本图
+                        if self.specEnvelopeSampleFigId and self.specEnvelopeFlag:
+                            # 标志位为1时清空图区
+                            self.verticalLayout_22.removeWidget(self.specEnvelopeSampleFig)
+                            self.specEnvelopeSampleFig = specEnvelopeDrawpic.ApplicationWindow(data,
+                                                                                               self.specEnvelopeSampleFigId,
+                                                                                               sampleInnerId,
+                                                                                               signalLimit,
+                                                                                               sampleLimit)
+                            self.verticalLayout_22.addWidget(self.specEnvelopeSampleFig)
+                            self.specEnvelopeFlag = 1
+                            self.specEnvelopeSampleFigId = ''
+                        elif self.specEnvelopeSampleFigId:
+                            self.specEnvelopeSampleFig = specEnvelopeDrawpic.ApplicationWindow(data,
+                                                                                               self.specEnvelopeSampleFigId,
+                                                                                               sampleInnerId,
+                                                                                               signalLimit,
+                                                                                               sampleLimit)
+                            self.verticalLayout_22.addWidget(self.specEnvelopeSampleFig)
+                            self.specEnvelopeFlag = 1
+                            self.specEnvelopeSampleFigId = ''
                             ##############
                         endtime = datetime.datetime.now()
                         strTime = 'funtion time use:%dms' % (
@@ -576,13 +575,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 QMessageBox.warning(self,
                                     '错误',
-                                    "请输入正确参数！",
+                                    "请输入正确范围内的参数，\n"
+                                    "起始频率不小于30MHz截止频率不大于6000MHz，\n"
+                                    "频率差不超过150MHz！",
                                     QMessageBox.Yes,
                                     QMessageBox.Yes)
         else:
             QMessageBox.warning(self,
                                 '错误',
-                                "请输入正确参数！",
+                                "请输入参数应为数字！",
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
 
@@ -607,7 +608,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             while not self.algorithmProcessQ.empty():
                 self.algorithmProcessQ.get()
             # 开启识别进程/线程
-            recognizeProcess = algorithmThreads.IQSingleProcess(filePath, self.algorithmProcessQ)
+            recognizeProcess = algorithmThreads.specEnvelopeOfflineProcess(filePath, self.algorithmProcessQ)
             recognizeProcess.start()
             # 调用识别loading
             loading = Message.Loading()
@@ -641,27 +642,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     sampleInnerId = recognizeResult[4]
                     ##############画信号图###############
                     # 生成对应的样本图id
-                    if len(recognizeResult) == 6 and recognizeResult[0] == 'GSM900':
+                    if recognizeResult[0] == 'GSM900':
                         self.specEnvelopeSampleFigId = 5
-                    elif len(recognizeResult) == 6 and recognizeResult[0] == 'WCDMA':
+                    elif recognizeResult[0] == 'WCDMA':
                         self.specEnvelopeSampleFigId = 11
-                    elif len(recognizeResult) == 6 and recognizeResult[0] == 'WLAN(2.4G)':
+                    elif recognizeResult[0] == 'WLAN(2.4G)':
                         self.specEnvelopeSampleFigId = 17
-                    elif len(recognizeResult) == 6 and recognizeResult[0] == 'CDMA800':
-                        self.specEnvelopeSampleFigId = 23
-                    elif len(recognizeResult) == 6 and recognizeResult[0] == 'TD_SCDMA':
-                        self.specEnvelopeSampleFigId = 29
-                    elif len(recognizeResult) == 6 and recognizeResult[0] == 'FDD_LTE':
-                        self.specEnvelopeSampleFigId = 32
-                    elif len(recognizeResult) == 6 and recognizeResult[0] == 'GSM1800':
-                        self.specEnvelopeSampleFigId = 36
+                    elif recognizeResult[0] == 'CDMA800':
+                        self.specEnvelopeSampleFigId = 24
+                    elif recognizeResult[0] == 'TD_SCDMA':
+                        self.specEnvelopeSampleFigId = 30
+                    elif recognizeResult[0] == 'FDD_LTE':
+                        self.specEnvelopeSampleFigId = 33
+                    elif recognizeResult[0] == 'GSM1800':
+                        self.specEnvelopeSampleFigId = 37
 
                     # 画信号图和样本图
                     if self.specEnvelopeSampleFigId and self.specEnvelopeFlag:
                         # 标志位为1时清空图区
                         self.verticalLayout_22.removeWidget(self.specEnvelopeSampleFig)
                         # sip.delete(self.specEnvelopeSampleFig)
-                        self.specEnvelopeSampleFig = specEnvelopeDrawpic.ApplicationWindow(recognizeResult,
+                        self.specEnvelopeSampleFig = specEnvelopeDrawpic.ApplicationWindow(filePath,
                                                                                            self.specEnvelopeSampleFigId,
                                                                                            sampleInnerId,
                                                                                            signalLimit,
@@ -670,7 +671,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.specEnvelopeFlag = 1
                         self.specEnvelopeSampleFigId = ''
                     elif self.specEnvelopeSampleFigId:
-                        self.specEnvelopeSampleFig = specEnvelopeDrawpic.ApplicationWindow(recognizeResult,
+                        self.specEnvelopeSampleFig = specEnvelopeDrawpic.ApplicationWindow(filePath,
                                                                                            self.specEnvelopeSampleFigId,
                                                                                            sampleInnerId,
                                                                                            signalLimit,
@@ -690,20 +691,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
 
-    # 重写关闭事件
+    # # 重写关闭事件
     def closeEvent(self, event):
         os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
         sys.exit()
 
 
-class py2Thread(Thread):
-    def __init__(self):
-        super(py2Thread, self).__init__()
-        self.currentPath = os.path.dirname(__file__)
-        self.fatherPath = os.path.dirname(self.currentPath)
-    def run(self):
-        scriptPath = os.path.join(self.fatherPath, r'py27usrp/socketTest/demo.py')
-        os.system('python2 {}'.format(scriptPath))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

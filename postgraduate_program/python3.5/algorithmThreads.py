@@ -3,16 +3,34 @@ from function import filesOrDirsOperate
 import datetime
 import time
 import os
+import queue
 from threading import Thread
+from socketDemo.zmqLocal import zmqThread
 from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,
                                                     usrp_shibie_v3)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelope_shibie_v3
 
+# py2线程（函数形式）
+def py2Thread():
+    currentPath = os.path.dirname(__file__)
+    fatherPath = os.path.dirname(currentPath)
+    scriptPath = os.path.join(fatherPath, r'py27usrp/socketTest/demo.py')
+    os.system('python2 {}'.format(scriptPath))
+
+# # py2线程
+# class py2Thread(Thread):
+#     def __init__(self):
+#         super(py2Thread, self).__init__()
+#         self.currentPath = os.path.dirname(__file__)
+#         self.fatherPath = os.path.dirname(self.currentPath)
+#     def run(self):
+#         scriptPath = os.path.join(self.fatherPath, r'py27usrp/socketTest/demo.py')
+#         os.system('python2 {}'.format(scriptPath))
 
 # 超频点判断线程
 class IQOverThreshold(Thread):
     def __init__(self, onlineSpecX, onlineSpecY, thre, overThresholdQ):
-        super(self, IQOverThreshold).__init__()
+        super(IQOverThreshold, self).__init__()
         self.onlineSpecX = onlineSpecX
         self.onlineSpecY = onlineSpecY
         self.thre = thre
@@ -107,10 +125,79 @@ class IQDataSaveProcess(Process):
         f.close()
         self.q.put(self.path)
 
-# 频谱包络识别线程
-class specEnvelopeProcess(Thread):
+# 频谱包络在线识别进程（包括采集、识别、存储）
+class specEnvelopeOnlineProcess(Thread):
+    def __init__(self, zmq, msg, dataQ, algorithmProcessQ, savingProcessQ):
+        super(specEnvelopeOnlineProcess, self).__init__()
+        self.dataQ = dataQ
+        self.algorithmProcessQ = algorithmProcessQ
+        self.savingProcessQ = savingProcessQ
+        self.zmq = zmq
+        self.msg = msg
+        self.zmqQ = queue.Queue()
+
+    # 包络识别
+    def recognize(self, data):
+        starttime = datetime.datetime.now()
+        rslt = specEnvelope_shibie_v3.baoluoshibie(data)
+        endtime = datetime.datetime.now()
+        strTime = '识别线程花费:%dms' % (
+                (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+        print(strTime)
+        self.algorithmProcessQ.put(rslt)
+
+    # 数据存储
+    def save(self, data):
+        starttime = datetime.datetime.now()
+        currentPath = os.path.dirname(__file__)
+        fatherPath = os.path.dirname(currentPath)
+        dirPath = os.path.join(fatherPath, r'specEnvelope_recvfiles')
+        filesOrDirsOperate.makesureDirExist(dirPath)
+        local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+        filePath = os.path.join(dirPath, r'specEnvelope_data_{}.txt'.format(local_time))
+        print('存储文件名为:', filePath)
+        f = open(filePath, 'w')
+        f.write(data[0])
+        f.write('\n')
+        f.write(data[1])
+        f.close()
+        endtime = datetime.datetime.now()
+        strTime = '存储线程花费:%dms' % (
+                (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+        print(strTime)
+        self.savingProcessQ.put(filePath)
+
+    def run(self):
+        zmqT = Thread(target=zmqThread, args=(self.zmq, self.msg, self.zmqQ))
+        zmqT.start()
+        while self.zmqQ.empty():
+            pass
+        else:
+            reslt = self.zmqQ.get()
+            print("reslt", reslt)
+            if reslt == "超时":
+                self.dataQ.put('超时')
+                self.algorithmProcessQ.put("超时")
+                self.savingProcessQ.put("超时")
+            else:
+                # 当zmq返回值为数据时，对数据进行切分，得到x和y
+                data = reslt
+                dataList = data.split(r';')
+                xList = dataList[0].split(' ')
+                yList = dataList[1].split(' ')
+                # 将x和y塞入数据队列
+                self.dataQ.put([xList, yList])
+                # 开启识别进程/线程
+                recognizeProcess = Thread(target=self.recognize, args=([xList, yList],))
+                recognizeProcess.start()
+                # 开启存储进程/线程
+                savingProcess = Thread(target=self.save, args=(dataList,))
+                savingProcess.start()
+
+# 频谱包络离线识别线程
+class specEnvelopeOfflineProcess(Thread):
     def __init__(self, path, q):
-        super(specEnvelopeProcess, self).__init__()
+        super(specEnvelopeOfflineProcess, self).__init__()
         self.path = path
         self.data = ''
         self.q = q
@@ -123,23 +210,3 @@ class specEnvelopeProcess(Thread):
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
         print(strTime)
         self.q.put(rslt)
-
-# 频谱包络存储进程
-class specEnvelopeDataSaveProcess(Process):
-    def __init__(self, data, q):
-        super(specEnvelopeDataSaveProcess, self).__init__()
-        currentPath = os.path.dirname(__file__)
-        fatherPath = os.path.dirname(currentPath)
-        dirPath = os.path.join(fatherPath, r'specEnvelope_recvfiles')
-        filesOrDirsOperate.makesureDirExist(dirPath)
-        local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
-        filePath = os.path.join(dirPath, r'specEnvelope_data_{}.txt'.format(local_time))
-        self.path = filePath
-        self.data = data
-        self.q = q
-    def run(self):
-        print('saving process:', self.path)
-        f = open(self.path, 'w')
-        f.write(self.data)
-        f.close()
-        self.q.put(self.path)

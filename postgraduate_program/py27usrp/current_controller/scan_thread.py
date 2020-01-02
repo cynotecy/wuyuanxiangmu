@@ -48,10 +48,15 @@ class Recv(QThread):
         self.q = q
         self.socket = sub_socket
         self.standard = float(standard)
+        self.runningFlag = 1
+
+    def stop(self):
+        self.runningFlag = 0
+
     def run(self):
         print 'start scan_recv at:', ctime()
         try:
-            while True:
+            while self.runningFlag:
                 crc16_ibm = crcmod.mkCrcFun(0x18005, rev=True, initCrc=0x0000, xorOut=0x0000)
                 print 'before socket.recv'
                 msg = self.socket.recv()

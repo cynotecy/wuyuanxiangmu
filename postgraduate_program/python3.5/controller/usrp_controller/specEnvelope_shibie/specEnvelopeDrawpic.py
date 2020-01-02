@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 ===============
 Embedding in Qt
@@ -36,7 +37,7 @@ class ApplicationWindow(QWidget):
         self.sample_id = self.sampleOutter_id+self.sampleInner_id
         self.signalLimit = signalLimit
         self.sampleLimit = sampleLimit
-        print(self.sample_id)
+        print("样本编号", str(self.sample_id))
         matplotlib.rcParams['font.family'] = ['SimHei']  # 用来正常显示中文标签
         matplotlib.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
         layout = QtWidgets.QVBoxLayout(self)
@@ -63,7 +64,7 @@ class ApplicationWindow(QWidget):
                                user='root',  # 用户名
                                passwd='root',  # 密码
                                db='cast',  # 库名
-                               charset='utf8')  # 链接字符集
+                               charset='utf8mb4')  # 链接字符集
         select = ("SELECT `data` FROM `sample_data` WHERE `id`=%s") % self.sample_id
         print(select)
         cursor = conn.cursor()
@@ -91,11 +92,11 @@ class ApplicationWindow(QWidget):
             x1 = np.array([float(x1) for x1 in x1])
             y1 = np.array([float(y1) for y1 in y1])
         else:
-            dataList = self.filepath.split(r' ')
-            data = np.array(dataList)
-            data = data.astype(np.float32)
-            x1 = data[0:int(len(data)) / 2 - 1]
-            y1 = data[int(len(data)) / 2:-1]
+            dataList = self.filepath
+            x1 = np.array(dataList[0])
+            y1 = np.array(dataList[1])
+            x1 = x1.astype(np.float32)
+            y1 = y1.astype(np.float32)
         # 生成需要标红部分的列表
         x1Red = x1[self.signalLimit[0]:self.signalLimit[1]]
         y1Red = y1[self.signalLimit[0]:self.signalLimit[1]]

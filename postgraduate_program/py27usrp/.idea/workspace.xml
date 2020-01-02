@@ -2,18 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7810345c-250a-4cab-bd2b-d559d19078cb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/data/sample_data/CDMA800_4.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../EMCfile/data/sample_data/CDMA800_4.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/data/sample_data/FDD_LTE_2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../EMCfile/data/sample_data/FDD_LTE_2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/data/sample_data/GSM1800_3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../EMCfile/data/sample_data/GSM1800_3.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/data/sample_data/GSM900_5.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../EMCfile/data/sample_data/GSM900_5.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/data/sample_data/TD_SCDMA_1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../EMCfile/data/sample_data/TD_SCDMA_1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/data/sample_data/WCDMA_4.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../EMCfile/data/sample_data/WCDMA_4.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/data/sample_data/WCDMA_5.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../EMCfile/data/sample_data/WCDMA_5.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/data/sample_data/WLAN_5.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../EMCfile/data/sample_data/WLAN_5.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/data/sample_data/WLAN_6.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../EMCfile/data/sample_data/WLAN_6.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../emc" beforeDir="false" afterPath="$PROJECT_DIR$/../emc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/current_controller/scan_thread.py" beforeDir="false" afterPath="$PROJECT_DIR$/current_controller/scan_thread.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/socketTest/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/demo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socketTest/socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/socket.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/.idea/python3.5.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/.idea/python3.5.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/MainWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/algorithmThreads.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/algorithmThreads.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/specEnvelope_shibie/specEnvelope_drawpic.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/specEnvelope_shibie/specEnvelopeDrawpic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/specEnvelope_shibie/specEnvelopeDrawpic.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/specEnvelope_shibie/specEnvelopeDrawpic.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/specEnvelope_shibie/specEnvelope_shibie_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/specEnvelope_shibie/specEnvelope_shibie_v3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/usrp_shibie/usrp_shibie_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/usrp_shibie/usrp_shibie_v3.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/localDemoUi.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/localDemoUi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/socketDemo/zmqLocal.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/socketDemo/zmqLocal.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -340,6 +350,15 @@
       <workItem from="1576635254904" duration="2427000" />
       <workItem from="1576719344694" duration="6079000" />
       <workItem from="1576814968596" duration="5782000" />
+      <workItem from="1577351191077" duration="2826000" />
+      <workItem from="1577455124302" duration="220000" />
+      <workItem from="1577703765598" duration="1456000" />
+      <workItem from="1577769292183" duration="2004000" />
+      <workItem from="1577781945663" duration="2880000" />
+      <workItem from="1577862269732" duration="5316000" />
+      <workItem from="1577869478998" duration="947000" />
+      <workItem from="1577889275939" duration="1697000" />
+      <workItem from="1577926671533" duration="1748000" />
     </task>
     <servers />
   </component>

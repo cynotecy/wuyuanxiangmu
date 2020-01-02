@@ -19,6 +19,9 @@ def connect(address, mode):
         repSocket = repContext.socket(zmq.REP)
         repSocket.bind(repAddress)
         socket = repSocket
+
+        poll = zmq.Poller()
+        poll.register(socket, zmq.POLLIN)
     else:
         socket = 'socket type error'
         
