@@ -126,12 +126,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget_5.setColumnWidth(0, 280)
         self.tableWidget_5.setColumnWidth(1, 230)
 
-        # 查看仪器连接图
-        # self.pushButton_3.clicked.connect(self.on_pushButton_clicked_3)
-        # ESMD采集
-        # self.pushButton.clicked.connect(self.on_pushButton_clicked_1)
-        # 选择识别文件
-        # self.pushButton_2.clicked.connect(self.on_pushButton_clicked_2)#ESMD
         self.pushButton_17.clicked.connect(self.on_pushButton_clicked_17)#USRP
         self.pushButton_48.clicked.connect(self.on_pushButton_clicked_48)  # 频域包络
         self.pushButton_22.clicked.connect(self.on_pushButton_clicked_22)#信噪比

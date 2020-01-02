@@ -318,11 +318,12 @@ def recongnize(val_data_path, logdir):
 
 
 def configuration(mat_path, length, class_name="test_device"):
-
-    txt_path = r'..\interference_file\txtpath'
-    test_path = r'..\interference_file\allpath.txt'
-    target_dir = r'..\interference_file\txt'
-    logdir = r'..\python3.5\controller\Pico_controller\model_saved\model_v1.pkl'
+    fatherPath = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    grandpaPath = os.path.dirname(fatherPath)
+    txt_path = os.path.join(grandpaPath, r'interference_files\txtpath')
+    test_path = os.path.join(grandpaPath, r'interference_files\allpath.txt')
+    target_dir = os.path.join(grandpaPath, r'interference_files\txt')
+    logdir = os.path.join(os.path.dirname(__file__), r'model_saved\model_v1.pkl')
 
     mat_to_txt.conversion(class_name, mat_path, txt_path)
     mat_to_txt.value_decetion(txt_path)
@@ -333,7 +334,7 @@ def configuration(mat_path, length, class_name="test_device"):
         pre_result = recongnize(test_path,logdir)
         print('This is pre_result:', pre_result)
         pre_result = max_voter(pre_result)
-        target_file = copy_move_file(txt_path, pre_result, target_dir)
+        target_file = copy_move_file(txt_path, pre_result, target_dir) # 转存的txt文件夹地址
         print('清空mat缓存区中...')
         remove_files(mat_path, test_path)
         return pre_result, target_file
@@ -343,6 +344,9 @@ def configuration(mat_path, length, class_name="test_device"):
 
 
 if __name__ == '__main__':
-    mat_path = r'..\interference_file\matfile'  # pico存mat文件路径
-    configuration(mat_path, length=10, class_name="test_device")
+    mat_path = r'D:\myPrograms\CASTProgram\postgraduate_program\interference_files\matfile'  # pico存mat文件路径
+    configuration(mat_path, length=10)
+    # fatherPath = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    # grandpaPath = os.path.dirname(fatherPath)
+    # print(grandpaPath)
 

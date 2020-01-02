@@ -16,7 +16,8 @@ from functions import filesOrDirsOperate
 """
 
 def threadControl():
-    standar = '-11'
+    standar = '-11'  # USRP定标
+    remoteTimeOut = 20  # 远端socket超时时限
     localQueue = Queue.Queue()
     remoteQueue = Queue.Queue()
     pubAddress1 = 'tcp://192.168.0.100:6666'
@@ -86,7 +87,7 @@ def threadControl():
                 while localQueue.empty():
                     nowTime = datetime.datetime.now()
                     period = (nowTime - startTime).seconds
-                    if period > 20:
+                    if period > remoteTimeOut:
                         scanRecv.stop()
                         repSocket.send('超时')
                         break

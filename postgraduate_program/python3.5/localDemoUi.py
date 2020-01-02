@@ -4,7 +4,7 @@ from multiprocessing import Process
 import datetime
 import os
 import time
-import sip
+import win32api
 import queue
 from multiprocessing import Process, Queue as mq
 import threading
@@ -20,6 +20,7 @@ from Ui.UitoPy.Ui_socketDEMO import Ui_MainWindow
 from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,
                                                     usrp_shibie_v3)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelopeDrawpic
+from controller.Pico_controller.draw_pic import draw_pic
 from function.numOrLetters import *
 from socketDemo import zmqLocal
 import algorithmThreads
@@ -49,6 +50,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.specPicFlag = 0
         self.ocTableDisplayFlag = 0
         self.specEnvelopeFlag = 0# 包络图标志位
+        self.pulsePicFlag = 0# 脉冲图标志位
 
         self.zmqLocal = zmqLocal.localZMQ()
         # 第一页，IQ识别
@@ -69,6 +71,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_10.clicked.connect(self.on_pushButton_clicked_10)  # 选择文件
         self.pushButton_11.clicked.connect(self.on_pushButton_clicked_11)  # 离线识别
 
+        # 第三页，开关脉冲识别
+        self.pushButton_13.clicked.connect(self.on_pushButton_clicked_13)  # pico信号采集
+        self.pushButton_14.clicked.connect(self.on_pushButton_clicked_14)  # 在线识别
+        self.pushButton_15.clicked.connect(self.on_pushButton_clicked_15)  # 选择文件
+        self.pushButton_16.clicked.connect(self.on_pushButton_clicked_16)  # 离线识别
+
+        # 第四页，稳态干扰识别
+        self.pushButton_17.clicked.connect(self.on_pushButton_clicked_17)  # 扫频
+        self.pushButton_18.clicked.connect(self.on_pushButton_clicked_18)  # 在线范围选定
+        self.pushButton_19.clicked.connect(self.on_pushButton_clicked_19)  # 选择文件
+        self.pushButton_20.clicked.connect(self.on_pushButton_clicked_20)  # 离线范围选定
+        self.pushButton_21.clicked.connect(self.on_pushButton_clicked_21)  # 历史查看
+        self.pushButton_22.clicked.connect(self.on_pushButton_clicked_22)  # 刷新
     # 扫频按键
     def on_pushButton_clicked_1(self):
         while not self.zmqLocalQ.empty():
@@ -171,11 +186,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles\usrp_scan')
         filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
                                                   defultPath, "*.txt")
-        self.path = filename
-        fileinfo = QFileInfo(filename)
-        self.name = fileinfo.fileName()
+        # self.path = filename
+        # fileinfo = QFileInfo(filename)
+        # self.name = fileinfo.fileName()
         print("IQ频谱图查看选择文件：", filename)
-        self.lineEdit_3.setText(self.path)
+        self.lineEdit_3.setText(filename)
 
     # 查看频谱图
     def on_pushButton_clicked_6(self):
@@ -419,11 +434,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles')
         filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
                                                   defultPath, "*.txt")
-        self.path = filename
-        fileinfo = QFileInfo(filename)
-        self.name = fileinfo.fileName()
+        # self.path = filename
+        # fileinfo = QFileInfo(filename)
+        # self.name = fileinfo.fileName()
         print("IQ频谱图查看选择文件：", filename)
-        self.lineEdit_7.setText(self.path)
+        self.lineEdit_7.setText(filename)
 
     # IQ手动离线识别
     def on_pushButton_clicked_4(self):
@@ -691,12 +706,144 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
 
-    # # 重写关闭事件
+    # pico信号采集
+    def on_pushButton_clicked_13(self):
+        try:
+            win32api.ShellExecute(0, "open", "controller\\Pico_controller\\PicoScope 6.lnk", "", "", 1)
+            time = QTimer(self)
+            self.pushButton_13.setEnabled(False)
+        except:
+            pass
+
+        def forbidden():
+            self.pushButton_13.setEnabled(True)
+
+        time.setInterval(10000)
+        time.start()
+        time.timeout.connect(forbidden)
+
+    # 脉冲在线识别
+    def on_pushButton_clicked_14(self):
+        try:
+            length = 10
+            dirPath = os.path.join(self.fatherPath, r'interference_files\matfile')
+            print(dirPath)
+            filesOrDirsOperate.makesureDirExist(dirPath)
+            pulseRecognizeOnlineT = algorithmThreads.PulseRecognizeOnlineProcess(dirPath, self.algorithmProcessQ, length)
+            pulseRecognizeOnlineT.start()
+            loading = Message.Loading()
+            loading.setWindowModality(Qt.ApplicationModal)
+            loading.show()
+            gui = QGuiApplication.processEvents
+            while self.algorithmProcessQ.empty():
+                gui()
+            else:
+                loading.close()
+                result = self.algorithmProcessQ.get()
+                targetFile = self.algorithmProcessQ.get()
+                if result == '0':
+                    QMessageBox.warning(self, "错误", "文件夹中没有文件，请先采集！")
+                else:
+                    if result == 'fan':
+                        display = '风扇'
+                        self.pulseSampleFigId = 1
+                    elif result == 'power':
+                        self.pulseSampleFigId = 2
+                        display = '电源'
+                    elif result == 'WD_200':
+                        self.pulseSampleFigId = 3
+                        display = 'WD_200'
+                    elif result == 'shipeiqi':
+                        self.pulseSampleFigId = 4
+                        display = '适配器'
+                    newItem = QTableWidgetItem(display)
+                    self.tableWidget_6.setItem(0, 1, newItem)
+                    ##############画信号图###############
+                    if self.pulsePicFlag:
+                        # 标志位为1时清空图区
+                        self.verticalLayout_20.removeWidget(self.samplefig)
+                        self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId)
+                        self.verticalLayout_20.addWidget(self.samplefig)
+                        self.pulsePicFlag = 1
+                    else:
+                        self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId)
+                        self.verticalLayout_20.addWidget(self.samplefig)
+                        self.pulsePicFlag = 1
+                    ##############
+        except:
+            pass
+
+    # 脉冲选择文件
+    def on_pushButton_clicked_15(self):
+        self.tableWidget_6.clearContents()
+        dirpath = QFileDialog.getExistingDirectory(self, "选择文件夹", os.path.join(self.fatherPath,
+                                                                               r'interference_files\txt'))
+        dirname = dirpath.split('/')[-1]
+        print(dirname)
+        self.pulsePath = dirpath
+        newItem = QTableWidgetItem(dirname)
+        self.tableWidget_6.setItem(0, 0, newItem)
+
+    # 脉冲离线识别
+    def on_pushButton_clicked_16(self):
+        try:
+            if not self.pulsePath:
+                QMessageBox.information(self, "提示", "请选择文件")
+            else:
+                print('选择识别的文件夹为：', self.pulsePath)
+                filesOrDirsOperate.makesureDirExist(self.pulsePath)
+                length = 10
+                pulseRecognizeOfflineT = algorithmThreads.PulseRecognizeOfflineProcess(self.pulsePath,
+                                                                                     self.algorithmProcessQ,
+                                                                                     length)
+                pulseRecognizeOfflineT.start()
+                loading = Message.Loading()
+                loading.setWindowModality(Qt.ApplicationModal)
+                loading.show()
+                gui = QGuiApplication.processEvents
+                while self.algorithmProcessQ.empty():
+                    gui()
+                else:
+                    loading.close()
+                    result = self.algorithmProcessQ.get()
+                    if result =='0':
+                        QMessageBox.warning(self, "错误", "文件夹中没有文件！")
+                    else:
+                        if result == 'fan':
+                            self.pulseSampleFigId = 1
+                            display = '风扇'
+                        elif result == 'power':
+                            self.pulseSampleFigId = 2
+                            display = '电源'
+                        elif result == 'WD_200':
+                            self.pulseSampleFigId = 3
+                            display = 'WD_200'
+                        elif result == 'shipeiqi':
+                            self.pulseSampleFigId = 4
+                            display = '适配器'
+                        newItem = QTableWidgetItem(display)
+                        self.tableWidget_6.setItem(0, 1, newItem)
+                        targetFile = self.pulsePath
+                        ##############画信号图###############
+                        if self.pulsePicFlag:
+                            # 标志位为1时清空图区
+                            self.verticalLayout_20.removeWidget(self.samplefig)
+                            self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId)
+                            self.verticalLayout_20.addWidget(self.samplefig)
+                            self.pulsePicFlag = 1
+                        else:
+                            self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId)
+                            self.verticalLayout_20.addWidget(self.samplefig)
+                            self.pulsePicFlag = 1
+                        ##############
+
+        except:
+            pass
+
+    # 重写关闭事件
     def closeEvent(self, event):
         os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
         sys.exit()
-
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

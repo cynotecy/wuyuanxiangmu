@@ -9,6 +9,7 @@ from socketDemo.zmqLocal import zmqThread
 from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,
                                                     usrp_shibie_v3)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelope_shibie_v3
+from controller.Pico_controller import pico_jicheng_online_pack_v2, pico_jicheng_offline_v2
 
 # py2线程（函数形式）
 def py2Thread():
@@ -16,16 +17,6 @@ def py2Thread():
     fatherPath = os.path.dirname(currentPath)
     scriptPath = os.path.join(fatherPath, r'py27usrp/socketTest/demo.py')
     os.system('python2 {}'.format(scriptPath))
-
-# # py2线程
-# class py2Thread(Thread):
-#     def __init__(self):
-#         super(py2Thread, self).__init__()
-#         self.currentPath = os.path.dirname(__file__)
-#         self.fatherPath = os.path.dirname(self.currentPath)
-#     def run(self):
-#         scriptPath = os.path.join(self.fatherPath, r'py27usrp/socketTest/demo.py')
-#         os.system('python2 {}'.format(scriptPath))
 
 # 超频点判断线程
 class IQOverThreshold(Thread):
@@ -210,3 +201,28 @@ class specEnvelopeOfflineProcess(Thread):
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
         print(strTime)
         self.q.put(rslt)
+
+# 脉冲在线识别线程
+class PulseRecognizeOnlineProcess(Thread):
+    def __init__(self, path, q, length):
+        super(PulseRecognizeOnlineProcess, self).__init__()
+        self.path = path
+        self.q = q
+        self.length = length
+    def run(self):
+        reslt, targetFile = pico_jicheng_online_pack_v2.configuration(self.path, self.length)
+        print("pulse recognize reslt, target file path:", reslt, targetFile)
+        self.q.put(reslt)
+        self.q.put(targetFile)
+
+# 脉冲离线识别线程
+class PulseRecognizeOfflineProcess(Thread):
+    def __init__(self, path, q, length):
+        super(PulseRecognizeOfflineProcess, self).__init__()
+        self.path = path
+        self.q = q
+        self.length = length
+    def run(self):
+        reslt= pico_jicheng_offline_v2.configuration(self.path, self.length)
+        print("pulse recognize reslt:", reslt)
+        self.q.put(reslt)

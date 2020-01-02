@@ -65,14 +65,14 @@ class ApplicationWindow(QWidget):
         # 获取所有记录列表
         results = str(cursor.fetchall())
         results = results.split('/')
-        print(results)
+        # print(results)
         results = results[-1]
         results = results.split("'")
         results = results[0]
-        print(results)
+        # print(results)
         self.path = '..\EMCfile\data\sample_data\%s' % results
 
-        print(self.path)
+        # print(self.path)
 
         file2 = open(self.path)
         y2 = file2.read().split('\n')
@@ -95,9 +95,9 @@ class ApplicationWindow(QWidget):
         x1 = np.array([float(x)*0.008 for x in x1])
         y1Array = np.asarray(self.y1List).astype('float64')
         # y1Array.astype('float64')
-        print(type(y1Array[0][0]))
+        # print(type(y1Array[0][0]))
         y1 = y1Array.mean(axis=0)
-        print(y1.shape)
+        # print(y1.shape)
         # y2 = np.array([float(y2) for y2 in y2])
         return x1, y1, x2, y2
 

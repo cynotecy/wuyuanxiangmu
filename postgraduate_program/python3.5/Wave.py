@@ -136,7 +136,6 @@ class PicoProcess_online(Thread):
         self.path = path
         self.data = ''
         self.q = q
-        # self.class_name = class_name
         self.length = int(length)
     def run(self):
         a,b = pico_jicheng_online_pack_v2.configuration(self.path, self.length)

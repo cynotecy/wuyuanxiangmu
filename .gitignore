@@ -17,4 +17,15 @@ build
 #others
 PicoScope6_r6_13_6.exe
 *.xlsx
+*.7z
 usrp_recvfiles
+IQ_outputfiles
+steadyStateInterference_recvfiles
+steadyStateInterference_outputfiles
+specEnvelope_recvfiles
+realtime_recvfiles
+realpart_recvfiles
+interference_files
+antenna_recvfiles
+specmonitor_recvfiles
+mat

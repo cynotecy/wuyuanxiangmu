@@ -318,9 +318,10 @@ def recongnize(val_data_path, logdir):
 
 
 def configuration(txt_path, length):
-
-    test_path = r'..\interference_file\allpath.txt'
-    logdir = r'..\python3.5\controller\Pico_controller\model_saved\model_v1.pkl'
+    fatherPath = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    grandpaPath = os.path.dirname(fatherPath)
+    test_path = os.path.join(grandpaPath, r'interference_files\allpath.txt')
+    logdir = os.path.join(os.path.dirname(__file__), r'model_saved\model_v1.pkl')
     warnings.filterwarnings("ignore")
     flag = dectect_folder(txt_path)
     if flag == 1:
@@ -335,7 +336,7 @@ def configuration(txt_path, length):
 
 
 if __name__ == '__main__':
-    txt_path = r'..\interference_file\txt\判错的fan\20190923162658'
+    txt_path = r'D:\myPrograms\CASTProgram\postgraduate_program\interference_files\txt\fan\20200102135845'
     pre_result = configuration(txt_path, length=10)
     print(pre_result)
 
