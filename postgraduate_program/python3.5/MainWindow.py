@@ -890,6 +890,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.currenttime_steadyState = time.time()
         usrp_collect = usrpScan_steadyStateInterference()
         usrp_collect.start()
+
     # 稳态干扰在线识别按键
     def on_pushButton_clicked_53(self):
         if self.pushButton_53.text() == '范围选定':

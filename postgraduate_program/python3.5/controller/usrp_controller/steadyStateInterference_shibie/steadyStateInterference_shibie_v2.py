@@ -4,29 +4,19 @@ import matplotlib
 import numpy as np
 from matplotlib.backends.qt_compat import QtWidgets
 
-from controller.usrp_controller.steadyStateInterference_shibie import steadyResult_draw
+# from controller.usrp_controller.steadyStateInterference_shibie import steadyResult_draw
 import time
 matplotlib.use('Qt5Agg')
 
 
-def position(input_filename,standard_vaule):
-    save_filename = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
-    print(save_filename)
-    # path_input_filename = input_filename  #输入文件路径
-    # input_file = np.loadtxt(path_input_filename,dtype=str,delimiter=' ')
-    fres=np.loadtxt(path_input_filename,dtype=str,delimiter=' ')[0, 0:-1]  #输出频率的一维数组
-    amps=np.loadtxt(path_input_filename,dtype=str,delimiter=' ')[1, 0:-1]  #输出幅度的一维数组
-    user_amps=float(standard_vaule)+11
-    amps = np.asarray(np.float32(amps))                                    #
-    fres = np.asarray(np.float32(fres))                                    #
-
+def position(fres, amps, standard_vaule, path_output_filename):
+    # save_filename = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+    user_amps = float(standard_vaule)
     list_range_lable = []
     list_maxpoint_lable=[]
     outputlist_range_list=[]
     outputlist_fre_amp_list=[]
     flag = 1   #1判断起点
-    # print(amps)
-    # print(fres)
     for i in range(len(amps)):
         if flag and amps[i] > user_amps :
             list_range_lable.append(i)
@@ -50,9 +40,9 @@ def position(input_filename,standard_vaule):
     for k in list_maxpoint_lable:
         outputlist_fre_amp_list.append("("+str(fres[k])+","+str(amps[k])+")")
 
-    path_output_filename='D:\\postgraduate_program\\steadyInterference\\Output_file\\%s' % save_filename    #输出文件路径
+    # path_output_filename='D:\\postgraduate_program\\steadyInterference\\Output_file\\%s' % save_filename    #输出文件路径
 
-    with open(path_output_filename+'.txt','w+') as file_object:
+    with open(path_output_filename+'.txt','w') as file_object:
         for n in range(len(outputlist_range_list)):
             file_object.write("\n"+str(outputlist_range_list[n])+":"+str(outputlist_fre_amp_list[n]))
 

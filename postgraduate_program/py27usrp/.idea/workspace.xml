@@ -2,22 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7810345c-250a-4cab-bd2b-d559d19078cb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyStateInterference_shibie_v2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../emc" beforeDir="false" afterPath="$PROJECT_DIR$/../emc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/socketTest/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/demo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/MainWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/TCPexample.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/UdpExample.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/Wave.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Wave.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/algorithmThreads.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/algorithmThreads.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/controller/Pico_controller/draw_pic/draw_pic.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/Pico_controller/draw_pic/draw_pic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/controller/Pico_controller/pico_jicheng_offline_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/Pico_controller/pico_jicheng_offline_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/controller/Pico_controller/pico_jicheng_online_pack_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/Pico_controller/pico_jicheng_online_pack_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/display_v4.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/display_v4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyFirst_draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyFirst_draw.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyResult_draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyStateDraw.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyStateInterference_shibie.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyStateInterference_shibie.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/demo/exer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/function/plotWithCursor.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/function/plotWithCursor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/localDemoUi.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/localDemoUi.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -44,7 +43,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../python3.5" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -353,7 +352,8 @@
       <workItem from="1577862269732" duration="5316000" />
       <workItem from="1577869478998" duration="947000" />
       <workItem from="1577889275939" duration="1697000" />
-      <workItem from="1577926671533" duration="4813000" />
+      <workItem from="1577926671533" duration="8969000" />
+      <workItem from="1578015387590" duration="4432000" />
     </task>
     <servers />
   </component>

@@ -1485,55 +1485,60 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
-           <widget class="QPushButton" name="pushButton_17">
-            <property name="minimumSize">
-             <size>
-              <width>133</width>
-              <height>35</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>50</width>
-              <height>16777215</height>
-             </size>
-            </property>
+           <widget class="QLabel" name="label_16">
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>信号采集</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_41">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>宋体</family>
               <pointsize>14</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
              </font>
             </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
             <property name="text">
-             <string>输入限值</string>
+             <string>一体化单元</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_14">
+           <widget class="QComboBox" name="comboBox_5">
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
+            </property>
+            <item>
+             <property name="text">
+              <string>1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>3</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>4</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_15">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>起始频率(MHz)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_12">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -1551,46 +1556,51 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_42">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
+           <widget class="QLabel" name="label_17">
             <property name="font">
              <font>
-              <family>宋体</family>
               <pointsize>14</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
              </font>
             </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
             <property name="text">
-             <string>dBm</string>
+             <string>截止频率(MHz)</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_18">
+           <widget class="QLineEdit" name="lineEdit_13">
             <property name="minimumSize">
              <size>
-              <width>133</width>
+              <width>0</width>
               <height>35</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
              </size>
             </property>
             <property name="font">
              <font>
-              <family>Adobe Arabic</family>
+              <family>Times New Roman</family>
+              <pointsize>14</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_17">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>125</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
               <pointsize>12</pointsize>
              </font>
             </property>
@@ -1598,70 +1608,7 @@
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="text">
-             <string>范围选定</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="Line" name="line_17">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_21">
-            <property name="minimumSize">
-             <size>
-              <width>133</width>
-              <height>35</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>Adobe Arabic</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="text">
-             <string>历史查看</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_22">
-            <property name="minimumSize">
-             <size>
-              <width>133</width>
-              <height>35</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>Adobe Arabic</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="text">
-             <string>刷新</string>
+             <string>扫频</string>
             </property>
            </widget>
           </item>
@@ -1670,7 +1617,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_11">
           <item>
-           <widget class="QPushButton" name="pushButton_19">
+           <widget class="QPushButton" name="pushButton_18">
             <property name="minimumSize">
              <size>
               <width>133</width>
@@ -1716,12 +1663,36 @@
            </widget>
           </item>
           <item>
-           <widget class="Line" name="line_25">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
+           <widget class="QPushButton" name="pushButton_22">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>125</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>查看频谱图</string>
             </property>
            </widget>
           </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
            <widget class="QLabel" name="label_49">
             <property name="maximumSize">
@@ -1789,6 +1760,41 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="pushButton_19">
+            <property name="minimumSize">
+             <size>
+              <width>133</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Adobe Arabic</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>干扰判断</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line_17">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="pushButton_20">
             <property name="minimumSize">
              <size>
@@ -1812,9 +1818,50 @@
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="text">
-             <string>范围选定</string>
+             <string>历史查看</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_21">
+            <property name="minimumSize">
+             <size>
+              <width>133</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Adobe Arabic</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>刷新</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
@@ -1845,12 +1892,12 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-1181</y>
              <width>1475</width>
-             <height>1088</height>
+             <height>1702</height>
             </rect>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_37">
+           <layout class="QVBoxLayout" name="verticalLayout_14">
             <item>
              <widget class="QWidget" name="widget_3" native="true">
               <property name="minimumSize">
@@ -1894,7 +1941,7 @@
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <layout class="QVBoxLayout" name="verticalLayout_13">
               <item>
                <widget class="QWidget" name="widget_4" native="true">
                 <property name="minimumSize">
@@ -2010,6 +2057,19 @@
                <string>记录上传</string>
               </property>
              </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </widget>

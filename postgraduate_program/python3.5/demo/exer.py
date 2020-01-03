@@ -1,10 +1,6 @@
-def log(func):
-    def wrapper(*args, **kw):
-        print('call %s():' % func.__name__)
-        return func(*args, **kw)
-    return wrapper
-
-@log
-def now():
-    pass
-now()
+list = []
+list1 = [1, 2]
+list2 = [3, 4]
+list.append(list1)
+list.append(list2)
+print(list)

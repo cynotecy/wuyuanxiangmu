@@ -26,9 +26,11 @@ from matplotlib.collections import LineCollection
 
 
 class ApplicationWindow(QWidget):
-    def __init__(self, path):
+    def __init__(self, *arg):
         super().__init__()
-        self.path = path
+        if len(arg) == 1:
+            self.path = path
+        elif len(arg) == 3:
         self.lineyArray = 0
         ############
         matplotlib.rcParams['font.family'] = ['SimHei']  # 用来正常显示中文标签
@@ -46,7 +48,7 @@ class ApplicationWindow(QWidget):
         # self.axs.set_xlim(150, 200)
         # self.axs.set_ylim(-120, -70)
         self.draw()
-##########
+
     def _update_canvas(self):
         self.draw()
 

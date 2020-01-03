@@ -131,11 +131,8 @@ class myQTableWidget(QTableWidget):
         pos = event.pos()
         item = self.indexAt(pos)
         if item:
-            if self.rowNum.empty():
-                self.rowNum.put(item.row())
-            else:
-                self.rowNum.get()
-                self.rowNum.put(item.row())
+            self.rowNum.queue.clear()
+            self.rowNum.put(item.row())
             print("item clicked at ", item.row(), " ", item.column())
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ from socketDemo.zmqLocal import zmqThread
 from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,
                                                     usrp_shibie_v3)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelope_shibie_v3
+from controller.usrp_controller.steadyStateInterference_shibie import steadyStateInterference_shibie_v2
 from controller.Pico_controller import pico_jicheng_online_pack_v2, pico_jicheng_offline_v2
 
 # py2线程（函数形式）
@@ -78,6 +79,25 @@ class OcRecognizeThread(Thread):
                     self.ocRsltDict[int(num)] = recognizeResult
                     break
         self.ocLoadingQ.put(self.ocRsltDict)
+
+# 频谱保存线程
+class SaveSpectrumThread(Thread):
+    def __init__(self, path, data, q):
+        super(SaveSpectrumThread, self).__init__()
+        self.path = path
+        self.data = data
+        self.q = q
+    def run(self):
+        starttime = datetime.datetime.now()
+        with open(self.path, 'w') as f:
+            f.write(self.data[0])
+            f.write('\n')
+            f.write(self.data[1])
+        endtime = datetime.datetime.now()
+        strTime = '存储线程花费:%dms' % (
+                (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+        print(strTime)
+        self.q.put(self.path)
 
 # IQ识别线程
 class IQSingleProcess(Thread):
@@ -225,4 +245,20 @@ class PulseRecognizeOfflineProcess(Thread):
     def run(self):
         reslt= pico_jicheng_offline_v2.configuration(self.path, self.length)
         print("pulse recognize reslt:", reslt)
+        self.q.put(reslt)
+
+# 稳态干扰判断线程
+class steadyStateRecognizeProcess(Thread):
+    def __init__(self, q, x, y, standardVaule, outputPath):
+        super(steadyStateRecognizeProcess, self).__init__()
+        self.q = q
+        self.x = x
+        self.y = y
+        self.standardValue = standardVaule
+        self.outputPath = outputPath
+    def run(self):
+        reslt = steadyStateInterference_shibie_v2.position(self.x,
+                                                           self.y,
+                                                           self.standardValue,
+                                                           self.outputPath)
         self.q.put(reslt)

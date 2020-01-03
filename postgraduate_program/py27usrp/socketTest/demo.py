@@ -17,7 +17,8 @@ from functions import filesOrDirsOperate
 
 def threadControl():
     standar = '-11'  # USRP定标
-    remoteTimeOut = 20  # 远端socket超时时限
+    # standar = '0'  # USRP定标
+    remoteTimeOut = 60  # 远端socket超时时限
     localQueue = Queue.Queue()
     remoteQueue = Queue.Queue()
     pubAddress1 = 'tcp://192.168.0.100:6666'
@@ -75,8 +76,8 @@ def threadControl():
         instructionInfoList = instructionInfo.split(';')
         # 扫频模式
         if mode == 'scan':
-            # IQ&频谱包络识别扫频
-            if action == 'IQ' or 'specEnvelope':
+            # IQ&频谱包络&稳态干扰识别扫频
+            if action == 'IQ' or 'specEnvelope' or 'steadyStateInterference':
                 startFreq = instructionInfoList[0]
                 endFreq = instructionInfoList[1]
                 scanRecv = scan_thread.Recv(localQueue, subSock, standar)
@@ -102,9 +103,6 @@ def threadControl():
                     freqbinsList = [freqStr, binStr]
                     freqbins = ';'.join(freqbinsList)
                     repSocket.send(freqbins)
-            # 稳态干扰识别扫频
-            elif action == 'steadyStateInterference':
-                pass
             # 48H监测扫频（连续）（1-4线程）
             elif action == 'specMonitor':
                 pass

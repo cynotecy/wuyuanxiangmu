@@ -20,6 +20,7 @@ from Ui.UitoPy.Ui_socketDEMO import Ui_MainWindow
 from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,
                                                     usrp_shibie_v3)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelopeDrawpic
+from controller.usrp_controller.steadyStateInterference_shibie import display_v4
 from controller.Pico_controller.draw_pic import draw_pic
 from function.numOrLetters import *
 from socketDemo import zmqLocal
@@ -31,7 +32,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
         os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
-        # py2 = algorithmThreads.py2Thread()
         py2 = Thread(target=algorithmThreads.py2Thread, args=(), daemon=True)
         py2.start()
 
@@ -46,12 +46,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.overThresholdQ = mq()
         self.ocCollectPathQ = mq()
         self.ocLoadingQ = mq()
-        # 绘图布局标志位，为0表示布局中没有绘图，为1表示布局中有在线扫频图，为2表示布局中有离线频谱图
-        self.specPicFlag = 0
+        self.steadyTabRowNum = queue.Queue()  # 稳态干扰表格双击监听队列
+        # 初始化标志位
+        self.specPicFlag = 0# 频谱图标志位，为0表示布局中没有绘图，为1表示布局中有在线扫频图，为2表示布局中有离线频谱图
         self.ocTableDisplayFlag = 0
         self.specEnvelopeFlag = 0# 包络图标志位
         self.pulsePicFlag = 0# 脉冲图标志位
-
+        self.steadyStatePicStateFlag = 0# 稳态干扰图区状态，0代表没有图，1代表原始图，2代表结果图
+        self.steadyStateTableFlag = 0  # 稳态干扰表区标志位
+        self.steadyStateHistoryFigFlag = 0  # 稳态干扰历史图区标志位
+        # 初始化变量
+        self.steadyStateHistoryData = []  # 稳态干扰历史数据
+        self.steadyStateHistoryResult = []  # 稳态干扰历史结果
+        # 实例化zmq
         self.zmqLocal = zmqLocal.localZMQ()
         # 第一页，IQ识别
         ## 自动识别
@@ -79,12 +86,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 第四页，稳态干扰识别
         self.pushButton_17.clicked.connect(self.on_pushButton_clicked_17)  # 扫频
-        self.pushButton_18.clicked.connect(self.on_pushButton_clicked_18)  # 在线范围选定
-        self.pushButton_19.clicked.connect(self.on_pushButton_clicked_19)  # 选择文件
-        self.pushButton_20.clicked.connect(self.on_pushButton_clicked_20)  # 离线范围选定
-        self.pushButton_21.clicked.connect(self.on_pushButton_clicked_21)  # 历史查看
-        self.pushButton_22.clicked.connect(self.on_pushButton_clicked_22)  # 刷新
-    # 扫频按键
+        self.pushButton_18.clicked.connect(self.on_pushButton_clicked_18)  # 选择文件
+        self.pushButton_19.clicked.connect(self.on_pushButton_clicked_19)  # 干扰判断
+        self.pushButton_20.clicked.connect(self.on_pushButton_clicked_20)  # 历史查看
+        self.pushButton_21.clicked.connect(self.on_pushButton_clicked_21)  # 刷新
+        self.pushButton_22.clicked.connect(self.on_pushButton_clicked_22)  # 查看频谱图
+
+    # IQ扫频按键
     def on_pushButton_clicked_1(self):
         while not self.zmqLocalQ.empty():
             self.zmqLocalQ.get()
@@ -94,7 +102,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if isNum(startfreq) and isNum(endfreq):
             startfreq = float(startfreq)
             endfreq = float(endfreq)
-            if startfreq < endfreq and startfreq >= 30 and endfreq <= 6000:
+            if startfreq < endfreq and startfreq >= 30 and endfreq <= 5000:
                 startfreq = startfreq*1000000
                 endfreq = endfreq*1000000
                 usrpNum = self.comboBox_2.currentText()
@@ -130,17 +138,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         #####置入绘图####
                         if self.specPicFlag:
                             self.verticalLayout.removeWidget(self.getPosition)
-                            self.getPosition = plotWithCursor.getPos(self.onlineSpecX,
-                                                                     self.onlineSpecY,
-                                                                     self.lineEdit_6)
-                            self.verticalLayout.addWidget(self.getPosition)
-                            self.specPicFlag = 1
-                        else:
-                            self.getPosition = plotWithCursor.getPos(self.onlineSpecX,
-                                                                     self.onlineSpecY,
-                                                                     self.lineEdit_6)
-                            self.verticalLayout.addWidget(self.getPosition)
-                            self.specPicFlag = 1
+                        self.getPosition = plotWithCursor.getPos('originOnline', self.onlineSpecX,
+                                                                 self.onlineSpecY,
+                                                                 self.lineEdit_6)
+                        self.verticalLayout.addWidget(self.getPosition)
+                        self.specPicFlag = 1
                         endtime = datetime.datetime.now()
                         strTime = 'funtion time use:%dms' % (
                                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
@@ -161,18 +163,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # 保存频谱
     def on_pushButton_clicked_9(self):
         if self.specPicFlag == 1:
+            while not self.savingProcessQ.empty():
+                self.savingProcessQ.get()
             dirPath = os.path.join(self.fatherPath, r'usrp_recvfiles\usrp_scan')
             filesOrDirsOperate.makesureDirExist(dirPath)
             localTime = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
             filePath = os.path.join(dirPath, r'scan_spectrum_{}.txt'.format(localTime))
-            # freqList = list(map(str, self.onlineSpecX))
-            # binsList = list(map(str, self.onlineSpecY))
-            # freqStr = " ".join(freqList)
-            # binsStr = " ".join(binsList)
-            with open(filePath, 'w') as f:
-                f.write(self.scanRslt[0])
-                f.write('\n')
-                f.write(self.scanRslt[1])
+            saveT = algorithmThreads.SaveSpectrumThread(filePath, self.scanRslt, self.savingProcessQ)
+            saveT.start()
+            loading = Message.Loading()
+            loading.setWindowModality(Qt.ApplicationModal)
+            loading.show()
+            gui = QGuiApplication.processEvents
+            while self.savingProcessQ.empty():
+                gui()
+            else:
+                loading.close()
+                print('频谱文件存储于：', self.savingProcessQ.get())
         else:
             QMessageBox.warning(self,
                                 '提示',
@@ -201,11 +208,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     #####置入绘图####
                     if self.specPicFlag:
                         self.verticalLayout.removeWidget(self.getPosition)
-                        self.getPosition = plotWithCursor.getPos(path)
-                        self.verticalLayout.addWidget(self.getPosition)
-                    else:
-                        self.getPosition = plotWithCursor.getPos(path)
-                        self.verticalLayout.addWidget(self.getPosition)
+                    self.getPosition = plotWithCursor.getPos('originOffline', path)
+                    self.verticalLayout.addWidget(self.getPosition)
                     self.specPicFlag = 2
                 except:
                     QMessageBox.warning(self,
@@ -494,7 +498,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if isNum(startfreq) and isNum(endfreq):
             startfreq = float(startfreq)
             endfreq = float(endfreq)
-            if startfreq < endfreq and startfreq >= 30 and endfreq <= 6000 and (endfreq - startfreq) <= 150:
+            if startfreq < endfreq and startfreq >= 30 and endfreq <= 5000 and (endfreq - startfreq) <= 150:
                 startfreq = startfreq * 1000000
                 endfreq = endfreq * 1000000
                 usrpNum = self.comboBox_4.currentText()
@@ -839,6 +843,245 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         except:
             pass
+
+    # 稳态干扰扫频
+    def on_pushButton_clicked_17(self):
+        while not self.zmqLocalQ.empty():
+            self.zmqLocalQ.get()
+        starttime = datetime.datetime.now()
+        startfreq = self.lineEdit_12.text()
+        endfreq = self.lineEdit_13.text()
+        if isNum(startfreq) and isNum(endfreq):
+            startfreq = float(startfreq)
+            endfreq = float(endfreq)
+            if startfreq < endfreq and startfreq >= 30 and endfreq <= 5000:
+                startfreq = startfreq*1000000
+                endfreq = endfreq*1000000
+                usrpNum = self.comboBox_5.currentText()
+                msg = (usrpNum + ',scan,steadyStateInterference,'
+                          + str(startfreq) + ";" + str(endfreq))
+                zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+                                             args=(self.zmqLocal, msg, self.zmqLocalQ))
+                zmqThread.start()
+                # 调用loading
+                loading = Message.Loading()
+                loading.setWindowModality(Qt.ApplicationModal)
+                loading.show()
+                gui = QGuiApplication.processEvents
+                # while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
+                while self.zmqLocalQ.empty():
+                    gui()
+                else:
+                    loading.close()
+                    reslt = self.zmqLocalQ.get()
+                    if reslt == "超时":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "本地连接超时！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                    else:
+                        resltList = reslt.split(';')
+                        steadyStateScanRslt = resltList  # 用于存储
+                        # 开启存储线程
+                        while not self.savingProcessQ.empty():
+                            self.savingProcessQ.get()
+                        dirPath = os.path.join(self.fatherPath, r'steadyStateInterference_recvfiles')
+                        filesOrDirsOperate.makesureDirExist(dirPath)
+                        localTime = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+                        filePath = os.path.join(dirPath, r'steady_state_spectrum_{}.txt'.format(localTime))
+                        saveT = algorithmThreads.SaveSpectrumThread(filePath,
+                                                                    steadyStateScanRslt, self.savingProcessQ)
+                        saveT.start()
+                        ##
+                        freqList = resltList[0].split(' ')
+                        binsList = resltList[1].split(" ")
+                        # 用于绘图
+                        specX = [float(i) for i in freqList]
+                        specY = [float(i) for i in binsList]
+                        self.steadyStateData = [specX, specY]# 用于干扰判断算法调用
+                        #####置入绘图####
+                        if not self.steadyStatePicStateFlag == 0:
+                            # 如果图区有图，不管是原图还是结果图，都刷掉
+                            self.verticalLayout_30.removeWidget(self.steadyStateFig)
+                            self.steadyStateFig.deleteLater()
+                            self.steadyStateFig = None
+                        self.steadyStateFig = plotWithCursor.getPos('originOnline',
+                                                                       specX, specY, self.lineEdit_16)
+                        self.verticalLayout_30.addWidget(self.steadyStateFig)
+                        self.steadyStatePicStateFlag = 1
+                        endtime = datetime.datetime.now()
+                        strTime = '扫频花费:%dms' % (
+                                (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                        print(strTime)
+            else:
+                QMessageBox.warning(self,
+                                    '错误',
+                                    "请输入正确参数！",
+                                    QMessageBox.Yes,
+                                    QMessageBox.Yes)
+        else:
+            QMessageBox.warning(self,
+                                '错误',
+                                "请输入正确参数！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
+    # 稳态干扰选择文件
+    def on_pushButton_clicked_18(self):
+        self.lineEdit_17.clear()
+        defultPath = os.path.join(self.fatherPath, r'steadyStateInterference_recvfiles')
+        filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
+                                                  defultPath, "*.txt")
+        print("IQ频谱图查看选择文件：", filename)
+        self.lineEdit_17.setText(filename)
+
+    # 稳态干扰离线频谱图查看
+    def on_pushButton_clicked_22(self):
+        if self.lineEdit_17.text():
+            path = self.lineEdit_17.text()
+            if os.path.exists(path):
+                try:
+                    #####置入绘图####
+                    if not self.steadyStatePicStateFlag == 0:
+                        # 如果图区有图，不管是原图还是结果图，都刷掉
+                        self.verticalLayout_30.removeWidget(self.steadyStateFig)
+                        self.steadyStateFig.deleteLater()
+                        self.steadyStateFig = None
+                    self.steadyDataQ = queue.Queue()
+                    self.steadyStateFig = plotWithCursor.getPos('originOffline',
+                                                                   path, self.lineEdit_16,
+                                                                   self.steadyDataQ)
+                    self.steadyStateData = self.steadyDataQ.get()
+                    self.verticalLayout_30.addWidget(self.steadyStateFig)
+                    self.steadyStatePicStateFlag = 2
+                except:
+                    QMessageBox.warning(self,
+                                        '错误',
+                                        "绘图失败，请检查文件格式。",
+                                        QMessageBox.Yes,
+                                        QMessageBox.Yes)
+
+            else:
+                QMessageBox.warning(self,
+                                    '提示',
+                                    "文件不存在！",
+                                    QMessageBox.Yes,
+                                    QMessageBox.Yes)
+        else:
+            QMessageBox.warning(self,
+                                '提示',
+                                "请先选择文件！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
+    # 稳态干扰判断
+    def on_pushButton_clicked_19(self):
+        if not self.lineEdit_16.text():
+            QMessageBox.warning(self,
+                                '提示',
+                                "请输入限值！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+        elif self.steadyStatePicStateFlag == 0:
+            QMessageBox.warning(self,
+                                '提示',
+                                "请先扫频或查看频谱图！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+        else:
+            if self.steadyStateTableFlag:
+                self.verticalLayout_31.removeWidget(self.steadyStateTab)
+                self.steadyStateTab.deleteLater()
+                self.steadyStateTab = None
+            self.steadyStateTab = display_v4.WindowClass(self.steadyTabRowNum)
+            self.verticalLayout_31.addWidget(self.steadyStateTab)
+            self.steadyStateTableFlag = 1
+
+            while not self.algorithmProcessQ.empty():
+                self.algorithmProcessQ.get()
+            dirPath = os.path.join(self.fatherPath, r'steadyStateInterference_outputfiles')
+            filesOrDirsOperate.makesureDirExist(dirPath)
+            localTime = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+            filePath = os.path.join(dirPath, r'steady_state_output_{}.txt'.format(localTime))
+            steadyStateRecognizeT = algorithmThreads.steadyStateRecognizeProcess(self.algorithmProcessQ,
+                                                                 self.steadyStateData[0],
+                                                                 self.steadyStateData[1],
+                                                                 self.lineEdit_16.text(),
+                                                                 filePath)
+            steadyStateRecognizeT.start()
+            # 调用loading
+            loading = Message.Loading()
+            loading.setWindowModality(Qt.ApplicationModal)
+            loading.show()
+            gui = QGuiApplication.processEvents
+            # while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
+            while self.algorithmProcessQ.empty():
+                gui()
+            else:
+                loading.close()
+                self.steadyStateHistoryData.append(self.steadyStateData)  # 历史数据表更新
+                reslt = self.algorithmProcessQ.get()
+                self.steadyStateHistoryResult.append(reslt)  # 历史识别记录表更新
+                self.steadyStateTab.pushButton(self.steadyStateHistoryResult)
+                #####置入绘图####
+                if not self.steadyStatePicStateFlag == 0:
+                    # 如果图区有图，不管是原图还是结果图，都刷掉
+                    self.verticalLayout_30.removeWidget(self.steadyStateFig)
+                    self.steadyStateFig.deleteLater()
+                    self.steadyStateFig = None
+                self.steadyStateFig = plotWithCursor.getPos('after',
+                                                            self.steadyStateData[0],
+                                                            self.steadyStateData[1],
+                                                            self.lineEdit_16.text())
+                self.verticalLayout_30.addWidget(self.steadyStateFig)
+                self.steadyStatePicStateFlag = 3
+
+    # 稳态干扰历史查看
+    def on_pushButton_clicked_20(self):
+        if not self.steadyTabRowNum.empty():
+            if self.steadyStateHistoryFigFlag:
+                self.verticalLayout_32.removeWidget(self.steadyStateHistoryFig)
+                self.steadyStateHistoryFig.deleteLater()
+                self.steadyStateHistoryFig = None
+            rowNum = self.steadyTabRowNum.get()
+            data = self.steadyStateHistoryData[rowNum]
+            self.steadyStateHistoryFig = plotWithCursor.getPos('history',
+                                                            data[0],
+                                                            data[1])
+            self.verticalLayout_32.addWidget(self.steadyStateHistoryFig)
+            self.steadyStateHistoryFigFlag = 1
+        else:
+            QMessageBox.warning(self, "提示", "请先双击需查看的行")
+
+    #稳态干扰刷新
+    def on_pushButton_clicked_21(self):
+        '''信号图区清空'''
+        if self.steadyStatePicStateFlag:
+            self.verticalLayout_30.removeWidget(self.steadyStateFig)
+            self.steadyStateFig.deleteLater()
+            self.steadyStateFig = None
+            self.steadyStatePicStateFlag = 0 # 信号图像标志位
+        '''历史图区清空'''
+        if self.steadyStateHistoryFigFlag:
+            self.verticalLayout_32.removeWidget(self.steadyStateHistoryFig)
+            self.steadyStateHistoryFig.deleteLater()
+            self.steadyStateHistoryFig = None
+            self.steadyStateHistoryFigFlag = 0
+        '''表区清空'''
+        if self.steadyStateTableFlag:
+            self.verticalLayout_31.removeWidget(self.steadyStateTab)
+            self.steadyStateTab.deleteLater()
+            self.steadyStateTab = None
+            self.steadyStateTableFlag = 0
+        '''全局变量清空'''
+        self.steadyStateHistoryData = []
+        self.steadyStateHistoryResult = []
+        '''行号监听队列清空'''
+        self.steadyTabRowNum.queue.clear()
+        '''输入框清空'''
+        self.lineEdit_17.clear()
+        self.lineEdit_16.clear()
 
     # 重写关闭事件
     def closeEvent(self, event):
