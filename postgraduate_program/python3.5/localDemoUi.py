@@ -26,8 +26,8 @@ from function.numOrLetters import *
 from socketDemo import zmqLocal
 import algorithmThreads
 
-class MainWindow(QMainWindow, Ui_MainWindow):
 
+class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
@@ -42,17 +42,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.zmqLocalQ = mq()
         self.dataQ = mq()
         self.algorithmProcessQ = mq()  # 算法线程队列，用来判断算法线程是否结束
-        self.savingProcessQ = mq()  # 算法线程队列，用来判断算法线程是否结束
-        self.overThresholdQ = mq()
-        self.ocCollectPathQ = mq()
-        self.ocLoadingQ = mq()
+        self.savingProcessQ = mq()  # 存储线程队列，用来判断存储线程是否结束
+        self.ocCollectPathQ = mq()  # 批量识别地址存储队列，采集线程往里面塞入采集文件的存储地址，识别线程从里面取出地址进行识别
         self.steadyTabRowNum = queue.Queue()  # 稳态干扰表格双击监听队列
         # 初始化标志位
-        self.specPicFlag = 0# 频谱图标志位，为0表示布局中没有绘图，为1表示布局中有在线扫频图，为2表示布局中有离线频谱图
+        self.specPicFlag = 0  # 频谱图标志位，为0表示布局中没有绘图，为1表示布局中有在线扫频图，为2表示布局中有离线频谱图
         self.ocTableDisplayFlag = 0
-        self.specEnvelopeFlag = 0# 包络图标志位
-        self.pulsePicFlag = 0# 脉冲图标志位
-        self.steadyStatePicStateFlag = 0# 稳态干扰图区状态，0代表没有图，1代表原始图，2代表结果图
+        self.specEnvelopeFlag = 0  # 包络图标志位
+        self.pulsePicFlag = 0  # 脉冲图标志位
+        self.steadyStatePicStateFlag = 0  # 稳态干扰图区状态，0代表没有图，1代表原始图，2代表结果图
         self.steadyStateTableFlag = 0  # 稳态干扰表区标志位
         self.steadyStateHistoryFigFlag = 0  # 稳态干扰历史图区标志位
         # 初始化变量
@@ -91,6 +89,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_20.clicked.connect(self.on_pushButton_clicked_20)  # 历史查看
         self.pushButton_21.clicked.connect(self.on_pushButton_clicked_21)  # 刷新
         self.pushButton_22.clicked.connect(self.on_pushButton_clicked_22)  # 查看频谱图
+
+        # 第五页，48h频谱监测
+        self.pushButton_23.clicked.connect(self.on_pushButton_clicked_23)  # usrp1开始监测
+        # self.pushButton_24.clicked.connect(self.on_pushButton_clicked_24)  # usrp2开始监测
+        # self.pushButton_25.clicked.connect(self.on_pushButton_clicked_25)  # usrp3开始监测
+        # self.pushButton_26.clicked.connect(self.on_pushButton_clicked_26)  # usrp4开始监测
+        # self.pushButton_27.clicked.connect(self.on_pushButton_clicked_27)  # 长频谱开始监测
 
     # IQ扫频按键
     def on_pushButton_clicked_1(self):
@@ -208,7 +213,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     #####置入绘图####
                     if self.specPicFlag:
                         self.verticalLayout.removeWidget(self.getPosition)
-                    self.getPosition = plotWithCursor.getPos('originOffline', path)
+                    self.getPosition = plotWithCursor.getPos('originOfflineWithoutMouseListening', path)
                     self.verticalLayout.addWidget(self.getPosition)
                     self.specPicFlag = 2
                 except:
@@ -265,16 +270,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     # 启用超频点判断线程
                     overThresholdThread = algorithmThreads.IQOverThreshold(self.onlineSpecX,
                                                                          self.onlineSpecY, threshold,
-                                                                         self.overThresholdQ)
+                                                                         self.algorithmProcessQ)
                     overThresholdThread.start()
                     loading = Message.Loading()
                     loading.setWindowModality(Qt.ApplicationModal)
                     loading.show()
                     gui = QApplication.processEvents
-                    while self.overThresholdQ.empty():
+                    while self.algorithmProcessQ.empty():
                         gui()
                     else:
-                        self.ocOverThresholdList = self.overThresholdQ.get()
+                        self.ocOverThresholdList = self.algorithmProcessQ.get()
                         loading.close()
                         if self.ocOverThresholdList:
                             # 置入超频点列表
@@ -307,15 +312,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.ocRowNumSelectList = self.ocTableDisplay.getRow()
             print('用户选中的行为:', self.ocRowNumSelectList)
             if self.ocRowNumSelectList:
-                while not self.ocLoadingQ.empty():
-                    self.ocLoadingQ.get()
+                while not self.algorithmProcessQ.empty():
+                    self.algorithmProcessQ.get()
                 usrpNum = self.comboBox_2.currentText()
                 # 创建行号-IQ识别结果字典
                 self.ocRsltDict = dict.fromkeys(self.ocRowNumSelectList, 'null')
                 collectThread = algorithmThreads.OcCollectThread(usrpNum, self.ocRsltDict,
                                               self.ocOverThresholdList, self.zmqLocal, self.ocCollectPathQ)
                 recognizeThread = algorithmThreads.OcRecognizeThread(self.ocRsltDict,
-                                                                     self.ocCollectPathQ, self.ocLoadingQ)
+                                                                     self.ocCollectPathQ, self.algorithmProcessQ)
                 collectThread.start()
                 recognizeThread.start()
                 # 调用识别loading
@@ -323,11 +328,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 loading.setWindowModality(Qt.ApplicationModal)
                 loading.show()
                 gui = QGuiApplication.processEvents
-                while self.ocLoadingQ.empty():
+                while self.algorithmProcessQ.empty():
                     gui()
                 else:
                     loading.close()
-                    self.ocRsltDict = self.ocLoadingQ.get()
+                    self.ocRsltDict = self.algorithmProcessQ.get()
                     for row in self.ocRsltDict:
                         rowName = int(row)
                         item1 = QTableWidgetItem(self.ocRsltDict[rowName][2])  # 调制方式
@@ -1080,8 +1085,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         '''行号监听队列清空'''
         self.steadyTabRowNum.queue.clear()
         '''输入框清空'''
+        self.lineEdit_12.clear()
+        self.lineEdit_13.clear()
         self.lineEdit_17.clear()
         self.lineEdit_16.clear()
+
+    # usrp1,48h频谱监测
+    def on_pushButton_clicked_23(self):
+        usrpNum = "1"
+        startfreq = self.lineEdit_27.text()
+        endfreq = self.lineEdit_26.text()
+        startfreq = startfreq * 1000000
+        endfreq = endfreq * 1000000
+        msg = (usrpNum + ',scan,specMonitor,'
+               + str(startfreq) + ";" + str(endfreq))
+        zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+                                     args=(self.zmqLocal, msg, self.zmqLocalQ))
+        zmqThread.start()
+        while self.zmqLocalQ.empty():
+            pass
+        else:
+            paraRepStartReslt = self.zmqLocalQ.get()
+            if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum):
+                pass
+            else:
+                paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
+
+                # 弹出子窗口
+                childWindow = WaterfallDialog(usrpNum, paraSocket, startfreq, endfreq)
+                childWindow.show()
+                pass
 
     # 重写关闭事件
     def closeEvent(self, event):

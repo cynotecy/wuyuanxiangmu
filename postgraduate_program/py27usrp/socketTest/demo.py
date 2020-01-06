@@ -6,10 +6,9 @@ import datetime
 import Queue
 import thread
 import zmq
-
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from current_controller import scan_thread, collect_thread
-from socketTest import socket
+from socketTest import socket, repParaThread
 from functions import filesOrDirsOperate
 """
 加个远程连接检测
@@ -30,6 +29,12 @@ def threadControl():
     subAddress3 = 'tcp://127.0.0.1:5555'
     
     repAddress = 'tcp://127.0.0.1:6667'
+    # 并行本地连接，当多路usrp同时使用时，repAddress地址绑定的socket不可以一直被占用则启用并行连接
+    repAddressPara1 = 'tcp://127.0.0.1:6668'
+    repAddressPara2 = 'tcp://127.0.0.1:6669'
+    repAddressPara3 = 'tcp://127.0.0.1:6670'
+    repAddressPara4 = 'tcp://127.0.0.1:6671'
+    repParaAddressList = [repAddressPara1, repAddressPara2, repAddressPara3, repAddressPara4]
     # 定义连接字典
     socketDic = dict()
 
@@ -70,8 +75,8 @@ def threadControl():
 
         pubSock = socketDic[usrpNum - 1][0]
         subSock = socketDic[usrpNum - 1][1]
-        mode = msg[1]  # scan
-        action = msg[2]  # IQ
+        mode = msg[1]  # e.g. scan
+        action = msg[2]  # e.g. IQ
         instructionInfo = msg[3]
         instructionInfoList = instructionInfo.split(';')
         # 扫频模式
@@ -105,7 +110,14 @@ def threadControl():
                     repSocket.send(freqbins)
             # 48H监测扫频（连续）（1-4线程）
             elif action == 'specMonitor':
-                pass
+                try:
+                    repParaSocket = socket.connect(repParaAddressList[usrpNum], 'REP')
+                    repParaT = repParaThread.RepParaThread(repParaSocket, pubSock, subSock, standar, remoteTimeOut)
+                    repParaT.start()
+                    # repSocket.send("paraSocket {} build succeed".format(str(usrpNum)))
+                    repSocket.send(repParaAddressList[usrpNum])
+                except:
+                    repSocket.send("paraSocket {} build failed".format(str(usrpNum)))
             # 实时频谱仪扫频（连续）
             elif action == 'realtimeSpecMonitor':
                 pass

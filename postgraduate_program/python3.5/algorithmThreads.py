@@ -262,3 +262,5 @@ class steadyStateRecognizeProcess(Thread):
                                                            self.standardValue,
                                                            self.outputPath)
         self.q.put(reslt)
+
+#

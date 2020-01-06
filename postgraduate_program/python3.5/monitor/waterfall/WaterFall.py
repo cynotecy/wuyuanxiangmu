@@ -29,22 +29,23 @@ from matplotlib.collections import LineCollection
 
 
 class ApplicationWindow(QWidget):
-    def __init__(self,device):
+    def __init__(self, device, layout):
         super().__init__()
         self.n = 1
         self.id = 1
         self.bar = 0
         self.countLine = 0
         self.device = device
+        self.layout = layout
         matplotlib.rcParams['font.family'] = ['SimHei']  # 用来正常显示中文标签
         matplotlib.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
-        layout = QtWidgets.QVBoxLayout(self)
+        # layout = QtWidgets.QVBoxLayout(self)
         self.freqCanvas = FigureCanvas(Figure(figsize=(9, 6)))
 
         # 添加工具栏
         self.toolbar = NavigationToolbar(self.freqCanvas, self)
-        layout.addWidget(self.toolbar)
-        layout.addWidget(self.freqCanvas)
+        self.layout.addWidget(self.toolbar)
+        self.layout.addWidget(self.freqCanvas)
 
         self.axs = self.freqCanvas.figure.subplots(2, 1, sharex=True)
 
@@ -57,19 +58,19 @@ class ApplicationWindow(QWidget):
         #         self.n+=1# self.n=1
         #         line = self.draw(self.n)
         #         break
-
-
         norm = matplotlib.colors.Normalize(-120, -60)
         # self.freqCanvas.figure.colorbar(line, ax=self.axs[1], norm=norm, orientation='horizontal')
         self.freqCanvas.figure.canvas.mpl_connect('button_press_event', self.drawFreq)
-        self.start = QtWidgets.QPushButton('start')
-        self.stop = QtWidgets.QPushButton('stop')
-
-        layout.addWidget(self.start)
-        layout.addWidget(self.stop)
-
-        self.start.clicked.connect(self._start)
-        self.stop.clicked.connect(self._stop)
+        # self.pause = buttons[0]
+        # self.watchBack = buttons[1]
+        # self.start = QtWidgets.QPushButton('start')
+        # self.stop = QtWidgets.QPushButton('stop')
+        #
+        # layout.addWidget(self.start)
+        # layout.addWidget(self.stop)
+        #
+        # self.start.clicked.connect(self._start)
+        # self.stop.clicked.connect(self._stop)
 
         # 定时任务
         self._timer = self.freqCanvas.new_timer(1000, [(self._update_canvas, (), {})])
@@ -207,7 +208,7 @@ class ApplicationWindow(QWidget):
         # 瀑布图超过限制调整画布大小
         if self.id >= -self.axs[1].get_ylim()[0]:
             self.axs[1].set_ylim(int(self.axs[1].get_ylim()[0] - 100), int(self.axs[1].get_ylim()[0]))
-        print('self.axs[1].ylim()[0]=',end='')
+        print('self.axs[1].ylim()[0]=', end='')
         print(self.axs[1].get_ylim())
         # path = random.randint(1, 20)
         if self.bar:

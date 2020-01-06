@@ -20,8 +20,8 @@ def connect(address, mode):
         repSocket.bind(repAddress)
         socket = repSocket
 
-        poll = zmq.Poller()
-        poll.register(socket, zmq.POLLIN)
+        # poll = zmq.Poller()
+        # poll.register(socket, zmq.POLLIN)
     else:
         socket = 'socket type error'
         

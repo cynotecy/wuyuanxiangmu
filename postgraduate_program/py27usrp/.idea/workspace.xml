@@ -2,22 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7810345c-250a-4cab-bd2b-d559d19078cb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyStateInterference_shibie_v2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/socketTest/repParaThread.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../python3.5/monitor/waterfall/waterfallDialogEngin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../emc" beforeDir="false" afterPath="$PROJECT_DIR$/../emc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/socketTest/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/demo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socketTest/socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/socket.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/MainWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/algorithmThreads.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/algorithmThreads.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/display_v4.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/display_v4.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyFirst_draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyFirst_draw.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyResult_draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyStateDraw.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyStateInterference_shibie.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyStateInterference_shibie.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/demo/exer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/steadyStateInterference_shibie/steadyFirst_draw.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/function/plotWithCursor.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/function/plotWithCursor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/localDemoUi.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/localDemoUi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/monitor/waterfall/WaterFall.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/monitor/waterfall/WaterFall.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/socketDemo/zmqLocal.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/socketDemo/zmqLocal.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -354,6 +353,7 @@
       <workItem from="1577889275939" duration="1697000" />
       <workItem from="1577926671533" duration="8969000" />
       <workItem from="1578015387590" duration="4432000" />
+      <workItem from="1578272611750" duration="8699000" />
     </task>
     <servers />
   </component>

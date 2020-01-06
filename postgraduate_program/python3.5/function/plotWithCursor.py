@@ -23,6 +23,9 @@ class getPos(QWidget):
             self.y = arg[2]
             self.lineEdit = arg[3]
             self.mouseListeningFlag = 1
+        elif arg[0] == 'originOfflineWithoutMouseListening':
+            self.x, self.y = self.getData(arg[1])
+            self.mouseListeningFlag = 0
         elif arg[0] == 'originOffline':
             self.x, self.y = self.getData(arg[1])
             self.lineEdit = arg[2]
