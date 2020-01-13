@@ -22,6 +22,7 @@ from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_
 from controller.usrp_controller.specEnvelope_shibie import specEnvelopeDrawpic
 from controller.usrp_controller.steadyStateInterference_shibie import display_v4
 from controller.Pico_controller.draw_pic import draw_pic
+from monitor.waterfall import waterfallDialogEngin
 from function.numOrLetters import *
 from socketDemo import zmqLocal
 import algorithmThreads
@@ -1107,14 +1108,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             paraRepStartReslt = self.zmqLocalQ.get()
             if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum):
-                pass
+                QMessageBox.warning(self, '错误：', '子窗口通信建立失败！')
             else:
                 paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
 
                 # 弹出子窗口
-                childWindow = WaterfallDialog(usrpNum, paraSocket, startfreq, endfreq)
+                childWindow = waterfallDialogEngin.WaterfallDialog(usrpNum, paraSocket, startfreq, endfreq)
                 childWindow.show()
-                pass
 
     # 重写关闭事件
     def closeEvent(self, event):

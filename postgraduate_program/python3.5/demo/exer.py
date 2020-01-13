@@ -1,6 +1,9 @@
-list = []
-list1 = [1, 2]
-list2 = [3, 4]
-list.append(list1)
-list.append(list2)
-print(list)
+import os
+import time
+
+a = int(time.time())
+time.sleep(3)
+b = int(time.time())
+print([a, b])
+list = [str(b), str(a)]
+print(sorted(list))

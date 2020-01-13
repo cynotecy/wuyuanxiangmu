@@ -26,24 +26,39 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.collections import LineCollection
+from monitor.waterfall.compresse.dbOperation import decompress
 
 
 class ApplicationWindow(QWidget):
-    def __init__(self, device, layout):
+    def __init__(self, pageLimit, dbTable, fatherFilePath, cursor, connect, dbField="data_path"):
         super().__init__()
-        self.n = 1
-        self.id = 1
-        self.bar = 0
-        self.countLine = 0
-        self.device = device
-        self.layout = layout
         matplotlib.rcParams['font.family'] = ['SimHei']  # 用来正常显示中文标签
         matplotlib.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
-        # layout = QtWidgets.QVBoxLayout(self)
+        self.layout = QtWidgets.QVBoxLayout(self)
         self.freqCanvas = FigureCanvas(Figure(figsize=(9, 6)))
+
+        self.dbTable = dbTable  # 数据库表
+        self.dbField = dbField  # 存地址的数据库字段
+        self.fatherFilePath = fatherFilePath  # 数据文件存储父地址，即EMCfile文件夹绝对地址
+        self.limit = pageLimit  # 每页条数
+        self.drawingTimes = 1  # 普通模式绘图次数
+        self.countLine = 1  # 当前页绘图条数
+        self.y_pyDic = {}
+        self.figureKind = 'normal'
+        # 建立数据库连接并初始化数据库游标
+        # self.conn = pymysql.connect(host='localhost',  # ID地址
+        #                        port=3306,  # 端口号
+        #                        user='root',  # 用户名
+        #                        passwd='root',  # 密码
+        #                        db='cast',  # 库名
+        #                        charset='utf8')  # 链接字符集
+        # self.cursor = self.conn.cursor()
+        self.cursor = cursor
+        self.conn = connect
 
         # 添加工具栏
         self.toolbar = NavigationToolbar(self.freqCanvas, self)
+        self.bar = 0
         self.layout.addWidget(self.toolbar)
         self.layout.addWidget(self.freqCanvas)
 
@@ -52,15 +67,14 @@ class ApplicationWindow(QWidget):
         self.axs[0].set_xlim(150, 200)
         self.axs[0].set_ylim(-100, -70)
         self.axs[1].set_xlim(150, 200)
-        self.axs[1].set_ylim(-100, 0)
+        self.axs[1].set_ylim(-self.limit, 0)
         # while True:
         #     if os.path.exists('D:\\postgraduate_program\\48recv\\%s\\1.dat'%self.device):
         #         self.n+=1# self.n=1
         #         line = self.draw(self.n)
         #         break
-        norm = matplotlib.colors.Normalize(-120, -60)
-        # self.freqCanvas.figure.colorbar(line, ax=self.axs[1], norm=norm, orientation='horizontal')
-        self.freqCanvas.figure.canvas.mpl_connect('button_press_event', self.drawFreq)
+        # norm = matplotlib.colors.Normalize(-120, -60)
+        # self.freqCanvas.figure.canvas.mpl_connect('button_press_event', self.refreshFreq)
         # self.pause = buttons[0]
         # self.watchBack = buttons[1]
         # self.start = QtWidgets.QPushButton('start')
@@ -73,165 +87,169 @@ class ApplicationWindow(QWidget):
         # self.stop.clicked.connect(self._stop)
 
         # 定时任务
-        self._timer = self.freqCanvas.new_timer(1000, [(self._update_canvas, (), {})])
+        # self._timer = self.freqCanvas.new_timer(1000, [(self._update_canvas, (), {})])
 
-    def _start(self):
-        self._timer.start()
+    # 图区刷新器，输入(数据库主键,[x,y])或(回看页码)，刷新两个图区
+    def _update_canvas(self, *arg):
+        """
 
-    def _stop(self):
-        self._timer.stop()
+        Args:
+            *arg:元组，长度为1时为(watchbackPath,)，即多条回溯每条的地址；长度为2时为(DBPK, [x, y])，即普通绘图
 
-    def _update_canvas(self):
-        self.draw(self.n)
+        Returns:绘图结果，普通绘图时一般都是True，当回溯数据库查询不到数据记录时为False
 
-    def drawFreq(self, event):  # 点击热力图重绘拼频谱图
+        """
+        reslt = True
+        if len(arg) == 2:
+            if not self.figureKind == 'normal':
+                self.figureKind = 'normal'
+                self.axs[1].set_ylim(-(self.drawingTimes + self.limit), -self.drawingTimes)
+                self.countLine = 1
+                self.y_pyDic = {}
+            elif self.figureKind == 'normal' and self.countLine>self.limit:
+                self.countLine = 1
+                self.y_pyDic = {}
+                self.axs[1].set_ylim(-(self.drawingTimes + self.limit), -self.drawingTimes)
+            dbPk = arg[0]
+            self.y_pyDic[self.countLine] = dbPk
+            #####
+            x = arg[1][0]
+            y = arg[1][1]
+            try:
+                self.draw(x, y)
+                self.countLine += 1
+                self.drawingTimes += 1
+            except:
+                reslt = False
+
+        elif len(arg) == 1:
+            watchBackPath = arg[0]
+            if not self.figureKind == 'watchback':
+                self.figureKind = 'watchback'
+                self.countLine = 1
+                self.y_pyDic = {}
+                self.axs[1].set_ylim(-self.limit, 0)
+            # dataPathList = [i[0] for i in self.batchSelect(watchBackPage)]
+            dataPath = self.addressResolution(watchBackPath, self.fatherFilePath)
+            self.y_pyDic[self.countLine] = dataPath
+            x, y = self.getData(dataPath)
+            try:
+                self.draw(x, y)
+                self.countLine += 1
+            except:
+                reslt = False
+
+        return reslt
+
+    # 单条回溯器，输入鼠标左键点击事件，刷新频谱图区
+    def refreshFreq(self, event):
+        """
+        点击瀑布图重绘频谱图，
+        根据event产生的ydata取数据，并内部调用_update_canvas函数绘图
+        Args:
+            event:
+        Returns:
+        """
         po = event.ydata
         print(po)
-        self.axs[1].set_ylim(-500, 0)
+        # self.axs[1].set_ylim(-100, 0)
         if po == None:
             print("提示:点击位置不对")
-        elif -po > self.id or po > 0:
+        elif self.figureKind == 'normal' and -po > self.drawingTimes or po > 0:
+            print("提示:该位置没有数据")
+        elif self.figureKind == 'watchback' and -po > self.countLine or po > 0:
             print("提示:该位置没有数据")
         else:
-            x, y = self.getOldData(int(-po))
-            print(y)
-            self.axs[0].cla()
-            self.axs[0].plot(x, y)
-            self.axs[0].figure.canvas.draw()
+            try:
+                if self.figureKind == 'normal':
+                    dbPk = self.y_pyDic[-po]
+                    dataPathRelative = self.singleSelect(dbPk)
+                    dataPath = self.addressResolution(dataPathRelative)  # 地址解析
+                else:
+                    dataPath = self.y_pyDic[-po]
+                x, y = self.getData(dataPath)
+                self.axs[0].cla()
+                self.axs[0].plot(x, y)
+                self.axs[0].figure.canvas.draw()
 
-            self.axs[0].set_title('频谱图',fontsize=16)
-            self.axs[0].set_xlabel('频率/MHz',fontsize=14)
-            self.axs[0].set_ylabel('功率/dBm',fontsize=14)
-            print(self.axs[0].figure.canvas==self.axs[1].figure.canvas)
+                self.axs[0].set_title('频谱图',fontsize=16)
+                self.axs[0].set_xlabel('频率/MHz',fontsize=14)
+                self.axs[0].set_ylabel('功率/dBm',fontsize=14)
+                print(self.axs[0].figure.canvas == self.axs[1].figure.canvas)
+            except:
+                print('单点回溯失败')
 
-    def getOldData(self, n):
-        # try:
-        # 获取文件建议使用数据库id获取，方便重绘频谱图
-        conn = pymysql.connect(host='localhost',  # ID地址
-                               port=3306,  # 端口号
-                               user='root',  # 用户名
-                               passwd='root',  # 密码
-                               db='cast',  # 库名
-                               charset='utf8')  # 链接字符集
-        select = ("SELECT `data_path` FROM `waterfall_data_%s` WHERE `id`=%s") % (self.device, n)
-        print(select)
-        cursor = conn.cursor()
-        cursor.execute(select)
-        # 获取所有记录列表
-        results = str(cursor.fetchall())
-        print(results)
-        results = results.split('/')
-        print(results)
-        results = results[-1]
-        results = results.split("'")
-        results = results[0]
-        print(results)
+    # 输入单条回溯数据库主键，输出文件相对地址
+    def singleSelect(self, dbPk):
+        try:
+            select = ("SELECT `{}` FROM `{}` WHERE `id`={}"
+                      .format(self.dbField, self.dbTable, dbPk))
+            print(select)
+            self.cursor.execute(select)
+            self.conn.commit()
+            # 获取单条地址记录
+            dataPath = str(self.cursor.fetchall())
+        except:
+            dataPath = 0
+        return dataPath
 
-        path = r'..\EMCfile\waterfall\%s\%s' % (self.device, results)
-        print(path)
-        if os.path.exists(path):
-            print(str(n)+'exist')
-            file = open(path)
-        else:
+    # # 输入多条回溯页码，输出文件相对地址元组
+    # def batchSelect(self, watchBackPage):
+    #     dataPathTuple = ()
+    #     try:
+    #         watchBackPage = int(watchBackPage)
+    #         select = ("SELECT `{}` FROM `{}` limit {} offset {} "
+    #                   .format(self.dbField, self.dbTable, self.limit,
+    #                           (watchBackPage-1)*self.limit))
+    #         self.cursor.execute(select)
+    #         # 获取地址元组
+    #         dataPathTuple = tuple(self.cursor.fetchall())
+    #     except:
+    #         pass
+    #     return dataPathTuple
+
+    # 输入文件绝对地址，输出x和y
+    def getData(self, dataPath):
+        x, y = None, None
+        try:
+            if os.path.exists(dataPath):
+                x, y = self.decompress(dataPath)  # decompress为引用的解压函数
+        except:
             pass
-
-        x = file.readline().split(" ")
-        y = file.readline().split(" ")
-        points = int(x.pop(0))
-        ratio = points / (len(x) - 2)
-        x.pop(len(x) - 1)
-        y.pop(len(y) - 1)
-        # print(type(x[0]))
-        x = np.array([float(x) for x in x])
-        y = np.array([float(y)-11 for y in y])
-        x = self.down_sample(x, ratio)
-        y = self.down_sample(y, ratio)
-        return x, y
-        # except:
-        #     pass
-
-    def getData(self, n):
-        # try:
-        # 获取文件建议使用数据库id获取，方便重绘频谱图
-        conn = pymysql.connect(host='localhost',  # ID地址
-                               port=3306,  # 端口号
-                               user='root',  # 用户名
-                               passwd='root',  # 密码
-                               db='cast',  # 库名
-                               charset='utf8')  # 链接字符集
-        select = ("SELECT `data_path` FROM `waterfall_data_%s` WHERE `id`=%s") % (self.device, self.id)
-        print(select)
-        cursor = conn.cursor()
-        cursor.execute(select)
-        # 获取所有记录列表
-        results = str(cursor.fetchall())
-        # print(results)
-        results = results.split('/')
-        print(results)
-        results = results[-1]
-        results = results.split("'")
-        results = results[0]
-        # print(results)
-
-        path = r'..\EMCfile\waterfall\%s\%s' % (self.device, results)
-        print(path)
-        if os.path.exists(path):
-            print(str(n)+'exist')
-            file = open(path)
-        else:
-            pass
-
-        x = file.readline().split(" ")
-        points = int(x.pop(0))
-
-        # ratio = points/(len(x)-2)
-        # print(ratio)
-        y = file.readline().split(" ")
-        x.pop(len(x) - 1)
-        y.pop(len(y) - 1)
-        x = np.asarray(x)
-        y = np.asarray(y)
-        # x = np.array([float(x) for x in x])
-        # y = np.array([float(y)-11 for y in y])
-        x = x.astype(np.float32)
-        y = y.astype(np.float32)
-        # x = self.down_sample(x, ratio)
-        # y = self.down_sample(y, ratio)
-        y = y-11
         return x, y
 
-    # def down_sample(self, input_data, ratio):  # 上or下采样
-    #     converter = 'linear'  # or 'sinc_fastest', ...
-    #     return samplerate.resample(input_data, ratio, converter)
+    # 地址解析器，输入数据库中存的文件地址、父绝对地址，输出文件绝对地址
+    def addressResolution(self, field, fatherPath):
+        """
 
-    def draw(self, path):
-        # 瀑布图超过限制调整画布大小
-        if self.id >= -self.axs[1].get_ylim()[0]:
-            self.axs[1].set_ylim(int(self.axs[1].get_ylim()[0] - 100), int(self.axs[1].get_ylim()[0]))
-        print('self.axs[1].ylim()[0]=', end='')
-        print(self.axs[1].get_ylim())
-        # path = random.randint(1, 20)
+        Args:
+            field: 格式为/file/waterfall/usrpN/时间戳
+            fatherPath: 格式为......./EMCfile
+
+        Returns:
+            dataPath: 文件绝对地址
+
+        """
+        dataPath = ''
+        try:
+            dataPath = field.replace("/file", fatherPath)
+        except:
+            pass
+        return dataPath
+
+    # 输入x和y，刷新频谱图区和瀑布图区
+    def draw(self, x, y):
         if self.bar:
             self.bar.remove()
-
         self.bar = 0
         try:
-            # 重绘频谱图
-            x, y = self.getData(path)
-            print('successful getdata')
-            # print(len(x))
-            # print(x)
             self.axs[0].cla()
             self.axs[0].plot(x, y)
             self.axs[0].set_title('频谱图',fontsize=16)
             self.axs[0].set_xlabel('频率/MHz',fontsize=14)
             self.axs[0].set_ylabel('功率/dBm',fontsize=14)
 
-            heat = np.array([-self.n for x in x])
-            self.n += 1
-            # print('draw')
-            # print(self.n)
-            self.id += 1
+            heat = np.array([-self.drawingTimes for x in x])
             points = np.array([x, heat]).T.reshape(-1, 1, 2)
             segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
@@ -243,7 +261,6 @@ class ApplicationWindow(QWidget):
             # 设置线宽，若瀑布图放的太大线与线之间会出现空缺，若设置太大瀑布图所得比较小时会叠加宽度，可适当调节
             lc.set_linewidth(2)
             line = self.axs[1].add_collection(lc)
-            self.countLine += 1
 
             self.bar = self.freqCanvas.figure.colorbar(line, ax=self.axs[1], norm=norm, orientation='horizontal')
             self.axs[1].figure.canvas.draw()
