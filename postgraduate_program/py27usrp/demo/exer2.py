@@ -1,5 +1,11 @@
 # -*- coding: UTF-8 -*-
 """
+@File:exer2.py
+@Author:lcx
+@Date:2020/1/1919:14
+@Desc:
+"""
+"""
 @File:repParaThread.py
 @Author:lcx
 @Date:2020/1/614:11
@@ -28,12 +34,12 @@ class RepParaThread(Thread):
         while True:
             if self.stopEvent.is_set():
                 self.repSocket.close()
-                print 'from repParaThread: self.repSocket.close()'
+                print 'catched the stop event'
                 break
             else:
-                # 接收界面端消息，发送工程机采集指令，接收工程机采集数据，转发采集数据至界面端
                 try:
                     localRecv = self.repSocket.recv()
+
                     instructionInfoList = localRecv.split(';')
                     startFreq = instructionInfoList[0]
                     endFreq = instructionInfoList[1]
@@ -64,7 +70,20 @@ class RepParaThread(Thread):
                     print repr(e), 'repParaThread reply'
                 finally:
                     time.sleep(1)
+        # else:
+        #     self.repSocket.close()
+        #     print 'from repParaThread: self.repSocket.close()'
 
     def terminate(self):
         self.stopEvent.set()
         print 'terminate'
+
+if __name__ == '__main__':
+    # repSocket, pubSocket, subSocket, standar, remoteTimeOut
+    while 1:
+        t = RepParaThread(1,1,1,1,1)
+        t.start()
+        time.sleep(10)
+        t.terminate()
+        t.join()
+        print 'end main'

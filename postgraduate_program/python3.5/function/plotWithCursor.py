@@ -68,6 +68,7 @@ class getPos(QWidget):
         if self.lineyArray:
             self.axs.plot(self.x, self.lineyArray)
         self.axs.figure.canvas.draw()
+        self.axs.set_ylim(-120, -30)
         self.axs.set_xlabel('频率/MHz', fontsize=14)
         self.axs.set_ylabel('功率/dBM', fontsize=14)
 

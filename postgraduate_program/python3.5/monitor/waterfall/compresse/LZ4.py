@@ -9,7 +9,7 @@ def lz4_compression(data, dbPk, outputDir):
     compressed_data = lz4.frame.compress(input_data, compression_level=3) #压缩比0-16可调，level越大时间越长
     out.write(compressed_data)
 
-    return output_path
+    return outputName
 
 def lz4_decompression(input_path):
     f = open(input_path,'rb')

@@ -32,9 +32,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
-        os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
-        py2 = Thread(target=algorithmThreads.py2Thread, args=(), daemon=True)
-        py2.start()
+        # os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
+        # py2 = Thread(target=algorithmThreads.py2Thread, args=(), daemon=True)
+        # py2.start()
 
         # 初始化当前路径和其父路径，用于拼接后续地址进行非文件夹依赖的寻址
         self.currentPath = os.path.dirname(__file__)
@@ -54,6 +54,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.steadyStatePicStateFlag = 0  # 稳态干扰图区状态，0代表没有图，1代表原始图，2代表结果图
         self.steadyStateTableFlag = 0  # 稳态干扰表区标志位
         self.steadyStateHistoryFigFlag = 0  # 稳态干扰历史图区标志位
+        self.interferenceCancellationFigFlag = 0  # 干扰对消图区标志位
         # 初始化变量
         self.steadyStateHistoryData = []  # 稳态干扰历史数据
         self.steadyStateHistoryResult = []  # 稳态干扰历史结果
@@ -93,9 +94,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 第五页，48h频谱监测
         self.pushButton_23.clicked.connect(self.on_pushButton_clicked_23)  # usrp1开始监测
-        # self.pushButton_24.clicked.connect(self.on_pushButton_clicked_24)  # usrp2开始监测
+        self.pushButton_24.clicked.connect(self.on_pushButton_clicked_24)  # usrp2开始监测
         # self.pushButton_25.clicked.connect(self.on_pushButton_clicked_25)  # usrp3开始监测
         # self.pushButton_26.clicked.connect(self.on_pushButton_clicked_26)  # usrp4开始监测
+        # self.pushButton_27.clicked.connect(self.on_pushButton_clicked_27)  # 长频谱开始监测
+
+        # 第八页，位置比对
+        # 2，干扰对消
+        self.pushButton_28.clicked.connect(self.on_pushButton_clicked_28)  # 在线对消
+        self.pushButton_29.clicked.connect(self.on_pushButton_clicked_29)  # 离线对消
+        self.pushButton_30.clicked.connect(self.on_pushButton_clicked_30)  # 选择文件1
+        self.pushButton_31.clicked.connect(self.on_pushButton_clicked_31)  # 选择文件2
         # self.pushButton_27.clicked.connect(self.on_pushButton_clicked_27)  # 长频谱开始监测
 
     # IQ扫频按键
@@ -1091,34 +1100,264 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.lineEdit_17.clear()
         self.lineEdit_16.clear()
 
-    # usrp1,48h频谱监测
+    # usrp1, 48h频谱监测
     def on_pushButton_clicked_23(self):
         usrpNum = "1"
         startfreq = self.lineEdit_27.text()
         endfreq = self.lineEdit_26.text()
-        startfreq = startfreq * 1000000
-        endfreq = endfreq * 1000000
-        msg = (usrpNum + ',scan,specMonitor,'
-               + str(startfreq) + ";" + str(endfreq))
+        if isNum(startfreq) and isNum(endfreq):
+            startfreq = float(startfreq)
+            endfreq = float(endfreq)
+            if (startfreq < endfreq and startfreq >= 30 and endfreq <= 5000 and (endfreq - startfreq) <= 25):
+                startfreq = startfreq * 1000000
+                endfreq = endfreq * 1000000
+                msg = (usrpNum + ',scan,specMonitor,'
+                       + str(startfreq) + ";" + str(endfreq))
+                zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+                                             args=(self.zmqLocal, msg, self.zmqLocalQ))
+                zmqThread.start()
+                while self.zmqLocalQ.empty():
+                    pass
+                else:
+                    paraRepStartReslt = self.zmqLocalQ.get()
+                    # print(paraRepStartReslt)
+                    if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum) or paraRepStartReslt == '超时':
+                        QMessageBox.warning(self, '错误：', '子窗口通信建立失败！\n {}'.format(paraRepStartReslt))
+                    else:
+                        paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
+                        # 弹出子窗口
+                        dbFilesRootDir = os.path.join(self.fatherPath, 'EMCfile')
+                        self.childWindow = waterfallDialogEngin.WaterfallDialog(usrpNum, paraSocket,
+                                                                                startfreq, endfreq, dbFilesRootDir)
+                        # self.childWindow = waterfallDialogEngin.WaterfallDialog()
+                        self.childWindow.signal.connect(self.waterfallDialogCloseSlot)
+                        self.childWindow.show()
+
+                        # 开启循环任务
+                        self.circulateT = threading.Timer(1, self.childWindow.circulate)
+                        self.circulateT.start()
+            else:
+                QMessageBox.warning(self,
+                                    '错误',
+                                    "请输入正确参数！",
+                                    QMessageBox.Yes,
+                                    QMessageBox.Yes)
+        else:
+            QMessageBox.warning(self,
+                                '错误',
+                                "请输入正确参数！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
+    # usrp2, 48h频谱监测
+    def on_pushButton_clicked_24(self):
+        usrpNum = "2"
+        startfreq = self.lineEdit_29.text()
+        endfreq = self.lineEdit_28.text()
+        if isNum(startfreq) and isNum(endfreq):
+            startfreq = float(startfreq)
+            endfreq = float(endfreq)
+            # if (startfreq < endfreq and startfreq >= 30 and endfreq <= 5000 and (endfreq - startfreq) <= 25):
+            startfreq = startfreq * 1000000
+            endfreq = endfreq * 1000000
+            msg = (usrpNum + ',scan,specMonitor,'
+                   + str(startfreq) + ";" + str(endfreq))
+            zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+                                         args=(self.zmqLocal, msg, self.zmqLocalQ))
+            zmqThread.start()
+            while self.zmqLocalQ.empty():
+                pass
+            else:
+                paraRepStartReslt = self.zmqLocalQ.get()
+                # print(paraRepStartReslt)
+                if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum) or paraRepStartReslt == '超时':
+                    QMessageBox.warning(self, '错误：', '子窗口通信建立失败！\n {}'.format(paraRepStartReslt))
+                else:
+                    paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
+                    # 弹出子窗口
+                    dbFilesRootDir = os.path.join(self.fatherPath, 'EMCfile')
+                    self.childWindow = waterfallDialogEngin.WaterfallDialog(usrpNum, paraSocket,
+                                                                            startfreq, endfreq, dbFilesRootDir)
+                    # self.childWindow = waterfallDialogEngin.WaterfallDialog()
+                    self.childWindow.signal.connect(self.waterfallDialogCloseSlot)
+                    self.childWindow.show()
+
+                    # 开启循环任务
+                    self.circulateT = threading.Timer(1, self.childWindow.circulate)
+                    self.circulateT.start()
+            # else:
+                # QMessageBox.warning(self,
+                #                     '错误',
+                #                     "请输入正确参数！",
+                #                     QMessageBox.Yes,
+                #                     QMessageBox.Yes)
+        else:
+            QMessageBox.warning(self,
+                                '错误',
+                                "请输入正确参数！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
+    def waterfallDialogCloseSlot(self, signalContent):
+        print('{}号子窗口关闭'.format(signalContent))
+        msg = (signalContent + ',scan,specMonitor,'
+               + '0;0')
         zmqThread = threading.Thread(target=zmqLocal.zmqThread,
                                      args=(self.zmqLocal, msg, self.zmqLocalQ))
         zmqThread.start()
         while self.zmqLocalQ.empty():
             pass
         else:
-            paraRepStartReslt = self.zmqLocalQ.get()
-            if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum):
-                QMessageBox.warning(self, '错误：', '子窗口通信建立失败！')
-            else:
-                paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
+            paraRepCloseReslt = self.zmqLocalQ.get()
+            print(paraRepCloseReslt)
 
-                # 弹出子窗口
-                childWindow = waterfallDialogEngin.WaterfallDialog(usrpNum, paraSocket, startfreq, endfreq)
-                childWindow.show()
+    # 干扰对消在线
+    def on_pushButton_clicked_28(self):
+        if self.comboBox_6.currentText() == self.comboBox_7.currentText():
+            QMessageBox.warning(self, '提示', "请不同的一体化单元！")
+        else:
+            usrpNum1 = self.comboBox_6.currentText()
+            usrpNum2 = self.comboBox_7.currentText()
+            usrpNum = usrpNum1 + ';' +usrpNum2
+            startfreq = self.lineEdit_14.text()
+            endfreq = self.lineEdit_15.text()
+            if isNum(startfreq) and isNum(endfreq):
+                startfreq = float(startfreq)
+                endfreq = float(endfreq)
+                if (startfreq < endfreq and startfreq >= 30 and endfreq <= 5000 and (endfreq - startfreq) <= 100):
+                    startfreq = startfreq * 1000000
+                    endfreq = endfreq * 1000000
+                    msg = (usrpNum + ',scan,interferenceCancellation,'
+                           + str(startfreq) + ";" + str(endfreq))
+                    zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+                                                 args=(self.zmqLocal, msg, self.zmqLocalQ))
+                    zmqThread.start()
+                    # 调用loading
+                    loading = Message.Loading()
+                    loading.setWindowModality(Qt.ApplicationModal)
+                    loading.show()
+                    gui = QGuiApplication.processEvents
+                    while self.zmqLocalQ.empty():
+                        gui()
+                    else:
+                        loading.close()
+                        data = self.zmqLocalQ.get()
+                        dataList = data.split('|')
+                        data1 = dataList[0]
+                        data1List = data1.split(';')
+                        freq1List = data1List[0].split(' ')
+                        bins1List = data1List[1].split(" ")
+                        x1 = [float(i) for i in freq1List]
+                        y1 = [float(i) for i in bins1List]
+                        data2 = dataList[1]
+                        data2List = data2.split(';')
+                        freq2List = data2List[0].split(' ')
+                        bins2List = data2List[1].split(" ")
+                        x2 = [float(i) for i in freq2List]
+                        y2 = [float(i) for i in bins2List]
+                        interferenceCancellationT = algorithmThreads.interferenceCancellationProcess(
+                            self.algorithmProcessQ, (x1, y1, x2, y2))
+                        interferenceCancellationT.start()
+                        # 调用loading
+                        loading = Message.Loading()
+                        loading.setWindowModality(Qt.ApplicationModal)
+                        loading.show()
+                        gui = QGuiApplication.processEvents
+                        while self.algorithmProcessQ.empty():
+                            gui()
+                        else:
+                            loading.close()
+                            xyList = self.algorithmProcessQ.get()
+                            #####置入绘图####
+                            if self.interferenceCancellationFigFlag:
+                                self.verticalLayout_25.removeWidget(self.getPosition)
+                                self.getPosition.deleteLater()
+                            self.getPosition = plotWithCursor.getPos('history', xyList[0], xyList[1])
+                            self.verticalLayout_25.addWidget(self.getPosition)
+                            self.interferenceCancellationFigFlag = 1
+                else:
+                    QMessageBox.warning(self,
+                                        '错误1',
+                                        "请输入正确参数！",
+                                        QMessageBox.Yes,
+                                        QMessageBox.Yes)
+            else:
+                QMessageBox.warning(self,
+                                '错误2',
+                                "请输入正确参数！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
+    # 干扰对消离线
+    def on_pushButton_clicked_29(self):
+        if self.lineEdit_18.text() and self.lineEdit_19.text():
+            path1 = self.lineEdit_18.text()
+            path2 = self.lineEdit_19.text()
+            if os.path.exists(path1) and os.path.exists(path2):
+                try:
+                    while not self.algorithmProcessQ.empty():
+                        self.algorithmProcessQ.get()
+                    interferenceCancellationT = algorithmThreads.interferenceCancellationProcess(self.algorithmProcessQ,
+                                                                                                 (path1, path2))
+                    interferenceCancellationT.start()
+                    # 调用loading
+                    loading = Message.Loading()
+                    loading.setWindowModality(Qt.ApplicationModal)
+                    loading.show()
+                    gui = QGuiApplication.processEvents
+                    while self.algorithmProcessQ.empty():
+                        gui()
+                    else:
+                        loading.close()
+                        xyList = self.algorithmProcessQ.get()
+                        #####置入绘图####
+                        if self.interferenceCancellationFigFlag:
+                            self.verticalLayout_25.removeWidget(self.getPosition)
+                            self.getPosition.deleteLater()
+                        self.getPosition = plotWithCursor.getPos('history', xyList[0], xyList[1])
+                        self.verticalLayout_25.addWidget(self.getPosition)
+                        self.interferenceCancellationFigFlag = 1
+                except:
+                    QMessageBox.warning(self,
+                                        '错误',
+                                        "绘图失败，请检查文件格式。",
+                                        QMessageBox.Yes,
+                                        QMessageBox.Yes)
+
+            else:
+                QMessageBox.warning(self,
+                                    '提示',
+                                    "文件不存在！",
+                                    QMessageBox.Yes,
+                                    QMessageBox.Yes)
+        else:
+            QMessageBox.warning(self,
+                                '提示',
+                                "请先选择文件！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
+    # 干扰对消选择文件1
+    def on_pushButton_clicked_30(self):
+        self.lineEdit_18.clear()
+        defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles\interface_cancellation')
+        filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
+                                                  defultPath, "*.txt")
+        print("干扰对消选择文件1：", filename)
+        self.lineEdit_18.setText(filename)
+
+    # 干扰对消选择文件2
+    def on_pushButton_clicked_31(self):
+        self.lineEdit_19.clear()
+        defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles\interface_cancellation')
+        filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
+                                                  defultPath, "*.txt")
+        print("干扰对消选择文件2：", filename)
+        self.lineEdit_19.setText(filename)
 
     # 重写关闭事件
     def closeEvent(self, event):
-        os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
+        # os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
         sys.exit()
 
 if __name__ == '__main__':

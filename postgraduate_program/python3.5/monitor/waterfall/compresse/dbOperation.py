@@ -7,15 +7,19 @@
 import os
 from monitor.waterfall.compresse import LZ4
 
-def compress(data, dbPk, dbCursor, dbTable, outputDir, dbField=['id', 'data_path']):
-    outputPath = LZ4.lz4_compression(data, dbPk, outputDir)
+def compress(data, dbPk, dbCursor, dbConn, dbTable, outputDir,
+             relativeOutputDir, dbField=['id', 'data_path']):
+    outputName = LZ4.lz4_compression(data, dbPk, outputDir)
+    outputPath = os.path.join(outputDir, outputName)
+    relativeOutputPath = os.path.join(relativeOutputDir, outputName)
     try:
-        insert = 'INSERT INTO `{}`(`{}`,`{}`) VALUES ({},{})'.format(
-            dbTable, dbField[0], dbField[1], dbPk, outputPath)
-        dbCursor.excute(insert)
-        dbCursor.commit()
+        insert = "INSERT INTO `{}`(`{}`,`{}`) VALUES ('{}','{}')".format(
+            dbTable, dbField[0], dbField[1], dbPk, relativeOutputPath)
+        print('压缩', insert)
+        dbCursor.execute(insert)
+        dbConn.commit()
     except:
-        dbCursor.rollback()
+        dbConn.rollback()
         if os.path.exists(outputPath):
             os.remove(outputPath)
 

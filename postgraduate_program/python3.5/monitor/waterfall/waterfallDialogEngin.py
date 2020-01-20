@@ -6,9 +6,11 @@
 """
 from Ui.UitoPy.SpecMonitorDialog import Ui_Dialog
 from PyQt5.QtWidgets import QApplication,QMainWindow,QDialog,QMessageBox
+from PyQt5.QtCore import pyqtSignal
 from monitor.waterfall import WaterFall
 import threading
 import queue
+import shutil
 import os
 import pymysql
 import time
@@ -19,7 +21,9 @@ from monitor.waterfall.compresse.dbOperation import compress
 
 
 class WaterfallDialog(QDialog, Ui_Dialog):
+    signal = pyqtSignal(str)
     def __init__(self, usrpNum, socket, startfreq, endfreq, fatherFilePath, pageLimit=100, parent=None):
+    # def __init__(self, parent = None):
         super(WaterfallDialog, self).__init__(parent)
         # 子窗口初始化
         self.setupUi(self)
@@ -33,6 +37,7 @@ class WaterfallDialog(QDialog, Ui_Dialog):
         self.startfreq = startfreq
         self.endfreq = endfreq
         self.fatherFilePath = fatherFilePath
+        self.usrpNum = str(usrpNum)
         self.zmqLocalQ = queue.Queue()
         # 初始化定时任务控制标志位置位，该标志位使用按钮信号置位
         self.state = ''
@@ -48,13 +53,11 @@ class WaterfallDialog(QDialog, Ui_Dialog):
                                charset='utf8')  # 链接字符集
         self.cursor = self.conn.cursor()
         # 数据表检查
-        self.tableName, self.outputDir = self.dbCheck(usrpNum)
+        self.tableName, self.outputDir, self.relativeOutputDir = self.dbCheck()
         # 实例化瀑布图装置对象并将其置入布局中pageLimit, dbTable, fatherFilePath, cursor
         self.waterfallWidget = WaterFall.ApplicationWindow(
             pageLimit, self.tableName, self.fatherFilePath, self.cursor, self.conn)
         self.verticalLayout.addWidget(self.waterfallWidget)
-        # 开启循环任务
-        self.circulate()
 
     def circulate(self):
         """
@@ -91,7 +94,10 @@ class WaterfallDialog(QDialog, Ui_Dialog):
         else:
             reslt = self.zmqLocalQ.get()
             if reslt == "超时":
+                print('paraZMQrep回传远端超时信息')
                 pass
+                # QMessageBox.warning(self, '错误：', '子窗口通信超时！')
+                # self.on_pushButton_clicked_2()
             else:
                 print(type(reslt))
                 resltList = reslt.split(';')
@@ -102,17 +108,20 @@ class WaterfallDialog(QDialog, Ui_Dialog):
                 x = [float(i) for i in freqList]
                 y = [float(i) for i in binsList]
                 # 生成DBPK
-                dbPk = uuid.uuid1()
+                dbPk = str(uuid.uuid1())
                 # 开启压缩存储线程
-                compressT = threading.Thread(target=compress, args=(dataForCompress, dbPk, self.cursor,
-                                                                    self.tableName, self.outputDir))
+                compressT = threading.Thread(target=compress, args=(dataForCompress, dbPk,
+                                                                    self.cursor, self.conn,
+                                                                    self.tableName, self.outputDir,
+                                                                    self.relativeOutputDir))
                 compressT.start()
                 # 调用画布刷新函数
-                self.waterfallWidget._update_canvas((dbPk, [x, y]))
+                print(self.waterfallWidget._update_canvas(dbPk, [x, y]))
                 # 等待存储线程结束
                 compressT.join()
+                print(compressT.is_alive())
 
-                self.state = ''
+            self.state = ''
 
     def watchBack(self):
         """
@@ -143,7 +152,7 @@ class WaterfallDialog(QDialog, Ui_Dialog):
                 self.singleWatchbackCid = self.waterfallWidget.freqCanvas.figure.canvas.mpl_connect(
                     'button_press_event', self.waterfallWidget.refreshFreq)
                 # 计算DB记录条数，生成combo中的页码
-
+                pass
                 # 多条回溯按钮ENABLE
                 self.pushButton_3.setEnabled(True)
                 self.pushButton_2.setText('开始')
@@ -180,55 +189,56 @@ class WaterfallDialog(QDialog, Ui_Dialog):
                 self.pushButton_2.setEnabled(True)
                 self.pushButton_3.setText('回溯')
 
-    def dbCheck(self, usrpNum):
+    def dbCheck(self):
         """
         查询输入的usrp号名下的瀑布图数据库表，将数据库表按时间戳排序，
         保留时间最近的四张表，删除其余的表格和对应的文件夹,
         新建带有当前时间戳的表格
-        Args:
-            usrpNum:
-
         Returns:
             tableName:新的表名
             dirPath:存储文件夹
+            relativeDirPath:存储文件夹地址的数据库格式
 
         """
-        tableName = None
-        dirPath = None
-        dirList = list(os.walk(os.path.join(
-            self.fatherFilePath, 'waterfall', 'usrp{}'.format(usrpNum))))[0][1][0]
-        # 删除超出存储限度的表格和本地文件夹
-        if len(dirList) > 4:
-            for dir in dirList[0:-5]:
-                try:
-                    # drop db record
-                    drop = ("DROP TABLE `waterfall_data_usrp{}_{}`".format(usrpNum, dir))
-                    self.cursor.execute(drop)
-                    self.conn.commit()
-                except:
-                    self.conn.rollback()
-                    QMessageBox.warning(self, '错误：', '旧数据表删除失败')
-                    break
-                else:
-                    dirPathToDrop = os.path.join(self.fatherFilePath, 'waterfall', 'usrp{}'.format(usrpNum), dir)
-                    if os.path.exists(dirPathToDrop):
-                        os.remove(dirPathToDrop)
+        usrpPath = os.path.join(self.fatherFilePath, 'waterfall', 'usrp{}'.format(self.usrpNum))
+        filesOrDirsOperate.makesureDirExist(usrpPath)
+        try:
+            dirList = list(os.walk(usrpPath))[0][1]
+            print(dirList)
+        except:
+            pass
+        else:
+            # 删除超出存储限度的表格和本地文件夹
+            if len(dirList) > 4:
+                for dir in dirList[0:-3]:
+                    try:
+                        dirPathToDrop = os.path.join(self.fatherFilePath, 'waterfall', 'usrp{}'.format(self.usrpNum), dir)
+                        if os.path.exists(dirPathToDrop):
+                            shutil.rmtree(dirPathToDrop)
+                        # drop db record
+                        drop = ("DROP TABLE `waterfall_data_usrp{}_{}`".format(self.usrpNum, dir))
+                        self.cursor.execute(drop)
+                        self.conn.commit()
+                    except:
+                        self.conn.rollback()
 
         # 新建表格和本地文件夹
         dirName = str(int(time.time()))
-        dirPath = os.path.join(self.fatherFilePath, 'waterfall', 'usrp{}'.format(usrpNum), dirName)
-        tableName = 'waterfall_data_usrp{}_{}'.format(usrpNum, dirName)
+        relativeDirPath = os.path.join('waterfall', 'usrp{}'.format(self.usrpNum), dirName)
+        dirPath = os.path.join(self.fatherFilePath, 'waterfall', 'usrp{}'.format(self.usrpNum), dirName)
+        tableName = 'waterfall_data_usrp{}_{}'.format(self.usrpNum, dirName)
         try:
             # build the dir
             filesOrDirsOperate.makesureDirExist(dirPath)
             # build the table
-            create = ("CREATE TABLE `waterfall_data_usrp{}_{}`('id', 'data_path')".format(usrpNum, dirName))
+            create = ("CREATE TABLE `waterfall_data_usrp{}_{}`(`id` varchar(40) primary key, `data_path` varchar(225))".format(self.usrpNum, dirName))
+            # print(create)
             self.cursor.execute(create)
             self.conn.commit()
         except:
             QMessageBox.warning(self, '错误：', '初始化失败！')
             self.closeEvent()
-        return tableName, dirPath
+        return tableName, dirPath, relativeDirPath
 
     def batchSelect(self, watchBackPage):
         """
@@ -260,7 +270,9 @@ class WaterfallDialog(QDialog, Ui_Dialog):
         else:
             self.socket.close()
             self.conn.close()
+            self.signal.emit(self.usrpNum)
             self.close()
+
 
 if __name__ == '__main__':
     import sys

@@ -11,6 +11,7 @@ from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_
 from controller.usrp_controller.specEnvelope_shibie import specEnvelope_shibie_v3
 from controller.usrp_controller.steadyStateInterference_shibie import steadyStateInterference_shibie_v2
 from controller.Pico_controller import pico_jicheng_online_pack_v2, pico_jicheng_offline_v2
+from controller.usrp_controller.interference_cancellation import interferenceCancellationCalling
 
 # py2线程（函数形式）
 def py2Thread():
@@ -263,4 +264,14 @@ class steadyStateRecognizeProcess(Thread):
                                                            self.outputPath)
         self.q.put(reslt)
 
-#
+# 干扰对消调用线程
+class interferenceCancellationProcess(Thread):
+    def __init__(self, q, arg):
+        super(interferenceCancellationProcess, self).__init__()
+        self.arg = arg
+        print('arg', arg)
+        self.q = q
+
+    def run(self):
+        targetx, targety = interferenceCancellationCalling.callInterferenceCancellation(self.arg)
+        self.q.put([targetx, targety])

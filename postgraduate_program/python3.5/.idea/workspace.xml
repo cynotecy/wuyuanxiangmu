@@ -2,17 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5455c2af-7abb-49a2-81b8-51745224f6c8" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/monitor/waterfall/compresse/dbOperation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../py27usrp/current_controller/collect_fakeDataCollect.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../py27usrp/current_controller/scan_fakeDataCollect.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../py27usrp/demo/exer2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../py27usrp/fakeTransmit.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../py27usrp/fakeTransmit2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controller/usrp_controller/interference_cancellation/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controller/usrp_controller/interference_cancellation/interferenceCancellationCalling.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controller/usrp_controller/interference_cancellation/interference_cancellation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demo/exer2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demo/multiLevelWindowConnect/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demo/multiLevelWindowConnect/child.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demo/multiLevelWindowConnect/father.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../emc" beforeDir="false" afterPath="$PROJECT_DIR$/../emc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../py27usrp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ad1d9457-abc2-4cdb-a224-282a5a644937.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ad1d9457-abc2-4cdb-a224-282a5a644937.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../py27usrp/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/demo/exer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../py27usrp/socketTest/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/socketTest/demo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../py27usrp/socketTest/repParaThread.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/socketTest/repParaThread.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../py27usrp/socketTest/socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/socketTest/socketInit.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ui/Ui_socketDEMO.ui" beforeDir="false" afterPath="$PROJECT_DIR$/Ui/Ui_socketDEMO.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ui/UitoPy/Ui_socketDEMO.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ui/UitoPy/Ui_socketDEMO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/algorithmThreads.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithmThreads.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/demo/exer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/function/filesOrDirsOperate.py" beforeDir="false" afterPath="$PROJECT_DIR$/function/filesOrDirsOperate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/function/plotWithCursor.py" beforeDir="false" afterPath="$PROJECT_DIR$/function/plotWithCursor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localDemoUi.py" beforeDir="false" afterPath="$PROJECT_DIR$/localDemoUi.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/monitor/waterfall/WaterFall.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/waterfall/WaterFall.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/waterfall/compresse/LZ4.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/waterfall/compresse/LZ4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/waterfall/compresse/dbOperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/waterfall/compresse/dbOperation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/monitor/waterfall/waterfallDialogEngin.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/waterfall/waterfallDialogEngin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socketDemo/zmqLocal.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketDemo/zmqLocal.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -123,19 +142,19 @@
     <property name="settings.editor.selected.configurable" value="preferences.externalTools" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\myPrograms\CASTProgram\postgraduate_program\python3.5\controller\usrp_controller\steadyStateInterference_shibie" />
-      <recent name="D:\myPrograms\CASTProgram\postgraduate_program\python3.5\controller\usrp_controller\usrp_shibie" />
-      <recent name="D:\myPrograms\CASTProgram\postgraduate_program\python3.5" />
-      <recent name="D:\myPrograms\postgraduate_program\python3.5\controller\usrp_controller\specEnvelope_shibie" />
-      <recent name="D:\postgraduate_program\python3.5\controller\Pico_controller" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\myPrograms\CASTProgram\postgraduate_program\python3.5" />
       <recent name="D:\myPrograms\CASTProgram\postgraduate_program\python3.5\function" />
       <recent name="D:\postgraduate_program\python3.5\demo\qtableView+checkbox" />
       <recent name="D:\postgraduate_program\python3.5\controller\Pico_controller" />
       <recent name="D:\postgraduate_program\python3.5\controller\Pico_controller\model_saved" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\myPrograms\CASTProgram\postgraduate_program\python3.5\controller\usrp_controller\interference_cancellation" />
+      <recent name="D:\myPrograms\CASTProgram\postgraduate_program\python3.5\controller\usrp_controller\steadyStateInterference_shibie" />
+      <recent name="D:\myPrograms\CASTProgram\postgraduate_program\python3.5\controller\usrp_controller\usrp_shibie" />
+      <recent name="D:\myPrograms\CASTProgram\postgraduate_program\python3.5" />
+      <recent name="D:\myPrograms\postgraduate_program\python3.5\controller\usrp_controller\specEnvelope_shibie" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -150,7 +169,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.exer">
+  <component name="RunManager" selected="Python.localDemoUi (1)">
     <configuration name="MainWindow" type="PythonConfigurationType" factoryName="Python">
       <module name="python3.5" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -217,6 +236,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="father" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="python3.5" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/demo/multiLevelWindowConnect" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/demo/multiLevelWindowConnect/father.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="localDemoUi (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="python3.5" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -231,28 +272,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/localDemoUi.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="plotWithCursor" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="python3.5" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/function" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/function/plotWithCursor.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -287,17 +306,17 @@
       <item itemvalue="Python.MainWindow" />
       <item itemvalue="Python.exer" />
       <item itemvalue="Python.localDemoUi (1)" />
-      <item itemvalue="Python.plotWithCursor" />
       <item itemvalue="Python.waterfallDialogEngin" />
       <item itemvalue="Python.WaterFall" />
+      <item itemvalue="Python.father" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.exer" />
-        <item itemvalue="Python.WaterFall" />
-        <item itemvalue="Python.waterfallDialogEngin" />
         <item itemvalue="Python.localDemoUi (1)" />
-        <item itemvalue="Python.plotWithCursor" />
+        <item itemvalue="Python.exer" />
+        <item itemvalue="Python.waterfallDialogEngin" />
+        <item itemvalue="Python.father" />
+        <item itemvalue="Python.WaterFall" />
       </list>
     </recent_temporary>
   </component>
@@ -557,18 +576,14 @@
       <workItem from="1578112495064" duration="20544000" />
       <workItem from="1578322702673" duration="12998000" />
       <workItem from="1578445857673" duration="32305000" />
-      <workItem from="1578810987097" duration="17017000" />
+      <workItem from="1578810987097" duration="43265000" />
+      <workItem from="1578966358512" duration="14019000" />
+      <workItem from="1579054478153" duration="15646000" />
+      <workItem from="1579175904018" duration="1245000" />
+      <workItem from="1579224437659" duration="1997000" />
+      <workItem from="1579407199527" duration="7783000" />
     </task>
     <servers />
-  </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -595,8 +610,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/localDemoUi.py</url>
-          <line>819</line>
+          <line>828</line>
           <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/monitor/waterfall/waterfallDialogEngin.py</url>
+          <line>214</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/monitor/waterfall/WaterFall.py</url>
+          <line>74</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/algorithmThreads.py</url>
+          <line>270</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -642,6 +672,7 @@
     <SUITE FILE_PATH="coverage/python3_5$pico_jicheng_offline.coverage" NAME="pico_jicheng_offline Coverage Results" MODIFIED="1565752424051" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/Pico_controller" />
     <SUITE FILE_PATH="coverage/python3_5$SNR_Estimate.coverage" NAME="SNR_Estimate Coverage Results" MODIFIED="1566358031688" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SNR" />
     <SUITE FILE_PATH="coverage/python3_5$steadyFirst_draw.coverage" NAME="steadyFirst_draw Coverage Results" MODIFIED="1565573218561" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
+    <SUITE FILE_PATH="coverage/python3_5$father.coverage" NAME="father Coverage Results" MODIFIED="1578883646016" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo/multiLevelWindowConnect" />
     <SUITE FILE_PATH="coverage/python3_5$pytest_in_oc_shibie_v2_py.coverage" NAME="pytest in oc_shibie_v2.py Coverage Results" MODIFIED="1568710468502" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$zmqLocal.coverage" NAME="zmqLocal Coverage Results" MODIFIED="1574670305982" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/socketDemo" />
     <SUITE FILE_PATH="coverage/python3_5$oc_shibie_for1file.coverage" NAME="oc_shibie_for1file Coverage Results" MODIFIED="1568631747469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
@@ -661,18 +692,18 @@
     <SUITE FILE_PATH="coverage/python3_5$DBtest.coverage" NAME="DBtest Coverage Results" MODIFIED="1560328256130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
     <SUITE FILE_PATH="coverage/python3_5$localDemoUi.coverage" NAME="localDemoUi Coverage Results" MODIFIED="1575547425522" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/socketDemo" />
     <SUITE FILE_PATH="coverage/python3_5$test_0616.coverage" NAME="test_0616 Coverage Results" MODIFIED="1560738955713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
-    <SUITE FILE_PATH="coverage/python3_5$localDemoUi__1_.coverage" NAME="localDemoUi (1) Coverage Results" MODIFIED="1578215863852" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$localDemoUi__1_.coverage" NAME="localDemoUi (1) Coverage Results" MODIFIED="1579433958822" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/python3_5$collect_thread.coverage" NAME="collect_thread Coverage Results" MODIFIED="1575467870071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../py27usrp/current_controller" />
     <SUITE FILE_PATH="coverage/python3_5$DBtest2.coverage" NAME="DBtest2 Coverage Results" MODIFIED="1560338230267" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
     <SUITE FILE_PATH="coverage/python3_5$exer__1_.coverage" NAME="exer (1) Coverage Results" MODIFIED="1574924670307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/python3_5$waterfallDialogEngin.coverage" NAME="waterfallDialogEngin Coverage Results" MODIFIED="1578310344991" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor/waterfall" />
+    <SUITE FILE_PATH="coverage/python3_5$waterfallDialogEngin.coverage" NAME="waterfallDialogEngin Coverage Results" MODIFIED="1578918744542" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor/waterfall" />
     <SUITE FILE_PATH="coverage/python3_5$steadyStateInterference_shibie.coverage" NAME="steadyStateInterference_shibie Coverage Results" MODIFIED="1567050599603" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$online_recognize.coverage" NAME="online_recognize Coverage Results" MODIFIED="1562760932607" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/WeChat Files/muyuzean/FileStorage/File/2019-07" />
     <SUITE FILE_PATH="coverage/python3_5$pytest_in_usrp_shibie_v3_py.coverage" NAME="pytest in usrp_shibie_v3.py Coverage Results" MODIFIED="1568603717438" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$display_v4.coverage" NAME="display_v4 Coverage Results" MODIFIED="1567011501572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$usrp_saocai.coverage" NAME="usrp_saocai Coverage Results" MODIFIED="1558947342136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller" />
     <SUITE FILE_PATH="coverage/python3_5$Message.coverage" NAME="Message Coverage Results" MODIFIED="1575469315670" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/python3_5$exer.coverage" NAME="exer Coverage Results" MODIFIED="1578831840290" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
+    <SUITE FILE_PATH="coverage/python3_5$exer.coverage" NAME="exer Coverage Results" MODIFIED="1579140234270" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
     <SUITE FILE_PATH="coverage/python3_5$Timer.coverage" NAME="Timer Coverage Results" MODIFIED="1563116349152" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/plotTools" />
     <SUITE FILE_PATH="coverage/python3_5$the_48h_realpart_inQt.coverage" NAME="the_48h_realpart_inQt Coverage Results" MODIFIED="1569140616717" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor/The48hRealPart" />
     <SUITE FILE_PATH="coverage/python3_5$multiple_test__1_.coverage" NAME="multiple_test (1) Coverage Results" MODIFIED="1567994338360" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />

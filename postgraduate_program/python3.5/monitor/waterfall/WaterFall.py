@@ -45,14 +45,6 @@ class ApplicationWindow(QWidget):
         self.countLine = 1  # 当前页绘图条数
         self.y_pyDic = {}
         self.figureKind = 'normal'
-        # 建立数据库连接并初始化数据库游标
-        # self.conn = pymysql.connect(host='localhost',  # ID地址
-        #                        port=3306,  # 端口号
-        #                        user='root',  # 用户名
-        #                        passwd='root',  # 密码
-        #                        db='cast',  # 库名
-        #                        charset='utf8')  # 链接字符集
-        # self.cursor = self.conn.cursor()
         self.cursor = cursor
         self.conn = connect
 
@@ -68,26 +60,6 @@ class ApplicationWindow(QWidget):
         self.axs[0].set_ylim(-100, -70)
         self.axs[1].set_xlim(150, 200)
         self.axs[1].set_ylim(-self.limit, 0)
-        # while True:
-        #     if os.path.exists('D:\\postgraduate_program\\48recv\\%s\\1.dat'%self.device):
-        #         self.n+=1# self.n=1
-        #         line = self.draw(self.n)
-        #         break
-        # norm = matplotlib.colors.Normalize(-120, -60)
-        # self.freqCanvas.figure.canvas.mpl_connect('button_press_event', self.refreshFreq)
-        # self.pause = buttons[0]
-        # self.watchBack = buttons[1]
-        # self.start = QtWidgets.QPushButton('start')
-        # self.stop = QtWidgets.QPushButton('stop')
-        #
-        # layout.addWidget(self.start)
-        # layout.addWidget(self.stop)
-        #
-        # self.start.clicked.connect(self._start)
-        # self.stop.clicked.connect(self._stop)
-
-        # 定时任务
-        # self._timer = self.freqCanvas.new_timer(1000, [(self._update_canvas, (), {})])
 
     # 图区刷新器，输入(数据库主键,[x,y])或(回看页码)，刷新两个图区
     def _update_canvas(self, *arg):
@@ -273,6 +245,6 @@ class ApplicationWindow(QWidget):
 
 if __name__ == "__main__":
     qapp = QtWidgets.QApplication(sys.argv)
-    app = ApplicationWindow('usrp2')
+    app = ApplicationWindow()
     app.show()
     qapp.exec_()

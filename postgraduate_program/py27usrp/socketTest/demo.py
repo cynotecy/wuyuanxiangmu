@@ -8,7 +8,7 @@ import thread
 import zmq
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from current_controller import scan_thread, collect_thread
-from socketTest import socket, repParaThread
+from socketTest import socketInit, repParaThread
 from functions import filesOrDirsOperate
 """
 加个远程连接检测
@@ -17,16 +17,25 @@ from functions import filesOrDirsOperate
 def threadControl():
     standar = '-11'  # USRP定标
     # standar = '0'  # USRP定标
-    remoteTimeOut = 60  # 远端socket超时时限
+    remoteTimeOut = 10  # 远端socket超时时限
     localQueue = Queue.Queue()
     remoteQueue = Queue.Queue()
-    pubAddress1 = 'tcp://192.168.0.100:6666'
-    pubAddress2 = 'tcp://192.168.0.100:7777'
-    pubAddress3 = 'tcp://127.0.0.1:6666'
+    pubAddress1 = 'tcp://127.0.0.1:6666'
+    pubAddress2 = 'tcp://127.0.0.1:7777'
+    # pubAddress3 = 'tcp://127.0.0.1:6666'
 
-    subAddress1 = 'tcp://192.168.0.5:5555'
-    subAddress2 = 'tcp://192.168.0.5:9999'
-    subAddress3 = 'tcp://127.0.0.1:5555'
+    subAddress1 = 'tcp://127.0.0.1:5555'
+    subAddress2 = 'tcp://127.0.0.1:9999'
+    # subAddress3 = 'tcp://127.0.0.1:5555'
+
+
+    # pubAddress1 = 'tcp://192.168.0.100:6666'
+    # pubAddress2 = 'tcp://192.168.0.100:7777'
+    # pubAddress3 = 'tcp://127.0.0.1:6666'
+    #
+    # subAddress1 = 'tcp://192.168.0.5:5555'
+    # subAddress2 = 'tcp://192.168.0.5:9999'
+    # subAddress3 = 'tcp://127.0.0.1:5555'
     
     repAddress = 'tcp://127.0.0.1:6667'
     # 并行本地连接，当多路usrp同时使用时，repAddress地址绑定的socket不可以一直被占用则启用并行连接
@@ -39,42 +48,56 @@ def threadControl():
     socketDic = dict()
 
     try:
-        pubSocket1 = socket.connect(pubAddress1, 'PUB')
-        subSocket1 = socket.connect(subAddress1, 'SUB')
+        pubSocket1 = socketInit.connect(pubAddress1, 'PUB')
+        subSocket1 = socketInit.connect(subAddress1, 'SUB')
         socketDic[0] = [pubSocket1, subSocket1]
         print "socket1 连接"
     except:
         pass
 
     try:
-        pubSocket2 = socket.connect(pubAddress2, 'PUB')
-        subSocket2 = socket.connect(subAddress2, 'SUB')
+        pubSocket2 = socketInit.connect(pubAddress2, 'PUB')
+        subSocket2 = socketInit.connect(subAddress2, 'SUB')
         socketDic[1] = [pubSocket2, subSocket2]
         print "socket2 连接"
     except:
         pass
 
-    try:
-        pubSocket3 = socket.connect(pubAddress3, 'PUB')
-        subSocket3 = socket.connect(subAddress3, 'SUB')
-        socketDic[2] = [pubSocket3, subSocket3]
-        print "socket3 连接"
-    except:
-        pass
+    # try:
+    #     pubSocket3 = socketInit.connect(pubAddress3, 'PUB')
+    #     subSocket3 = socketInit.connect(subAddress3, 'SUB')
+    #     socketDic[2] = [pubSocket3, subSocket3]
+    #     print "socket3 连接"
+    # except:
+    #     pass
 
-    repSocket = socket.connect(repAddress, 'REP')
+    repSocket = socketInit.connect(repAddress, 'REP')
+    repParaSocketDic = {}
+    repParaThreadDic = {}
 
     while 1:
+        # time.sleep(0.5)
         print 'py2 waiting msg'
         localRecv = repSocket.recv()
         print '收到信息' + localRecv
 
         msg = localRecv.split(',')
         print msg
-        usrpNum = int(msg[0])
+        if ';' in msg[0]:
+            pubSockList = []
+            subSockList = []
+            usrpNumList = msg[0].split(';')
+            for usrpNumStr in usrpNumList:
+                usrpNum = int(usrpNumStr)
+                pubSock = socketDic[usrpNum - 1][0]
+                subSock = socketDic[usrpNum - 1][1]
+                pubSockList.append(pubSock)
+                subSockList.append(subSock)
+        else:
+            usrpNum = int(msg[0])
 
-        pubSock = socketDic[usrpNum - 1][0]
-        subSock = socketDic[usrpNum - 1][1]
+            pubSock = socketDic[usrpNum - 1][0]
+            subSock = socketDic[usrpNum - 1][1]
         mode = msg[1]  # e.g. scan
         action = msg[2]  # e.g. IQ
         instructionInfo = msg[3]
@@ -82,7 +105,8 @@ def threadControl():
         # 扫频模式
         if mode == 'scan':
             # IQ&频谱包络&稳态干扰识别扫频
-            if action == 'IQ' or 'specEnvelope' or 'steadyStateInterference':
+            if action == 'IQ' or action == 'specEnvelope' or action == 'steadyStateInterference':
+
                 startFreq = instructionInfoList[0]
                 endFreq = instructionInfoList[1]
                 scanRecv = scan_thread.Recv(localQueue, subSock, standar)
@@ -110,17 +134,69 @@ def threadControl():
                     repSocket.send(freqbins)
             # 48H监测扫频（连续）（1-4线程）
             elif action == 'specMonitor':
-                try:
-                    repParaSocket = socket.connect(repParaAddressList[usrpNum], 'REP')
-                    repParaT = repParaThread.RepParaThread(repParaSocket, pubSock, subSock, standar, remoteTimeOut)
-                    repParaT.start()
-                    # repSocket.send("paraSocket {} build succeed".format(str(usrpNum)))
-                    repSocket.send(repParaAddressList[usrpNum])
-                except:
-                    repSocket.send("paraSocket {} build failed".format(str(usrpNum)))
+                if not instructionInfoList[0] == '0':
+                    try:
+                        repParaSocketDic[usrpNum] = socketInit.connect(repParaAddressList[usrpNum-1], 'REP')
+                        repParaThreadDic[usrpNum] = repParaThread.RepParaThread(repParaSocketDic[usrpNum], pubSock, subSock,
+                                                               standar, remoteTimeOut)
+                        repParaThreadDic[usrpNum].start()
+                        repSocket.send(repParaAddressList[usrpNum-1])
+                    except Exception, e:
+                        print repr(e)
+                        # 虽然我不知道为啥有时候terminate会不好使，但是通过这句话让terminate失灵时本该关闭的socket连接关闭了
+                        # repParaSocketDic[int(usrpNum)].close()
+                        repSocket.send("paraSocket {} build failed".format(str(usrpNum)))
+                else:
+                    repParaThreadDic[usrpNum].terminate()
+                    repParaThreadDic[usrpNum].join()
+                    print "paraSocket {} closed".format(str(usrpNum))
+                    repSocket.send("paraSocket {} closed".format(str(usrpNum)))
+
             # 实时频谱仪扫频（连续）
             elif action == 'realtimeSpecMonitor':
                 pass
+
+            # 干扰对消
+            elif action == 'interferenceCancellation':
+                startFreq = instructionInfoList[0]
+                endFreq = instructionInfoList[1]
+                scanRecvList = []
+                scanSendList = []
+                i = 0
+                j = 0
+                for subSock in subSockList:
+                    scanRecvList.append(scan_thread.Recv(localQueue, subSock, standar))
+                    scanRecvList[i].start()
+                    i += 1
+                for pubSock in pubSockList:
+                    scanSendList.append(scan_thread.Send(startFreq, endFreq, pubSock))
+                    scanSendList[j].run()
+                    j += 1
+                startTime = datetime.datetime.now()
+                while localQueue.qsize() != len(pubSockList):
+                    nowTime = datetime.datetime.now()
+                    period = (nowTime - startTime).seconds
+                    if period > remoteTimeOut:
+                        for scanRecv in scanRecvList:
+                            scanRecv.stop()
+                        repSocket.send('超时')
+                        break
+                else:
+                    freqbinses = []
+                    for j in range(localQueue.qsize()):
+                        bins = localQueue.get()
+                        freqList = localQueue.get()
+                        # 将回传的频谱直接发给py3
+                        bins = [str(i) for i in bins]
+                        freqlist = [str(i) for i in freqList]
+                        binStr = " ".join(bins)
+                        freqStr = " ".join(freqlist)
+                        freqbinsList = [freqStr, binStr]
+                        freqbins = ';'.join(freqbinsList)
+                        freqbinses.append(freqbins)
+                    freqbinses = '|'.join(freqbinses)
+                    repSocket.send(freqbinses)
+
             # 天线（每个usrp的两个天线串行采集，不同usrp并行采集）（1或2线程）
             elif action == 'antenna':
                 pass
