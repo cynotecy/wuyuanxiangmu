@@ -2,36 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7810345c-250a-4cab-bd2b-d559d19078cb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/current_controller/collect_fakeDataCollect.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/current_controller/scan_fakeDataCollect.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo/exer2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeTransmit.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fakeTransmit2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/interference_cancellation/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/interference_cancellation/interferenceCancellationCalling.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../python3.5/controller/usrp_controller/interference_cancellation/interference_cancellation.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../python3.5/demo/exer2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../python3.5/demo/multiLevelWindowConnect/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../python3.5/demo/multiLevelWindowConnect/child.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../python3.5/demo/multiLevelWindowConnect/father.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579433922/3f7af1c2-3ab0-11ea-9716-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579433922/402fe1e2-3ab0-11ea-841c-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579433966/5a42f9ee-3ab0-11ea-a82f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434042/86c9f3a4-3ab0-11ea-906d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434042/87bb359c-3ab0-11ea-a6d0-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434048/8ad6d2e4-3ab0-11ea-81c9-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434054/8e35fdf0-3ab0-11ea-814e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434054/8f2e4a0a-3ab0-11ea-a611-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434054/902ea9e8-3ab0-11ea-be0d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434054/9134e7a4-3ab0-11ea-ab40-a088699cd42e_compressed" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../emc" beforeDir="false" afterPath="$PROJECT_DIR$/../emc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/demo/exer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/socketTest/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/demo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/socketTest/repParaThread.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/repParaThread.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/socketTest/socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/socketTest/socketInit.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/Ui_socketDEMO.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/Ui/UitoPy/Ui_socketDEMO.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/algorithmThreads.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/algorithmThreads.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/demo/exer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/function/plotWithCursor.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/function/plotWithCursor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/localDemoUi.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/localDemoUi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/demo/exer2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/demo/exer2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/monitor/waterfall/WaterFall.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/monitor/waterfall/WaterFall.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../python3.5/monitor/waterfall/WaterFallForPico.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/monitor/waterfall/WaterFallForPico.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/monitor/waterfall/compresse/LZ4.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/monitor/waterfall/compresse/LZ4.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/monitor/waterfall/compresse/dbOperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/monitor/waterfall/compresse/dbOperation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../python3.5/monitor/waterfall/waterfallDialogEngin.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/monitor/waterfall/waterfallDialogEngin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python3.5/socketDemo/zmqLocal.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python3.5/socketDemo/zmqLocal.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,7 +47,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../python3.5" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -205,9 +195,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.demo" />
+        <item itemvalue="Python.fakeTransmit" />
         <item itemvalue="Python.exer" />
         <item itemvalue="Python.exer2" />
-        <item itemvalue="Python.fakeTransmit" />
         <item itemvalue="Python.collect_fakeDataCollect" />
       </list>
     </recent_temporary>
@@ -377,7 +367,8 @@
       <workItem from="1579054588959" duration="20671000" />
       <workItem from="1579175902222" duration="1247000" />
       <workItem from="1579224310055" duration="2248000" />
-      <workItem from="1579401612869" duration="12249000" />
+      <workItem from="1579401612869" duration="18459000" />
+      <workItem from="1579614042481" duration="7239000" />
     </task>
     <servers />
   </component>
@@ -416,7 +407,7 @@
     <SUITE FILE_PATH="coverage/py27usrp$exer2.coverage" NAME="exer2 Coverage Results" MODIFIED="1579432761855" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
     <SUITE FILE_PATH="coverage/py27usrp$thread_test.coverage" NAME="thread_test Coverage Results" MODIFIED="1559270582327" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/py27usrp$usrp_pc_server.coverage" NAME="usrp_pc_server Coverage Results" MODIFIED="1559304768514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/current_controller" />
-    <SUITE FILE_PATH="coverage/py27usrp$fakeTransmit.coverage" NAME="fakeTransmit Coverage Results" MODIFIED="1579407479527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/py27usrp$fakeTransmit.coverage" NAME="fakeTransmit Coverage Results" MODIFIED="1579615592079" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/py27usrp$oc_collect_allinone.coverage" NAME="oc_collect_allinone Coverage Results" MODIFIED="1568125589897" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/current_controller" />
     <SUITE FILE_PATH="coverage/py27usrp$client2.coverage" NAME="client2 Coverage Results" MODIFIED="1560262661555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DEMO/SOCKET1TO2" />
     <SUITE FILE_PATH="coverage/py27usrp$repParaThread.coverage" NAME="repParaThread Coverage Results" MODIFIED="1578990000219" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/socketTest" />
@@ -439,7 +430,7 @@
     <SUITE FILE_PATH="coverage/py27usrp$single_freq_recv.coverage" NAME="single_freq_recv Coverage Results" MODIFIED="1559559389479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/current_controller" />
     <SUITE FILE_PATH="coverage/py27usrp$usrp_saomiao.coverage" NAME="usrp_saomiao Coverage Results" MODIFIED="1559011161026" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/py27usrp$getPos.coverage" NAME="getPos Coverage Results" MODIFIED="1573824402313" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cursorPos" />
-    <SUITE FILE_PATH="coverage/py27usrp$demo.coverage" NAME="demo Coverage Results" MODIFIED="1579434041038" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/socketTest" />
+    <SUITE FILE_PATH="coverage/py27usrp$demo.coverage" NAME="demo Coverage Results" MODIFIED="1579622308093" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/socketTest" />
     <SUITE FILE_PATH="coverage/py27usrp$MainWindow_antenna.coverage" NAME="MainWindow_antenna Coverage Results" MODIFIED="1565939529621" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/py27usrp$MainWindow_antenna_usrp1.coverage" NAME="MainWindow_antenna_usrp1 Coverage Results" MODIFIED="1566269986403" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/py27usrp$pub.coverage" NAME="pub Coverage Results" MODIFIED="1559655015395" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DEMO/thread_socket" />

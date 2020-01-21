@@ -11,6 +11,7 @@ from monitor.waterfall import WaterFall
 import threading
 import queue
 import shutil
+import math
 import os
 import pymysql
 import time
@@ -22,7 +23,7 @@ from monitor.waterfall.compresse.dbOperation import compress
 
 class WaterfallDialog(QDialog, Ui_Dialog):
     signal = pyqtSignal(str)
-    def __init__(self, usrpNum, socket, startfreq, endfreq, fatherFilePath, pageLimit=100, parent=None):
+    def __init__(self, usrpNum, socket, startfreq, endfreq, fatherFilePath, pageLimit=10, dbField = 'data_path',parent=None):
     # def __init__(self, parent = None):
         super(WaterfallDialog, self).__init__(parent)
         # 子窗口初始化
@@ -36,6 +37,8 @@ class WaterfallDialog(QDialog, Ui_Dialog):
         self.socket = socket
         self.startfreq = startfreq
         self.endfreq = endfreq
+        self.pageLimit = pageLimit
+        self.dbField = dbField
         self.fatherFilePath = fatherFilePath
         self.usrpNum = str(usrpNum)
         self.zmqLocalQ = queue.Queue()
@@ -137,7 +140,17 @@ class WaterfallDialog(QDialog, Ui_Dialog):
             QMessageBox.warning(self, '提示：', '回溯失败。')
         else:
             for path in pathTuple:
-                self.waterfallWidget._update_canvas(path)
+                if self.request == '':
+                    break
+                else:
+                    self.waterfallWidget._update_canvas(path)
+            if self.pushButton_3.text() == '停止回溯':
+                self.waterfallWidget.countLine = self.waterfallWidget.limit + 1
+                # 建立单点回溯信号槽连接
+                self.singleWatchbackCid = self.waterfallWidget.freqCanvas.figure.canvas.mpl_connect(
+                    'button_press_event', self.waterfallWidget.refreshFreq)
+                self.pushButton_3.setText('回溯')
+                self.pushButton_2.setEnabled(True)
 
         self.request = ''
         self.state = ''
@@ -152,7 +165,18 @@ class WaterfallDialog(QDialog, Ui_Dialog):
                 self.singleWatchbackCid = self.waterfallWidget.freqCanvas.figure.canvas.mpl_connect(
                     'button_press_event', self.waterfallWidget.refreshFreq)
                 # 计算DB记录条数，生成combo中的页码
-                pass
+                count = ("SELECT COUNT(*) FROM {}".format(self.tableName))
+                self.cursor.execute(count)
+                self.conn.commit()
+                countResult = self.cursor.fetchall()[0][0]
+                print('数据库表共有记录{}条'.format(countResult))
+                pageCount = math.ceil(int(countResult) / self.pageLimit)
+                print('应产生{}页码'.format(pageCount))
+                for i in range(pageCount):
+                    print('正在生成第{}页页码'.format(i+1))
+                    self.comboBox.addItem('')
+                    self.comboBox.setItemText(i+1, str(i+1))
+
                 # 多条回溯按钮ENABLE
                 self.pushButton_3.setEnabled(True)
                 self.pushButton_2.setText('开始')
@@ -168,7 +192,8 @@ class WaterfallDialog(QDialog, Ui_Dialog):
     def on_pushButton_clicked_3(self):
         if self.pushButton_3.text() == '回溯':
             if not self.comboBox.currentText() == '请选择':
-                self.watchbackPage = self.comboBox.currentText()
+                self.watchbackPage = int(self.comboBox.currentText())
+                # self.waterfallWidget.axs[1].cla()
                 # 断开单点回溯信号槽连接
                 self.waterfallWidget.freqCanvas.figure.canvas.mpl_disconnect(self.singleWatchbackCid)
                 self.singleWatchbackCid = 0
@@ -252,15 +277,16 @@ class WaterfallDialog(QDialog, Ui_Dialog):
         dataPathTuple = ()
         try:
             watchBackPage = int(watchBackPage)
-            select = ("SELECT `{}` FROM `{}` limit {} offset {} "
-                      .format(self.dbField, self.dbTable, self.limit,
-                              (watchBackPage - 1) * self.limit))
+            select = ("SELECT `{}` FROM `{}` limit {},{} "
+                      .format(self.dbField, self.tableName,
+                              (watchBackPage - 1) * self.pageLimit, self.pageLimit))
+            print('select:{}'.format(select))
             self.cursor.execute(select)
             self.conn.commit()
             # 获取地址元组
-            dataPathTuple = tuple(self.cursor.fetchall())
-        except:
-            pass
+            dataPathTuple = tuple(i[0] for i in self.cursor.fetchall())
+        except Exception as e:
+            print('exception from batchSelect:{}'.format(repr(e)))
         return dataPathTuple
 
     def closeEvent(self, QCloseEvent):

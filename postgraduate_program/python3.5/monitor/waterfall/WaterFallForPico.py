@@ -208,6 +208,6 @@ class ApplicationWindow(QWidget):
 
 if __name__ == "__main__":
     qapp = QtWidgets.QApplication(sys.argv)
-    app = ApplicationWindow(r'..\48recv\pico\\')
+    app = ApplicationWindow(r'D:\myPrograms\CASTProgram\postgraduate_program\usrp_recvfiles\usrp_scan\\')
     app.show()
     qapp.exec_()

@@ -11,10 +11,10 @@ example) by setting the ``MPLBACKEND`` environment variable to "Qt4Agg" or
 import time
 import sys, os, random
 import numpy as np
+import math
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-import samplerate
 from PyQt5.QtWidgets import *
 from matplotlib.backends.qt_compat import QtCore, QtWidgets, is_pyqt5
 
@@ -75,23 +75,29 @@ class ApplicationWindow(QWidget):
         if len(arg) == 2:
             if not self.figureKind == 'normal':
                 self.figureKind = 'normal'
-                self.axs[1].set_ylim(-(self.drawingTimes + self.limit), -self.drawingTimes)
+                self.axs[1].cla()
+                self.axs[1].set_ylim(-int(self.drawingTimes + self.limit - 1), -int(self.drawingTimes))
                 self.countLine = 1
                 self.y_pyDic = {}
-            elif self.figureKind == 'normal' and self.countLine>self.limit:
+            elif self.figureKind == 'normal' and self.countLine > self.limit:
                 self.countLine = 1
+                self.axs[1].cla()
                 self.y_pyDic = {}
-                self.axs[1].set_ylim(-(self.drawingTimes + self.limit), -self.drawingTimes)
+                self.axs[1].set_ylim(-int(self.drawingTimes + self.limit - 1), -int(self.drawingTimes))
             dbPk = arg[0]
-            self.y_pyDic[self.countLine] = dbPk
+            self.y_pyDic[self.drawingTimes] = dbPk
             #####
-            x = arg[1][0]
-            y = arg[1][1]
+            # x = arg[1][0]
+            # y = arg[1][1]
+            x = np.array(arg[1][0])
+            y = np.array(arg[1][1])
             try:
-                self.draw(x, y)
+                self.draw(x, y, self.drawingTimes)
                 self.countLine += 1
                 self.drawingTimes += 1
-            except:
+            except Exception as e:
+                print('_update_')
+                print(repr(e))
                 reslt = False
 
         elif len(arg) == 1:
@@ -100,15 +106,24 @@ class ApplicationWindow(QWidget):
                 self.figureKind = 'watchback'
                 self.countLine = 1
                 self.y_pyDic = {}
-                self.axs[1].set_ylim(-self.limit, 0)
+                self.axs[1].cla()
+                self.axs[1].set_ylim(-int(self.limit + 1), 1)
+            elif self.countLine == self.limit + 1:
+                self.countLine = 1
+                self.y_pyDic = {}
+                self.axs[1].cla()
+                self.axs[1].set_ylim(-int(self.limit + 1), 1)
             # dataPathList = [i[0] for i in self.batchSelect(watchBackPage)]
             dataPath = self.addressResolution(watchBackPath, self.fatherFilePath)
             self.y_pyDic[self.countLine] = dataPath
             x, y = self.getData(dataPath)
             try:
-                self.draw(x, y)
+                self.draw(x, y, self.countLine)
+                print("已画{}".format(self.countLine))
                 self.countLine += 1
-            except:
+            except Exception as e:
+                print('_update_')
+                print(repr(e))
                 reslt = False
 
         return reslt
@@ -134,11 +149,12 @@ class ApplicationWindow(QWidget):
         else:
             try:
                 if self.figureKind == 'normal':
-                    dbPk = self.y_pyDic[-po]
+                    print(self.y_pyDic.keys())
+                    dbPk = self.y_pyDic[math.ceil(-po)]
                     dataPathRelative = self.singleSelect(dbPk)
-                    dataPath = self.addressResolution(dataPathRelative)  # 地址解析
+                    dataPath = self.addressResolution(dataPathRelative, self.fatherFilePath)  # 地址解析
                 else:
-                    dataPath = self.y_pyDic[-po]
+                    dataPath = self.y_pyDic[math.ceil(-po)]
                 x, y = self.getData(dataPath)
                 self.axs[0].cla()
                 self.axs[0].plot(x, y)
@@ -148,20 +164,23 @@ class ApplicationWindow(QWidget):
                 self.axs[0].set_xlabel('频率/MHz',fontsize=14)
                 self.axs[0].set_ylabel('功率/dBm',fontsize=14)
                 print(self.axs[0].figure.canvas == self.axs[1].figure.canvas)
-            except:
+            except Exception as e:
                 print('单点回溯失败')
+                print('单点回溯错误:{}'.format(repr(e)))
 
     # 输入单条回溯数据库主键，输出文件相对地址
     def singleSelect(self, dbPk):
         try:
-            select = ("SELECT `{}` FROM `{}` WHERE `id`={}"
+            select = ("SELECT `{}` FROM `{}` WHERE `id`='{}'"
                       .format(self.dbField, self.dbTable, dbPk))
             print(select)
             self.cursor.execute(select)
             self.conn.commit()
             # 获取单条地址记录
-            dataPath = str(self.cursor.fetchall())
-        except:
+            dataPath = tuple(i[0] for i in self.cursor.fetchall())[0]
+            print(dataPath)
+        except Exception as e:
+            print('single select exception:{}'.format(repr(e)))
             dataPath = 0
         return dataPath
 
@@ -185,9 +204,10 @@ class ApplicationWindow(QWidget):
         x, y = None, None
         try:
             if os.path.exists(dataPath):
-                x, y = self.decompress(dataPath)  # decompress为引用的解压函数
-        except:
-            pass
+                x, y = decompress(dataPath)  # decompress为引用的解压函数
+                x, y = np.array(x), np.array(y)
+        except Exception as e:
+            print(repr(e))
         return x, y
 
     # 地址解析器，输入数据库中存的文件地址、父绝对地址，输出文件绝对地址
@@ -210,7 +230,7 @@ class ApplicationWindow(QWidget):
         return dataPath
 
     # 输入x和y，刷新频谱图区和瀑布图区
-    def draw(self, x, y):
+    def draw(self, x, y, basePosition):
         if self.bar:
             self.bar.remove()
         self.bar = 0
@@ -221,7 +241,7 @@ class ApplicationWindow(QWidget):
             self.axs[0].set_xlabel('频率/MHz',fontsize=14)
             self.axs[0].set_ylabel('功率/dBm',fontsize=14)
 
-            heat = np.array([-self.drawingTimes for x in x])
+            heat = np.array([-basePosition for x in x])
             points = np.array([x, heat]).T.reshape(-1, 1, 2)
             segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
@@ -239,12 +259,62 @@ class ApplicationWindow(QWidget):
             self.axs[1].figure.canvas.flush_events()
             print('successful draw')
             return line
-        except:
-            pass
+        except Exception as e:
+            print('draw')
+            print(repr(e))
 
 
 if __name__ == "__main__":
+    watchbackPage = 1
+    pageLimit = 2
+    dbTable = 'waterfall_data_usrp2_1579530177'
+    fatherFilePath = r'D:\myPrograms\CASTProgram\postgraduate_program\EMCfile'
+    # 建立数据库连接并初始化数据库游标
+    connect = pymysql.connect(host='localhost',  # ID地址
+                                port=3306,  # 端口号
+                                user='root',  # 用户名
+                                passwd='root',  # 密码
+                                db='cast',  # 库名
+                                charset='utf8')  # 链接字符集
+    cursor = connect.cursor()
+    def batchSelect(watchBackPage):
+        dataPathTuple = ()
+        try:
+            watchBackPage = int(watchBackPage)
+            # select = ("SELECT `{}` FROM `{}` limit {} offset {} "
+            #           .format('data_path', dbTable, pageLimit,
+            #                   (watchBackPage - 1) * pageLimit))
+            select = ("SELECT `{}` FROM `{}` limit {} offset {} "
+                      .format('data_path', dbTable, 100,
+                              (watchBackPage - 1) * 100))
+            cursor.execute(select)
+            connect.commit()
+            # 获取地址元组
+            dataPathTuple = tuple(i[0] for i in cursor.fetchall())
+        except:
+            pass
+        return dataPathTuple
+
+
     qapp = QtWidgets.QApplication(sys.argv)
-    app = ApplicationWindow()
+    app = ApplicationWindow(pageLimit, dbTable, fatherFilePath, cursor, connect)
     app.show()
+
+    # 查询选中页对应的数据记录
+    pathTuple = batchSelect(watchbackPage)
+    print(pathTuple)
+    import threading
+    # 遍历记录调用绘图函数
+    if not pathTuple:
+        print('未查询到记录')
+    else:
+        i = 0
+        for path in pathTuple:
+            dataPath = app.addressResolution(path, app.fatherFilePath)
+            x, y = app.getData(dataPath)
+            # print(x)
+            app._update_canvas(i, [x, y])
+            # app.startTimer(path)
+            # app._update_canvas(path)
+
     qapp.exec_()

@@ -6,12 +6,14 @@
 """
 import os
 from monitor.waterfall.compresse import LZ4
+import matplotlib.pyplot as plt
 
 def compress(data, dbPk, dbCursor, dbConn, dbTable, outputDir,
              relativeOutputDir, dbField=['id', 'data_path']):
     outputName = LZ4.lz4_compression(data, dbPk, outputDir)
     outputPath = os.path.join(outputDir, outputName)
-    relativeOutputPath = os.path.join(relativeOutputDir, outputName)
+    relativeOutputPath = os.path.join('/file', relativeOutputDir, outputName)
+    relativeOutputPath = relativeOutputPath.replace('\\', '/')
     try:
         insert = "INSERT INTO `{}`(`{}`,`{}`) VALUES ('{}','{}')".format(
             dbTable, dbField[0], dbField[1], dbPk, relativeOutputPath)
