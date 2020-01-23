@@ -23,7 +23,7 @@ from monitor.waterfall.compresse.dbOperation import compress
 
 class WaterfallDialog(QDialog, Ui_Dialog):
     signal = pyqtSignal(str)
-    def __init__(self, usrpNum, socket, startfreq, endfreq, fatherFilePath, pageLimit=10, dbField = 'data_path',parent=None):
+    def __init__(self, usrpNum, socket, startfreq, endfreq, fatherFilePath, pageLimit=100, dbField = 'data_path',parent=None):
     # def __init__(self, parent = None):
         super(WaterfallDialog, self).__init__(parent)
         # 子窗口初始化
@@ -294,10 +294,19 @@ class WaterfallDialog(QDialog, Ui_Dialog):
         while self.state:
             pass
         else:
-            self.socket.close()
-            self.conn.close()
-            self.signal.emit(self.usrpNum)
-            self.close()
+            msg = ('close')
+            zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+                                         args=(self.socket, msg, self.zmqLocalQ))
+            zmqThread.start()
+            while self.zmqLocalQ.empty():
+                pass
+            else:
+                reslt = self.zmqLocalQ.get()
+                print(reslt)
+                self.socket.close()
+                self.conn.close()
+                self.signal.emit(self.usrpNum)
+                self.close()
 
 
 if __name__ == '__main__':

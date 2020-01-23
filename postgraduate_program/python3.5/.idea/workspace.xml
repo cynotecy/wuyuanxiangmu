@@ -2,25 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5455c2af-7abb-49a2-81b8-51745224f6c8" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579433922/3f7af1c2-3ab0-11ea-9716-a088699cd42e_compressed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579433922/402fe1e2-3ab0-11ea-841c-a088699cd42e_compressed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579433966/5a42f9ee-3ab0-11ea-a82f-a088699cd42e_compressed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434042/86c9f3a4-3ab0-11ea-906d-a088699cd42e_compressed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434042/87bb359c-3ab0-11ea-a6d0-a088699cd42e_compressed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434048/8ad6d2e4-3ab0-11ea-81c9-a088699cd42e_compressed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434054/8e35fdf0-3ab0-11ea-814e-a088699cd42e_compressed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434054/8f2e4a0a-3ab0-11ea-a611-a088699cd42e_compressed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434054/902ea9e8-3ab0-11ea-be0d-a088699cd42e_compressed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579434054/9134e7a4-3ab0-11ea-ab40-a088699cd42e_compressed" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../emc" beforeDir="false" afterPath="$PROJECT_DIR$/../emc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../py27usrp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../py27usrp/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/demo/exer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../py27usrp/demo/exer2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/demo/exer2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../py27usrp/socketTest/repParaThread.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/socketTest/repParaThread.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/demo/exer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/exer2.py" beforeDir="false" afterPath="$PROJECT_DIR$/demo/exer2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/waterfall/WaterFall.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/waterfall/WaterFall.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/waterfall/WaterFallForPico.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/waterfall/WaterFallForPico.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/waterfall/compresse/LZ4.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/waterfall/compresse/LZ4.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/waterfall/compresse/dbOperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/waterfall/compresse/dbOperation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/monitor/waterfall/waterfallDialogEngin.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/waterfall/waterfallDialogEngin.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -303,8 +290,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.localDemoUi" />
-        <item itemvalue="Python.exer2" />
         <item itemvalue="Python.waterfallDialogEngin" />
+        <item itemvalue="Python.exer2" />
         <item itemvalue="Python.WaterFall" />
         <item itemvalue="Python.WaterFallForPico" />
       </list>
@@ -572,7 +559,8 @@
       <workItem from="1579175904018" duration="1245000" />
       <workItem from="1579224437659" duration="1997000" />
       <workItem from="1579407199527" duration="26275000" />
-      <workItem from="1579574214541" duration="13187000" />
+      <workItem from="1579574214541" duration="13955000" />
+      <workItem from="1579749053619" duration="6743000" />
     </task>
     <servers />
   </component>
@@ -671,14 +659,14 @@
     <SUITE FILE_PATH="coverage/python3_5$pytest_in_usrp_shibie_py.coverage" NAME="pytest in usrp_shibie.py Coverage Results" MODIFIED="1565596038226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$usrp_shibie__1_.coverage" NAME="usrp_shibie (1) Coverage Results" MODIFIED="1560741874444" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$DBtest.coverage" NAME="DBtest Coverage Results" MODIFIED="1560328256130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
-    <SUITE FILE_PATH="coverage/python3_5$localDemoUi.coverage" NAME="localDemoUi Coverage Results" MODIFIED="1579622282273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$localDemoUi.coverage" NAME="localDemoUi Coverage Results" MODIFIED="1579758215429" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/python3_5$test_0616.coverage" NAME="test_0616 Coverage Results" MODIFIED="1560738955713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$localDemoUi__1_.coverage" NAME="localDemoUi (1) Coverage Results" MODIFIED="1579501817197" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/python3_5$collect_thread.coverage" NAME="collect_thread Coverage Results" MODIFIED="1575467870071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../py27usrp/current_controller" />
     <SUITE FILE_PATH="coverage/python3_5$DBtest2.coverage" NAME="DBtest2 Coverage Results" MODIFIED="1560338230267" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
     <SUITE FILE_PATH="coverage/python3_5$exer2.coverage" NAME="exer2 Coverage Results" MODIFIED="1579616581238" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
     <SUITE FILE_PATH="coverage/python3_5$exer__1_.coverage" NAME="exer (1) Coverage Results" MODIFIED="1574924670307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/python3_5$waterfallDialogEngin.coverage" NAME="waterfallDialogEngin Coverage Results" MODIFIED="1579615577612" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor/waterfall" />
+    <SUITE FILE_PATH="coverage/python3_5$waterfallDialogEngin.coverage" NAME="waterfallDialogEngin Coverage Results" MODIFIED="1579756983857" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/monitor/waterfall" />
     <SUITE FILE_PATH="coverage/python3_5$steadyStateInterference_shibie.coverage" NAME="steadyStateInterference_shibie Coverage Results" MODIFIED="1567050599603" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/steadyStateInterference_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$online_recognize.coverage" NAME="online_recognize Coverage Results" MODIFIED="1562760932607" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/WeChat Files/muyuzean/FileStorage/File/2019-07" />
     <SUITE FILE_PATH="coverage/python3_5$pytest_in_usrp_shibie_v3_py.coverage" NAME="pytest in usrp_shibie_v3.py Coverage Results" MODIFIED="1568603717438" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
