@@ -134,23 +134,23 @@ def threadControl():
                     repSocket.send(freqbins)
             # 48H监测扫频（连续）（1-4线程）
             elif action == 'specMonitor':
-                if not instructionInfoList[0] == '0':
-                    try:
-                        repParaSocketDic[usrpNum] = socketInit.connect(repParaAddressList[usrpNum-1], 'REP')
-                        repParaThreadDic[usrpNum] = repParaThread.RepParaThread(repParaSocketDic[usrpNum], pubSock, subSock,
-                                                               standar, remoteTimeOut)
-                        repParaThreadDic[usrpNum].start()
-                        repSocket.send(repParaAddressList[usrpNum-1])
-                    except Exception, e:
-                        print repr(e)
-                        # 虽然我不知道为啥有时候terminate会不好使，但是通过这句话让terminate失灵时本该关闭的socket连接关闭了
-                        # repParaSocketDic[int(usrpNum)].close()
-                        repSocket.send("paraSocket {} build failed".format(str(usrpNum)))
-                else:
-                    repParaThreadDic[usrpNum].terminate()
-                    repParaThreadDic[usrpNum].join()
-                    print "paraSocket {} closed".format(str(usrpNum))
-                    repSocket.send("paraSocket {} closed".format(str(usrpNum)))
+                # if not instructionInfoList[0] == '0':
+                try:
+                    repParaSocketDic[usrpNum] = socketInit.connect(repParaAddressList[usrpNum-1], 'REP')
+                    repParaThreadDic[usrpNum] = repParaThread.RepParaThread(repParaSocketDic[usrpNum], pubSock, subSock,
+                                                           standar, remoteTimeOut)
+                    repParaThreadDic[usrpNum].start()
+                    repSocket.send(repParaAddressList[usrpNum-1])
+                except Exception, e:
+                    print repr(e)
+                    # 虽然我不知道为啥有时候terminate会不好使，但是通过这句话让terminate失灵时本该关闭的socket连接关闭了
+                    # repParaSocketDic[int(usrpNum)].close()
+                    repSocket.send("paraSocket {} build failed".format(str(usrpNum)))
+                # else:
+                    # repParaThreadDic[usrpNum].terminate()
+                    # repParaThreadDic[usrpNum].join()
+                    # print "paraSocket {} closed".format(str(usrpNum))
+                    # repSocket.send("paraSocket {} closed".format(str(usrpNum)))
 
             # 实时频谱仪扫频（连续）
             elif action == 'realtimeSpecMonitor':

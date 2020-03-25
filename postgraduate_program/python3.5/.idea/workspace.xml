@@ -2,13 +2,229 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5455c2af-7abb-49a2-81b8-51745224f6c8" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/2003bc8a-38c9-11ea-b9b6-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/20615dee-38c9-11ea-932c-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/20b9d122-38c9-11ea-b8e7-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/2110bdf0-38c9-11ea-8e29-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/216ba1d2-38c9-11ea-885c-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/21cf179c-38c9-11ea-af91-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/22274d08-38c9-11ea-b605-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/22890b98-38c9-11ea-a34f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/22eacae2-38c9-11ea-95cf-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/2353b002-38c9-11ea-911b-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/23c61e78-38c9-11ea-9b6d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/24362aee-38c9-11ea-9cb0-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/249a4be4-38c9-11ea-905d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/250dfd3a-38c9-11ea-9299-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/25791936-38c9-11ea-9bcc-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/25eb87fe-38c9-11ea-959e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/26520b38-38c9-11ea-b383-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/26bfb57a-38c9-11ea-ab91-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/272fc1e8-38c9-11ea-9964-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/27a66bda-38c9-11ea-b717-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/3d4a661c-38d2-11ea-9963-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/3db5ade8-38d2-11ea-bbfe-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/3e176c86-38d2-11ea-89be-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579224704/3e810310-38d2-11ea-8674-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/e10718e6-3da1-11ea-91c2-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/e206bc80-3da1-11ea-a870-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/e305d34a-3da1-11ea-98ac-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/e404ea18-3da1-11ea-9b6d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/e5019e9e-3da1-11ea-844c-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/e5ff047e-3da1-11ea-9cd2-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/e6fbb8f0-3da1-11ea-9a18-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/e7f86d76-3da1-11ea-af43-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/e8f9e69e-3da1-11ea-bd76-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/e9f69b1c-3da1-11ea-bf75-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/eaf5b206-3da1-11ea-924f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/ebf26664-3da1-11ea-b637-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/ecef1afa-3da1-11ea-b24d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/edebcf68-3da1-11ea-ab47-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/eee3811e-3da1-11ea-844b-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/efe09468-3da1-11ea-b65e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/f0dfabda-3da1-11ea-af18-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/f1dac16e-3da1-11ea-8826-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/f2d9d840-3da1-11ea-a0bb-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/f3d8ef14-3da1-11ea-919c-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/f4d5a3ba-3da1-11ea-b782-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/f5d4ba46-3da1-11ea-8488-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/f6d16ed4-3da1-11ea-8f41-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757604/f7e381f8-3da1-11ea-b879-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/04d424e2-3da2-11ea-904c-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/05cda5f8-3da2-11ea-9101-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/06c168c2-3da2-11ea-a0d7-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/07cfef1c-3da2-11ea-9794-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/09286852-3da2-11ea-adb5-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/0a73c8c0-3da2-11ea-be83-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/0bcf5982-3da2-11ea-8f50-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/0d19fa5c-3da2-11ea-9f60-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/0e96ba58-3da2-11ea-9b12-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/0ffbf4ba-3da2-11ea-8837-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/115e8218-3da2-11ea-90db-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/12c86570-3da2-11ea-90c7-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/141cf1e8-3da2-11ea-849e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/15c3ef68-3da2-11ea-aea7-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/17141478-3da2-11ea-9e5e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/1888d142-3da2-11ea-9971-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/19f2e99a-3da2-11ea-a8ec-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp1/1579757664/1b54cda2-3da2-11ea-a518-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579753721/d6336cc6-3d98-11ea-b519-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579753721/d6eff2f0-3d98-11ea-8b2a-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579753721/d7a784b4-3d98-11ea-b88e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579753721/d8748af6-3d98-11ea-9020-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579753721/d957f136-3d98-11ea-921e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579753721/da2ad3d2-3d98-11ea-aa61-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579753721/db16498c-3d98-11ea-b836-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/cc0f1a26-3da1-11ea-9bfa-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/cd095838-3da1-11ea-93c5-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/ce06088c-3da1-11ea-ba0c-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/cf051f64-3da1-11ea-8958-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/cfff71a4-3da1-11ea-b688-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/d0fc2606-3da1-11ea-82b8-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/d1fb3cdc-3da1-11ea-b61f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/d2f7f178-3da1-11ea-a41e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/d3f4a5e4-3da1-11ea-bfb3-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/d4eef82c-3da1-11ea-be24-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/d5ebacb0-3da1-11ea-9a47-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/d6eac364-3da1-11ea-b833-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/d7e515a8-3da1-11ea-ad22-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757569/d8eb5354-3da1-11ea-91f0-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/07892f34-3da2-11ea-9275-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/08847e74-3da2-11ea-904f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/09c35e30-3da2-11ea-b7ed-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/0b1e9a22-3da2-11ea-b2b3-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/0c698f80-3da2-11ea-9550-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/0dc9016e-3da2-11ea-9fcf-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/0f40fdc0-3da2-11ea-8842-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/10a48e54-3da2-11ea-b2af-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/121ad854-3da2-11ea-a9f3-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/13835f7e-3da2-11ea-ba05-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/151909e4-3da2-11ea-86f4-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/166f954a-3da2-11ea-8a99-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/17af0a6e-3da2-11ea-8738-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/1929184c-3da2-11ea-8069-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/1a99cb3a-3da2-11ea-bfa5-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/1d56f4b6-3da2-11ea-a81a-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/1f740074-3da2-11ea-8abe-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579757668/20771a6e-3da2-11ea-8c15-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/508d8214-3da3-11ea-8fe8-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/5129094c-3da3-11ea-afdb-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/51ca1392-3da3-11ea-9263-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/527019e8-3da3-11ea-85ae-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/530fd464-3da3-11ea-a2f7-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/53c03f1e-3da3-11ea-accb-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/5470a9d2-3da3-11ea-bf5c-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/55283b48-3da3-11ea-ae7f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/55e49188-3da3-11ea-8ca4-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/569e8574-3da3-11ea-bac3-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/575fa048-3da3-11ea-88ed-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/5827e1f8-3da3-11ea-ab69-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/58f4e868-3da3-11ea-a1e7-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/59c451b8-3da3-11ea-924a-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/5a9d42f0-3da3-11ea-9a31-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/5b73d2c2-3da3-11ea-9cd9-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/5c4f26c6-3da3-11ea-9378-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/5d2a7b12-3da3-11ea-982a-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/5e1da646-3da3-11ea-bebd-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/5f074878-3da3-11ea-bb2e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/5ff34cb6-3da3-11ea-8d73-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/60e415ca-3da3-11ea-af85-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/61d9a366-3da3-11ea-a550-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/62dfe128-3da3-11ea-8efc-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/63ed45be-3da3-11ea-9a04-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/64f38386-3da3-11ea-9686-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/65fc2380-3da3-11ea-a40a-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/670bea7a-3da3-11ea-855e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/68279d0a-3da3-11ea-985a-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/6948140c-3da3-11ea-a73d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/6a747698-3da3-11ea-96ce-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/6b928b8a-3da3-11ea-b769-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/6cb7c736-3da3-11ea-b393-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/6de429e2-3da3-11ea-939e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/6f15511c-3da3-11ea-bee0-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/704b3cee-3da3-11ea-adcc-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/71838b1a-3da3-11ea-8368-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/72bbd95c-3da3-11ea-8fc1-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/74099c2c-3da3-11ea-b864-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/75529a68-3da3-11ea-b525-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/76a2bfc0-3da3-11ea-9478-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/77fa0bca-3da3-11ea-9099-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/794ef5d8-3da3-11ea-a5c5-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/7aa3dfa4-3da3-11ea-b24f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/7bfd414c-3da3-11ea-bb56-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/7d6078e4-3da3-11ea-a423-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/7ecf9c40-3da3-11ea-a726-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/80601fae-3da3-11ea-8bb7-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/81e2557e-3da3-11ea-a9c8-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/835b01e2-3da3-11ea-804e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/84d61086-3da3-11ea-aa79-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/8655e3ec-3da3-11ea-acf8-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/87df40a6-3da3-11ea-a278-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/896aff6c-3da3-11ea-a35a-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/8aef974a-3da3-11ea-b4a6-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/8c90cb10-3da3-11ea-bf8f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/8e287586-3da3-11ea-870f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/8fcc0b74-3da3-11ea-9088-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/9176c85c-3da3-11ea-a411-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/93218562-3da3-11ea-9e8f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/94e41934-3da3-11ea-9975-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/96985f50-3da3-11ea-ba3b-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/984f07de-3da3-11ea-a5ef-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/9a034dd2-3da3-11ea-839a-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/9bcf6b36-3da3-11ea-bbc2-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/9d94615e-3da3-11ea-b866-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/9f5c7dd0-3da3-11ea-930b-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/a123d666-3da3-11ea-9e11-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/a2fbdf26-3da3-11ea-82ab-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/a4d3e7c8-3da3-11ea-934e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/a6ae52ba-3da3-11ea-a0cb-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/a894a94c-3da3-11ea-b639-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/aa73d906-3da3-11ea-b90b-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/ac57cd40-3da3-11ea-839d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/ae66ab06-3da3-11ea-ab2b-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/b051c634-3da3-11ea-a5c5-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/b24b2f26-3da3-11ea-8c0d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/b44235ec-3da3-11ea-817b-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/b63e0140-3da3-11ea-871e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/b840f358-3da3-11ea-a51b-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/ba4d6ee6-3da3-11ea-8fa1-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/bc5eaef8-3da3-11ea-a8c2-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/be771682-3da3-11ea-b66e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/c08d1aae-3da3-11ea-b80d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/c2a58192-3da3-11ea-9401-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/c4c771c8-3da3-11ea-8eca-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/c6f54d8c-3da3-11ea-b62b-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/c920c710-3da3-11ea-9dbd-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/cb536780-3da3-11ea-a81c-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/cd91f364-3da3-11ea-9547-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/cfce1cf4-3da3-11ea-b7fc-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/d2247fcc-3da3-11ea-9d19-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/d460a986-3da3-11ea-9fca-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/d69cd300-3da3-11ea-ba21-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/d8e285dc-3da3-11ea-9e89-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/db44d47a-3da3-11ea-ab44-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/dd91ae12-3da3-11ea-ad2e-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/dfe810fe-3da3-11ea-b260-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/e24cc1ee-3da3-11ea-83e2-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/e4aa4bd8-3da3-11ea-807a-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/e7115ef4-3da3-11ea-b1af-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/e7ac54da-3da3-11ea-8372-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/e844e878-3da3-11ea-925f-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/e8e4a2fa-3da3-11ea-939d-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/e98b8476-3da3-11ea-9676-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/ea2da146-3da3-11ea-b804-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/eadba9ba-3da3-11ea-b29b-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/eb8c1476-3da3-11ea-aedc-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/ec3c7efe-3da3-11ea-8f13-a088699cd42e_compressed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EMCfile/waterfall/usrp2/1579758220/ecfd77e2-3da3-11ea-af43-a088699cd42e_compressed" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../emc" beforeDir="false" afterPath="$PROJECT_DIR$/../emc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../py27usrp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py27usrp/demo/exer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/demo/exer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py27usrp/demo/exer2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/demo/exer2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../py27usrp/socketTest/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/socketTest/demo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../py27usrp/socketTest/repParaThread.py" beforeDir="false" afterPath="$PROJECT_DIR$/../py27usrp/socketTest/repParaThread.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/5ffbe6c6-ad65-4694-972f-aa1a16f5ed1c.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/5ffbe6c6-ad65-4694-972f-aa1a16f5ed1c.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ad1d9457-abc2-4cdb-a224-282a5a644937.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ad1d9457-abc2-4cdb-a224-282a5a644937.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/waterfall/waterfallDialogEngin.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/waterfall/waterfallDialogEngin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localDemoUi.py" beforeDir="false" afterPath="$PROJECT_DIR$/localDemoUi.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -112,7 +328,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://F:/python3.5/nets/resnet_net.py" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="database.console.LAST_STATE" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../py27usrp" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="python.debugger.dataview.coloredbydefault" value="false" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -281,11 +497,11 @@
     </configuration>
     <list>
       <item itemvalue="Python.MainWindow" />
-      <item itemvalue="Python.WaterFall" />
       <item itemvalue="Python.WaterFallForPico" />
+      <item itemvalue="Python.WaterFall" />
+      <item itemvalue="Python.exer2" />
       <item itemvalue="Python.localDemoUi" />
       <item itemvalue="Python.waterfallDialogEngin" />
-      <item itemvalue="Python.exer2" />
     </list>
     <recent_temporary>
       <list>
@@ -561,6 +777,9 @@
       <workItem from="1579407199527" duration="26275000" />
       <workItem from="1579574214541" duration="13955000" />
       <workItem from="1579749053619" duration="6743000" />
+      <workItem from="1585135801789" duration="304000" />
+      <workItem from="1585136363306" duration="12000" />
+      <workItem from="1585136647004" duration="295000" />
     </task>
     <servers />
   </component>
@@ -659,7 +878,7 @@
     <SUITE FILE_PATH="coverage/python3_5$pytest_in_usrp_shibie_py.coverage" NAME="pytest in usrp_shibie.py Coverage Results" MODIFIED="1565596038226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$usrp_shibie__1_.coverage" NAME="usrp_shibie (1) Coverage Results" MODIFIED="1560741874444" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$DBtest.coverage" NAME="DBtest Coverage Results" MODIFIED="1560328256130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/demo" />
-    <SUITE FILE_PATH="coverage/python3_5$localDemoUi.coverage" NAME="localDemoUi Coverage Results" MODIFIED="1579758215429" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python3_5$localDemoUi.coverage" NAME="localDemoUi Coverage Results" MODIFIED="1585136768381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/python3_5$test_0616.coverage" NAME="test_0616 Coverage Results" MODIFIED="1560738955713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controller/usrp_controller/usrp_shibie" />
     <SUITE FILE_PATH="coverage/python3_5$localDemoUi__1_.coverage" NAME="localDemoUi (1) Coverage Results" MODIFIED="1579501817197" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/python3_5$collect_thread.coverage" NAME="collect_thread Coverage Results" MODIFIED="1575467870071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../py27usrp/current_controller" />

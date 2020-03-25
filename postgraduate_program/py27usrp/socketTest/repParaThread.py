@@ -22,57 +22,57 @@ class RepParaThread(Thread):
         self.standar = standar
         self.remoteTimeOut = remoteTimeOut
         self.localQueue = Queue.Queue()
-        self.stopEvent = threading.Event()
+        # self.stopEvent = threading.Event()
 
 
     def run(self):
         while True:
-            if self.stopEvent.is_set():
-                print 'catched the stop event'
-                self.repSocket.close()
-                break
-            else:
-                try:
-                    print '等待本地采集指令'
-                    localRecv = self.repSocket.recv()
-                    print '收到本地采集指令'
-                    if localRecv == 'close':
-                        print 'catched the stop event by socket'
-                        self.repSocket.send('para socket thread closed')
-                        self.repSocket.close()
-                        break
+            # if self.stopEvent.is_set():
+            #     print 'catched the stop event'
+            #     self.repSocket.close()
+            #     break
+            # else:
+            try:
+                print '等待本地采集指令'
+                localRecv = self.repSocket.recv()
+                print '收到本地采集指令'
+                if localRecv == 'close':
+                    print 'catched the stop event by socket'
+                    self.repSocket.send('para socket thread closed')
+                    self.repSocket.close()
+                    break
+                else:
+                    instructionInfoList = localRecv.split(';')
+                    startFreq = instructionInfoList[0]
+                    endFreq = instructionInfoList[1]
+                    scanRecv = scan_thread.Recv(self.localQueue, self.subSocket, self.standar)
+                    scanSend = scan_thread.Send(startFreq, endFreq, self.pubSocket)
+                    scanRecv.start()
+                    scanSend.run()
+                    startTime = datetime.datetime.now()
+                    while self.localQueue.empty():
+                        nowTime = datetime.datetime.now()
+                        period = (nowTime - startTime).seconds
+                        if period > self.remoteTimeOut:
+                            scanRecv.stop()
+                            self.repSocket.send('超时')
+                            break
                     else:
-                        instructionInfoList = localRecv.split(';')
-                        startFreq = instructionInfoList[0]
-                        endFreq = instructionInfoList[1]
-                        scanRecv = scan_thread.Recv(self.localQueue, self.subSocket, self.standar)
-                        scanSend = scan_thread.Send(startFreq, endFreq, self.pubSocket)
-                        scanRecv.start()
-                        scanSend.run()
-                        startTime = datetime.datetime.now()
-                        while self.localQueue.empty():
-                            nowTime = datetime.datetime.now()
-                            period = (nowTime - startTime).seconds
-                            if period > self.remoteTimeOut:
-                                scanRecv.stop()
-                                self.repSocket.send('超时')
-                                break
-                        else:
-                            bins = self.localQueue.get()
-                            freqList = self.localQueue.get()
-                            # 将回传的频谱直接发给py3
-                            bins = [str(i) for i in bins]
-                            freqlist = [str(i) for i in freqList]
-                            binStr = " ".join(bins)
-                            freqStr = " ".join(freqlist)
-                            freqbinsList = [freqStr, binStr]
-                            freqbins = ';'.join(freqbinsList)
-                            self.repSocket.send(freqbins)
-                except Exception, e:
-                    print 'repParaThread run方法错误：{}'.format(repr(e))
-                finally:
-                    time.sleep(0.3)
+                        bins = self.localQueue.get()
+                        freqList = self.localQueue.get()
+                        # 将回传的频谱直接发给py3
+                        bins = [str(i) for i in bins]
+                        freqlist = [str(i) for i in freqList]
+                        binStr = " ".join(bins)
+                        freqStr = " ".join(freqlist)
+                        freqbinsList = [freqStr, binStr]
+                        freqbins = ';'.join(freqbinsList)
+                        self.repSocket.send(freqbins)
+            except Exception, e:
+                print 'repParaThread run方法错误：{}'.format(repr(e))
+            finally:
+                time.sleep(0.3)
 
-    def terminate(self):
-        self.stopEvent.set()
-        print 'terminate'
+    # def terminate(self):
+    #     self.stopEvent.set()
+    #     print 'terminate'

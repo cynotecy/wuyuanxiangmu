@@ -1200,16 +1200,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def waterfallDialogCloseSlot(self, signalContent):
         print('{}号子窗口关闭'.format(signalContent))
-        msg = (signalContent + ',scan,specMonitor,'
-               + '0;0')
-        zmqThread = threading.Thread(target=zmqLocal.zmqThread,
-                                     args=(self.zmqLocal, msg, self.zmqLocalQ))
-        zmqThread.start()
-        while self.zmqLocalQ.empty():
-            pass
-        else:
-            paraRepCloseReslt = self.zmqLocalQ.get()
-            print(paraRepCloseReslt)
+        # msg = (signalContent + ',scan,specMonitor,'
+        #        + '0;0')
+        # zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+        #                              args=(self.zmqLocal, msg, self.zmqLocalQ))
+        # zmqThread.start()
+        # while self.zmqLocalQ.empty():
+        #     pass
+        # else:
+        #     paraRepCloseReslt = self.zmqLocalQ.get()
+        #     print(paraRepCloseReslt)
 
     # 干扰对消在线
     def on_pushButton_clicked_28(self):
