@@ -14,6 +14,9 @@ dist
 *.dat
 build
 
+# pycharm
+.idea
+
 #others
 PicoScope6_r6_13_6.exe
 *.xlsx
@@ -30,3 +33,4 @@ antenna_recvfiles
 specmonitor_recvfiles
 mat
 fakeData
+waterfall
