@@ -61,10 +61,9 @@ class ApplicationWindow(QWidget):
         self.axs[1].set_xlim(150, 200)
         self.axs[1].set_ylim(-self.limit, 0)
 
-    # 图区刷新器，输入(数据库主键,[x,y])或(回看页码)，刷新两个图区
     def _update_canvas(self, *arg):
         """
-
+        图区刷新器，输入(数据库主键,[x,y])或(回看页码)，刷新两个图区
         Args:
             *arg:元组，长度为1时为(watchbackPath,)，即多条回溯每条的地址；长度为2时为(DBPK, [x, y])，即普通绘图
 

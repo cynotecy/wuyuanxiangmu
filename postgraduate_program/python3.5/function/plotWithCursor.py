@@ -9,7 +9,7 @@ from matplotlib.figure import Figure
 from matplotlib.widgets import Cursor
 import sys
 """
-频谱图绘图类，输入不定长参数，参数中包含绘图模式、绘图地址或绘图数据
+频谱图绘图类，输入不定长参数，参数中包含绘图模式、绘图地址或绘图数据，根据具体传入的参数绘制相应的频谱图
 """
 class getPos(QWidget):
     def __init__(self, *arg, parent=None):
@@ -18,25 +18,30 @@ class getPos(QWidget):
         matplotlib.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
         self.mouseListeningFlag = 1  # 鼠标监听标志位，为0时不监听图区鼠标行为
         self.lineyArray = 0  # 图上标线位置，默认为无标线
+        #　该模式下，本类根据输入的绘图数据绘图，进行鼠标监听
         if arg[0] == 'originOnline':
             self.x = arg[1]
             self.y = arg[2]
             self.lineEdit = arg[3]
             self.mouseListeningFlag = 1
+        # 该模式下，本类根据输入的文件地址绘图，不进行鼠标监听
         elif arg[0] == 'originOfflineWithoutMouseListening':
             self.x, self.y = self.getData(arg[1])
             self.mouseListeningFlag = 0
+        # 该模式下，本类根据输入的文件地址绘图，进行鼠标监听，并将图像数据置入队列以返回给调用者
         elif arg[0] == 'originOffline':
             self.x, self.y = self.getData(arg[1])
             self.lineEdit = arg[2]
-            arg[3].put([self.x, self.y])
+            arg[3].put([self.x, self.y])  # 该参数为调用者用来取得绘图数据的队列
             self.mouseListeningFlag = 1
+        # 该模式下，本类根据输入的绘图数据绘图，并根据输入的参考线位置绘制参考线，不进行鼠标监听
         elif arg[0] == 'after':
             self.x = arg[1]
             self.y = arg[2]
             liney = float(arg[3])
             self.lineyArray = [liney for _ in range(len(self.x))]
             self.mouseListeningFlag = 0
+        # 该模式下，本类根据输入的绘图数据绘图，不进行鼠标监听
         elif arg[0] == 'history':
             self.x = arg[1]
             self.y = arg[2]
@@ -56,6 +61,14 @@ class getPos(QWidget):
         self.draw()
 
     def getData(self, path):
+        """
+        读取路径对应的txt文件中的数据，文件中第一行的数据被读为x，第二行被读为y
+        Args:
+            path: str类型的路径
+
+        Returns:numpy float32格式的数组x和y
+
+        """
         x = np.loadtxt(path, dtype=str, delimiter=' ')[0, 0:-1]  # 输出频率的一维数组
         y = np.loadtxt(path, dtype=str, delimiter=' ')[1, 0:-1]  # 输出幅度的一维数组
         x = np.asarray(np.float32(x))
@@ -63,6 +76,11 @@ class getPos(QWidget):
         return x, y
 
     def draw(self):
+        """
+        清除图区后根据类属性x和y画图，若需要在图上绘制y=某数值的参考线（即类变量lineyArray有值），则同时在图中绘制该参考线
+        Returns:
+
+        """
         self.axs.cla()
         self.axs.plot(self.x, self.y)
         if self.lineyArray:
@@ -74,6 +92,14 @@ class getPos(QWidget):
 
     # 定义响应函数
     def on_key_press(self, event):
+        """
+        鼠标左键单击事件监听器，当本类的鼠标监听标志位为1且鼠标左键在图区中单击时，将鼠标点击位置对应的y坐标置入相应界面的lineEdit组件中
+        Args:
+            event:
+
+        Returns:
+
+        """
         if self.mouseListeningFlag:
             pos = event.ydata
             if self.lineEdit:

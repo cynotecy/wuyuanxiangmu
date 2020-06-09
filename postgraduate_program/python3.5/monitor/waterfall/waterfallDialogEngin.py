@@ -2,7 +2,7 @@
 @File:waterfallDialogEngin.py
 @Author:lcx
 @Date:2020/1/615:23
-@Desc:瀑布图子窗口
+@Desc:瀑布图子窗口，调用WaterFall类提供的各种方法进行相应瀑布图显示
 """
 from Ui.UitoPy.SpecMonitorDialog import Ui_Dialog
 from PyQt5.QtWidgets import QApplication,QMainWindow,QDialog,QMessageBox
@@ -16,7 +16,7 @@ import os
 import pymysql
 import time
 import uuid
-from socketDemo import zmqLocal
+from communication import zmqLocal
 from function import filesOrDirsOperate
 from monitor.waterfall.compresse.dbOperation import compress
 
@@ -290,6 +290,14 @@ class WaterfallDialog(QDialog, Ui_Dialog):
         return dataPathTuple
 
     def closeEvent(self, QCloseEvent):
+        """
+        关闭事件，确保当前动作完成后关闭相应连接和本窗口
+        Args:
+            QCloseEvent:
+
+        Returns:
+
+        """
         self.interruptFlag = 1
         while self.state:
             pass

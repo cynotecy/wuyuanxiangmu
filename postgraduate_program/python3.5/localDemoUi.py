@@ -1,31 +1,25 @@
 import sys
-from threading import Thread
-from multiprocessing import Process
 import datetime
 import os
 import time
 import win32api
 import queue
-from multiprocessing import Process, Queue as mq
+from multiprocessing import Queue as mq
 import threading
-import zmq
 from PyQt5.QtCore import Qt, QFileInfo, QTimer
-from PyQt5.QtGui import QCursor, QIcon, QGuiApplication
-from PyQt5.QtWidgets import QMainWindow, QSystemTrayIcon, QMessageBox, QTableWidgetItem, QFileDialog, QProgressDialog, \
-    QApplication
+from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTableWidgetItem, QFileDialog, QApplication
 
-import Message
-from function import plotWithCursor, filesOrDirsOperate
+from loadingDialog import Message
+from function import plotWithCursor, filesOrDirsOperate, algorithmThreads
 from Ui.UitoPy.Ui_socketDEMO import Ui_MainWindow
-from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,
-                                                    usrp_shibie_v3)
+from controller.usrp_controller.usrp_shibie import (oc_list_display_v1)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelopeDrawpic
 from controller.usrp_controller.steadyStateInterference_shibie import display_v4
 from controller.Pico_controller.draw_pic import draw_pic
 from monitor.waterfall import waterfallDialogEngin
 from function.numOrLetters import *
-from socketDemo import zmqLocal
-import algorithmThreads
+from communication import zmqLocal
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -279,8 +273,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if threshold > min(self.onlineSpecY) and threshold < max(self.onlineSpecY):
                     # 启用超频点判断线程
                     overThresholdThread = algorithmThreads.IQOverThreshold(self.onlineSpecX,
-                                                                         self.onlineSpecY, threshold,
-                                                                         self.algorithmProcessQ)
+                                                                           self.onlineSpecY, threshold,
+                                                                           self.algorithmProcessQ)
                     overThresholdThread.start()
                     loading = Message.Loading()
                     loading.setWindowModality(Qt.ApplicationModal)
@@ -328,7 +322,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # 创建行号-IQ识别结果字典
                 self.ocRsltDict = dict.fromkeys(self.ocRowNumSelectList, 'null')
                 collectThread = algorithmThreads.OcCollectThread(usrpNum, self.ocRsltDict,
-                                              self.ocOverThresholdList, self.zmqLocal, self.ocCollectPathQ)
+                                                                 self.ocOverThresholdList, self.zmqLocal, self.ocCollectPathQ)
                 recognizeThread = algorithmThreads.OcRecognizeThread(self.ocRsltDict,
                                                                      self.ocCollectPathQ, self.algorithmProcessQ)
                 collectThread.start()
@@ -520,9 +514,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 msg = (usrpNum + ',scan,specEnvelope,'
                        + str(startfreq) + ";" + str(endfreq))
                 specEnvelopThread = algorithmThreads.specEnvelopeOnlineProcess(self.zmqLocal,
-                                                                         msg, self.dataQ,
-                                                                         self.algorithmProcessQ,
-                                                                         self.savingProcessQ)
+                                                                               msg, self.dataQ,
+                                                                               self.algorithmProcessQ,
+                                                                               self.savingProcessQ)
                 specEnvelopThread.start()
                 # 调用识别loading
                 loading = Message.Loading()
@@ -813,8 +807,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 filesOrDirsOperate.makesureDirExist(self.pulsePath)
                 length = 10
                 pulseRecognizeOfflineT = algorithmThreads.PulseRecognizeOfflineProcess(self.pulsePath,
-                                                                                     self.algorithmProcessQ,
-                                                                                     length)
+                                                                                       self.algorithmProcessQ,
+                                                                                       length)
                 pulseRecognizeOfflineT.start()
                 loading = Message.Loading()
                 loading.setWindowModality(Qt.ApplicationModal)
@@ -1020,10 +1014,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             localTime = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
             filePath = os.path.join(dirPath, r'steady_state_output_{}.txt'.format(localTime))
             steadyStateRecognizeT = algorithmThreads.steadyStateRecognizeProcess(self.algorithmProcessQ,
-                                                                 self.steadyStateData[0],
-                                                                 self.steadyStateData[1],
-                                                                 self.lineEdit_16.text(),
-                                                                 filePath)
+                                                                                 self.steadyStateData[0],
+                                                                                 self.steadyStateData[1],
+                                                                                 self.lineEdit_16.text(),
+                                                                                 filePath)
             steadyStateRecognizeT.start()
             # 调用loading
             loading = Message.Loading()

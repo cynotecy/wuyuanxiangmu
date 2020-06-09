@@ -1,3 +1,6 @@
+"""
+随便写写的demo类
+"""
 import os
 from threading import Thread
 class py2Thread(Thread):
