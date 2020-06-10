@@ -14,6 +14,7 @@ jpeg                      9b                   hb83a4c4_2
 kiwisolver                1.1.0                    pypi_0    pypi
 libpng                    1.6.37               h2a8f88b_0
 libtiff                   4.1.0                h56a325e_0
+lz4                       2.2.1                    pypi_0    pypi
 matplotlib                3.1.2                    pypi_0    pypi
 mkl                       2019.4                      245
 mkl-service               2.3.0            py37hb782905_0
