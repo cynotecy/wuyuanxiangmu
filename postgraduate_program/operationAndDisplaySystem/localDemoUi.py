@@ -27,8 +27,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
         # os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
-        py2 = threading.Thread(target=algorithmThreads.py2Thread, args=(), daemon=True)
-        py2.start()
+        # py2 = threading.Thread(target=algorithmThreads.py2Thread, args=(), daemon=True)
+        # py2.start()
 
         # 初始化当前路径和其父路径，用于拼接后续地址进行非文件夹依赖的寻址
         self.currentPath = os.path.dirname(__file__)
@@ -52,6 +52,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 初始化变量
         self.steadyStateHistoryData = []  # 稳态干扰历史数据
         self.steadyStateHistoryResult = []  # 稳态干扰历史结果
+        self.childWindowDic = {}
         # 实例化zmq
         self.zmqLocal = zmqLocal.localZMQ()
         # 第一页，IQ识别
@@ -389,6 +390,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 while self.zmqLocalQ.empty():
                     gui()
                 else:
+                    loading.close()
+                    print("after loading1 close")
                     reslt = self.zmqLocalQ.get()
                     if reslt == "超时":
                         loading.close()
@@ -398,21 +401,37 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             QMessageBox.Yes,
                                             QMessageBox.Yes)
                     else:
-                        print('data type=', str(type(reslt)))
                         while not self.algorithmProcessQ.empty():
                             self.algorithmProcessQ.get()
                         while not self.savingProcessQ.empty():
                             self.savingProcessQ.get()
-                        # 开启识别进程/线程
-                        recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ)
-                        recognizeProcess.start()
-                        # 开启存储进程/线程
+                        # 开启存储进程/线程，该线程耗时异常长
+                        starttime = datetime.datetime.now()
                         savingProcess = algorithmThreads.IQDataSaveProcess(reslt, self.savingProcessQ)
                         savingProcess.start()
+
+                        endtime = datetime.datetime.now()
+                        strTime = '开启存储线程耗时:%dms' % (
+                                (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                        print(strTime)
+                        # 开启识别进程/线程
+                        # starttime = datetime.datetime.now()
+                        recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ)
+                        recognizeProcess.start()
+
+                        endtime = datetime.datetime.now()
+                        strTime = '开启识别线程耗时:%dms' % (
+                                (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                        print(strTime)
+                        # 调用识别loading
+                        loading = Message.Loading()
+                        loading.setWindowModality(Qt.ApplicationModal)
+                        loading.show()
                         while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
-                            pass
+                            gui()
                         else:
                             loading.close()
+                            print("IQ识别结束......")
                             dataPath = self.savingProcessQ.get()
                             print("IQ数据存储于：", dataPath)
                             recognizeResult = self.algorithmProcessQ.get()
@@ -424,10 +443,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             self.tableWidget_3.setItem(0, 2, item2)
                             self.tableWidget_3.setItem(0, 3, item3)
                             self.tableWidget_3.setItem(0, 4, item4)
-                            endtime = datetime.datetime.now()
-                            strTime = '并行识别花费:%dms' % (
-                                    (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                            print(strTime)
+                            # endtime = datetime.datetime.now()
+                            # strTime = '并行识别花费:%dms' % (
+                            #         (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                            # print(strTime)
             else:
                 QMessageBox.warning(self,
                                     '错误',
@@ -527,6 +546,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     gui()
                 else:
                     loading.close()
+                    print("频谱包络识别算法终止......")
                     recognizeResult = self.algorithmProcessQ.get()
                     print("识别结果：", recognizeResult)
                     saveResult = self.savingProcessQ.get()
@@ -647,6 +667,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 gui()
             else:
                 loading.close()
+                print("频谱包络识别算法终止......")
                 recognizeResult = self.algorithmProcessQ.get()
                 ########################################################
                 if len(recognizeResult) == 1:
@@ -739,7 +760,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_pushButton_clicked_14(self):
         try:
             length = 10
-            dirPath = os.path.join(self.fatherPath, r'interference_files\matfile')
+            dirPath = os.path.join(self.fatherPath, r'data\interference_files\matfile')
             print(dirPath)
             filesOrDirsOperate.makesureDirExist(dirPath)
             pulseRecognizeOnlineT = algorithmThreads.PulseRecognizeOnlineProcess(dirPath, self.algorithmProcessQ, length)
@@ -1121,14 +1142,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
                         # 弹出子窗口
                         dbFilesRootDir = os.path.join(self.fatherPath, 'EMCfile')
-                        self.childWindow = waterfallDialogEngin.WaterfallDialog(usrpNum, paraSocket,
+                        self.childWindowDic[usrpNum] = waterfallDialogEngin.WaterfallDialog(usrpNum, paraSocket,
                                                                                 startfreq, endfreq, dbFilesRootDir)
                         # self.childWindow = waterfallDialogEngin.WaterfallDialog()
-                        self.childWindow.signal.connect(self.waterfallDialogCloseSlot)
-                        self.childWindow.show()
+                        self.childWindowDic[usrpNum].signal.connect(self.waterfallDialogCloseSlot)
+                        self.childWindowDic[usrpNum].show()
 
                         # 开启循环任务
-                        self.circulateT = threading.Timer(1, self.childWindow.circulate)
+                        self.circulateT = threading.Timer(1, self.childWindowDic[usrpNum].circulate)
                         self.circulateT.start()
             else:
                 QMessageBox.warning(self,
@@ -1170,14 +1191,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
                     # 弹出子窗口
                     dbFilesRootDir = os.path.join(self.fatherPath, 'EMCfile')
-                    self.childWindow = waterfallDialogEngin.WaterfallDialog(usrpNum, paraSocket,
+                    self.childWindowDic[usrpNum] = waterfallDialogEngin.WaterfallDialog(usrpNum, paraSocket,
                                                                             startfreq, endfreq, dbFilesRootDir)
                     # self.childWindow = waterfallDialogEngin.WaterfallDialog()
-                    self.childWindow.signal.connect(self.waterfallDialogCloseSlot)
-                    self.childWindow.show()
+                    self.childWindowDic[usrpNum].signal.connect(self.waterfallDialogCloseSlot)
+                    self.childWindowDic[usrpNum].show()
 
                     # 开启循环任务
-                    self.circulateT = threading.Timer(1, self.childWindow.circulate)
+                    self.circulateT = threading.Timer(1, self.childWindowDic[usrpNum].circulate)
                     self.circulateT.start()
             # else:
                 # QMessageBox.warning(self,
@@ -1194,6 +1215,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def waterfallDialogCloseSlot(self, signalContent):
         print('{}号子窗口关闭'.format(signalContent))
+        self.childWindowDic[signalContent] = ""
         # msg = (signalContent + ',scan,specMonitor,'
         #        + '0;0')
         # zmqThread = threading.Thread(target=zmqLocal.zmqThread,
@@ -1349,16 +1371,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("干扰对消选择文件2：", filename)
         self.lineEdit_19.setText(filename)
 
-    # 重写关闭事件
-    def closeEvent(self, event):
-        # os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
-
-        socketThread = threading.Thread(target=zmqLocal.zmqThread,
-                                        args=(self.zmqLocal, "StopAll", self.zmqLocalQ), daemon=True)
-        socketThread.start()
-        while not self.zmqLocalQ.empty():
-            sys.exit()
-            break
+    # # 重写关闭事件
+    # def closeEvent(self, event):
+    #     # os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
+    #
+    #     socketThread = threading.Thread(target=zmqLocal.zmqThread,
+    #                                     args=(self.zmqLocal, "StopAll", self.zmqLocalQ), daemon=True)
+    #     socketThread.start()
+    #     while not self.zmqLocalQ.empty():
+    #         sys.exit()
+    #         break
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -37,7 +37,7 @@ class ApplicationWindow(QWidget):
         self.sample_id = self.sampleOutter_id+self.sampleInner_id
         self.signalLimit = signalLimit
         self.sampleLimit = sampleLimit
-        print("样本编号", str(self.sample_id))
+        print("最相似模板文件的数据库编号：", str(self.sample_id))
         matplotlib.rcParams['font.family'] = ['SimHei']  # 用来正常显示中文标签
         matplotlib.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
         layout = QtWidgets.QVBoxLayout(self)
@@ -66,7 +66,7 @@ class ApplicationWindow(QWidget):
                                db='cast',  # 库名
                                charset='utf8mb4')  # 链接字符集
         select = ("SELECT `data` FROM `sample_data` WHERE `id`=%s") % self.sample_id
-        print(select)
+        # print(select)
         cursor = conn.cursor()
         cursor.execute(select)
         # 获取所有记录列表
@@ -75,11 +75,11 @@ class ApplicationWindow(QWidget):
         results = results[-1]
         results = results.split("'")
         results = results[0]
-        print(results)
-        self.path = '..\EMCfile\data\sample_data\%s' % results
-        print(self.path)
+        # print(results)
+        self.path = '..\data\EMCfile\data\sample_data\%s' % results
+        print("最相似模板文件路径: " + self.path)
         if "\\" in self.filepath or '/' in self.filepath:
-            print(self.filepath)
+            # print(self.filepath)
             file = open(self.filepath)
             # x = file.readline().split(" ")
             xy1 = file.read().split('\n')
@@ -117,9 +117,9 @@ class ApplicationWindow(QWidget):
     def draw(self):
         # 重绘频谱图
         x1, y1, x1Red, y1Red, x2, y2, x2Red, y2Red = self.getData()
-        print('successful getdata')
+        print('successfully getdata')
         xnum = len(y2)
-        print(xnum)
+        # print(xnum)
         # # 生成样本图横坐标
         # # GSM
         # if self.sampleOutter_id == 5:
@@ -172,7 +172,7 @@ class ApplicationWindow(QWidget):
         self.axs[1].axis('off')
         # self.axs[1].set_xlabel('频率/MHz',fontsize=14)
         # self.axs[1].set_ylabel('功率/dBM')
-        print('successful draw')
+        print('successfully draw')
         # return line
 
 

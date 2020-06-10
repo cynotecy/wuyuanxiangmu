@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 base = ['GSM900', 'WCDMA', 'WLAN(2.4G)', 'CDMA800', 'GSM1800', 'FDD_LTE', 'TD_SCDMA']
 freq = [[935, 960], [2130, 2145], [2400, 2483], [870, 880], [1805, 1840], [1850, 1875], [2010, 2025]]
 def baoluoshibie(file_path):
+    print("频谱包络识别算法启动......")
     if not ('\\' in file_path or '/' in file_path):
         xList = file_path[0]
         yList = file_path[1]
@@ -25,7 +26,7 @@ def baoluoshibie(file_path):
 
     for m in range(0,7):
         if (x_lable[-1] <= freq[m][1] + c) & (x_lable[-1] >= freq[m][0]):
-            path = r'..\python3.5\controller\usrp_controller\specEnvelope_shibie\Normal_data' +'\\' + base[m] + '.txt'
+            path = r'..\operationAndDisplaySystem\controller\usrp_controller\specEnvelope_shibie\Normal_data' +'\\' + base[m] + '.txt'
             normal = read_dat(path)
             xinhao_name = base[m]
             xx1 = max(x_lable[0],freq[m][0])

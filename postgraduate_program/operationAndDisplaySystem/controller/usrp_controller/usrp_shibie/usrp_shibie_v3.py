@@ -288,7 +288,7 @@ def model_test(model, logdir, inputs):
             #       classes[top_3[1][0]], int(top_3[1][1]) / batch_size * 100, classes[top_3[2][0]], int(top_3[2][1]) / batch_size * 100))
 
 def play(file_path):
-    print("识别算法参数" + file_path)
+    # print("识别算法参数" + file_path)
     net = ResNet(Bottleneck,
                  [[(16, 32, 2), (32, 64, 1)] * 1,
                   [(32, 64, 2), (64, 64, 1)] * 5,
@@ -299,6 +299,7 @@ def play(file_path):
     fatherPath = os.path.dirname(currentPath)
     # logdir = r'..\..\python3.5\controller\usrp_controller\logs\0709_5p.pkl'
     logdir = os.path.join(fatherPath, r'logs\0709_5p.pkl')
+    # print("IQ识别算法logdir：" + logdir)
     if not ('\\' in file_path or '/' in file_path):
         dataList = file_path.split(' ')
         txt = np.array(dataList)
@@ -326,7 +327,7 @@ def play(file_path):
     else:
         input_data = read_file(file_path)
     reslt = model_test(net, logdir, inputs=input_data)
-    print(reslt)
+    print("IQ识别结果" + str(reslt))
     return reslt
 
 

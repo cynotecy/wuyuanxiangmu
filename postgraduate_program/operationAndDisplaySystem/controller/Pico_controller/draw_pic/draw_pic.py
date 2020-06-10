@@ -64,15 +64,16 @@ class ApplicationWindow(QWidget):
         cursor.execute(select)
         # 获取所有记录列表
         results = str(cursor.fetchall())
+        print("查询结果：" + results)
         results = results.split('/')
         # print(results)
         results = results[-1]
         results = results.split("'")
         results = results[0]
         # print(results)
-        self.path = '..\EMCfile\data\sample_data\%s' % results
+        self.path = '..\data\EMCfile\data\sample_data\%s' % results
 
-        # print(self.path)
+        print("样本图路径", self.path)
 
         file2 = open(self.path)
         y2 = file2.read().split('\n')

@@ -112,7 +112,7 @@ class IQSingleProcess(Thread):
         self.data = ''
         self.q = q
     def run(self):
-        print('thread')
+        print("IQ识别开始......")
         starttime = datetime.datetime.now()
         rslt = usrp_shibie_v3.play(self.path)
         endtime = datetime.datetime.now()
@@ -122,11 +122,11 @@ class IQSingleProcess(Thread):
         self.q.put(rslt)
 
 # IQ存储进程
-class IQDataSaveProcess(Process):
+class IQDataSaveProcess(Thread):
     def __init__(self, data, q):
         super(IQDataSaveProcess, self).__init__()
         currentPath = os.path.dirname(__file__)
-        fatherPath = os.path.join(os.path.dirname(self.currentPath), "data")
+        fatherPath = os.path.join(os.path.dirname(os.path.dirname(currentPath)), "data")
         dirPath = os.path.join(fatherPath, r'usrp_recvfiles')
         filesOrDirsOperate.makesureDirExist(dirPath)
         local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
@@ -135,7 +135,7 @@ class IQDataSaveProcess(Process):
         self.data = data
         self.q = q
     def run(self):
-        print('saving process:', self.path)
+        print('saving process start')
         f = open(self.path, 'w')
         f.write(self.data)
         f.close()
@@ -157,7 +157,7 @@ class specEnvelopeOnlineProcess(Thread):
         starttime = datetime.datetime.now()
         rslt = specEnvelope_shibie_v3.baoluoshibie(data)
         endtime = datetime.datetime.now()
-        strTime = '识别线程花费:%dms' % (
+        strTime = '识别线程耗时:%dms' % (
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
         print(strTime)
         self.algorithmProcessQ.put(rslt)
@@ -166,7 +166,7 @@ class specEnvelopeOnlineProcess(Thread):
     def save(self, data):
         starttime = datetime.datetime.now()
         currentPath = os.path.dirname(__file__)
-        fatherPath = os.path.join(os.path.dirname(self.currentPath), "data")
+        fatherPath = os.path.join(os.path.dirname(os.path.dirname(currentPath)), "data")
         dirPath = os.path.join(fatherPath, r'specEnvelope_recvfiles')
         filesOrDirsOperate.makesureDirExist(dirPath)
         local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
@@ -178,7 +178,7 @@ class specEnvelopeOnlineProcess(Thread):
         f.write(data[1])
         f.close()
         endtime = datetime.datetime.now()
-        strTime = '存储线程花费:%dms' % (
+        strTime = '存储线程耗时:%dms' % (
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
         print(strTime)
         self.savingProcessQ.put(filePath)
@@ -190,7 +190,7 @@ class specEnvelopeOnlineProcess(Thread):
             pass
         else:
             reslt = self.zmqQ.get()
-            print("reslt", reslt)
+            # print("reslt", reslt)
             if reslt == "超时":
                 self.dataQ.put('超时')
                 self.algorithmProcessQ.put("超时")
@@ -218,11 +218,11 @@ class specEnvelopeOfflineProcess(Thread):
         self.data = ''
         self.q = q
     def run(self):
-        print('thread')
+        # print('thread')
         starttime = datetime.datetime.now()
         rslt = specEnvelope_shibie_v3.baoluoshibie(self.path)
         endtime = datetime.datetime.now()
-        strTime = '识别线程花费:%dms' % (
+        strTime = '识别线程耗时:%dms' % (
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
         print(strTime)
         self.q.put(rslt)
