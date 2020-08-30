@@ -18,7 +18,8 @@ class VirtualCollecter():
                     content = f.read()
                     self.collectDataList.append(content)  # 每个文件的文本存到list中
 
-    def collect(self):
+    def collect(self, logger, source):
         i = int(random.randint(0, 15))
-        print i
+        # print i
+        logger.debug("{}采集转发，第{}个文件".format(source, i))
         self.socket.send(bytes(self.collectDataList[i]))

@@ -4,41 +4,47 @@ import time
 import os
 import datetime
 import Queue
+import logging
 import thread
 import zmq
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+# sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from current_controller import scan_thread, collect_thread
 from socketTest import socketInit, repParaThread
 from functions import filesOrDirsOperate
 """
-加个远程连接检测
+数据中台
 """
+
+logger = logging.getLogger("transmitLogger")
+logger.setLevel(logging.DEBUG)
+LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
+DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
+logging.basicConfig(level=logging.INFO,
+                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
 
 def threadControl():
     stopFlag = 0
     standar = '-11'  # USRP定标
     # standar = '0'  # USRP定标
-    remoteTimeOut = 10  # 远端socket超时时限
+    remoteTimeOut = 10  # 远程连接超时时限
     localQueue = Queue.Queue()
     remoteQueue = Queue.Queue()
-    pubAddress1 = 'tcp://127.0.0.1:6666'
-    pubAddress2 = 'tcp://127.0.0.1:7777'
-    # pubAddress3 = 'tcp://127.0.0.1:6666'
-
-    subAddress1 = 'tcp://127.0.0.1:5555'
-    subAddress2 = 'tcp://127.0.0.1:9999'
-    # subAddress3 = 'tcp://127.0.0.1:5555'
-
-
-    # pubAddress1 = 'tcp://192.168.0.100:6666'
-    # pubAddress2 = 'tcp://192.168.0.100:7777'
-    # pubAddress3 = 'tcp://127.0.0.1:6666'
-    #
-    # subAddress1 = 'tcp://192.168.0.5:5555'
-    # subAddress2 = 'tcp://192.168.0.5:9999'
-    # subAddress3 = 'tcp://127.0.0.1:5555'
+    # 向4路usrp的远程连接地址
+    # 发送地址
+    pubAddressDic = dict()
+    pubAddressDic[0] = 'tcp://127.0.0.1:6000'
+    pubAddressDic[1] = 'tcp://127.0.0.1:6001'
+    pubAddressDic[2] = 'tcp://127.0.0.1:6002'
+    pubAddressDic[3] = 'tcp://127.0.0.1:6003'
+    # 接收地址
+    subAddressDic = dict()
+    subAddressDic[0] = 'tcp://127.0.0.1:5000'
+    subAddressDic[1] = 'tcp://127.0.0.1:5001'
+    subAddressDic[2] = 'tcp://127.0.0.1:5002'
+    subAddressDic[3] = 'tcp://127.0.0.1:5003'
     
-    repAddress = 'tcp://127.0.0.1:6667'
+    # 本地连接地址，本地连接采用rep/req模式
+    repAddress = 'tcp://127.0.0.1:5678'
     # 并行本地连接，当多路usrp同时使用时，repAddress地址绑定的socket不可以一直被占用则启用并行连接
     repAddressPara1 = 'tcp://127.0.0.1:6668'
     repAddressPara2 = 'tcp://127.0.0.1:6669'
@@ -48,39 +54,20 @@ def threadControl():
     # 定义连接字典
     socketDic = dict()
 
-    try:
-        pubSocket1 = socketInit.connect(pubAddress1, 'PUB')
-        subSocket1 = socketInit.connect(subAddress1, 'SUB')
-        socketDic[0] = [pubSocket1, subSocket1]
-        print "socket1 连接"
-    except:
-        pass
 
-    try:
-        pubSocket2 = socketInit.connect(pubAddress2, 'PUB')
-        subSocket2 = socketInit.connect(subAddress2, 'SUB')
-        socketDic[1] = [pubSocket2, subSocket2]
-        print "socket2 连接"
-    except:
-        pass
-
-    # try:
-    #     pubSocket3 = socketInit.connect(pubAddress3, 'PUB')
-    #     subSocket3 = socketInit.connect(subAddress3, 'SUB')
-    #     socketDic[2] = [pubSocket3, subSocket3]
-    #     print "socket3 连接"
-    # except:
-    #     pass
+    for i in range(0,4):
+        socketDic[i] = [socketInit.connect(pubAddressDic[i], 'PUB'),
+                        socketInit.connect(subAddressDic[i], 'SUB')]
+        logger.info("连接" + str(i)+"创建成功")
 
     repSocket = socketInit.connect(repAddress, 'REP')
     repParaSocketDic = {}
     repParaThreadDic = {}
 
     while not stopFlag:
-        # time.sleep(0.5)
-        print 'py2 waiting msg'
+        logger.info('py2 waiting msg')
         localRecv = repSocket.recv()
-        print '收到信息' + localRecv
+        logger.info('收到信息' + localRecv)
 
         if localRecv == "StopAll":
             repSocket.send("StopAllOk")
@@ -100,7 +87,10 @@ def threadControl():
                 pubSockList.append(pubSock)
                 subSockList.append(subSock)
         else:
-            usrpNum = int(msg[0])
+            if "USRP" in msg[0]:
+                usrpNum = int(msg[0].strip("USRP"))
+            else:
+                logger.error("错误的设备名称")
 
             pubSock = socketDic[usrpNum - 1][0]
             subSock = socketDic[usrpNum - 1][1]
@@ -150,13 +140,7 @@ def threadControl():
                 except Exception, e:
                     print repr(e)
                     # 虽然我不知道为啥有时候terminate会不好使，但是通过这句话让terminate失灵时本该关闭的socket连接关闭了
-                    # repParaSocketDic[int(usrpNum)].close()
                     repSocket.send("paraSocket {} build failed".format(str(usrpNum)))
-                # else:
-                    # repParaThreadDic[usrpNum].terminate()
-                    # repParaThreadDic[usrpNum].join()
-                    # print "paraSocket {} closed".format(str(usrpNum))
-                    # repSocket.send("paraSocket {} closed".format(str(usrpNum)))
 
             # 实时频谱仪扫频（连续）
             elif action == 'realtimeSpecMonitor':
@@ -206,9 +190,10 @@ def threadControl():
             # 天线（每个usrp的两个天线串行采集，不同usrp并行采集）（1或2线程）
             elif action == 'antenna':
                 pass
+
         # 采集模式
         elif mode == 'collect':
-            # 批量采集
+            # 批量采集，数据直接写入文件
             if action == 'IQoc':
                 centreFreq = float(instructionInfoList[0])
                 bdWdith = float(instructionInfoList[1])
@@ -218,7 +203,8 @@ def threadControl():
                 filesOrDirsOperate.makesureDirExist(dirPath)
                 local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
                 filePath = os.path.join(dirPath, r'oc_collect_{}.txt'.format(local_time))
-                print "oc文件路径", filePath
+                # print "oc文件路径", filePath
+                logger.info("oc文件路径"+filePath)
                 localQueue.queue.clear()
                 collectRecv = collect_thread.Recv(localQueue, subSock, path=filePath)
                 collectRecv.start()
@@ -230,8 +216,10 @@ def threadControl():
                 while localQueue.empty():
                     pass
                 else:
-                    print 'localQueue:'+localQueue.get()
+                    logger.info('localQueue:'+localQueue.get())
+                    # print 'localQueue:'+localQueue.get()
                     repSocket.send(filePath)
+
             # 单个采集（并行，返回采集数据）
             elif action == 'IQsingle':
                 centreFreq = float(instructionInfoList[0])
@@ -249,8 +237,34 @@ def threadControl():
                     pass
                 else:
                     data = localQueue.get()
-                    print 'localQueue:' + str(type(data))
+                    logger.info('localQueue:' + str(type(data)))
+                    # print 'localQueue:' + str(type(data))
                     repSocket.send(data)
+
+            # 两路IQ采集
+            elif action == '2way':
+                centreFreq = float(instructionInfoList[0])
+                bdWdith = float(instructionInfoList[1])
+                samprate = float(instructionInfoList[2])
+                localQueue.queue.clear()
+                collectRecv = collect_thread.Recv(localQueue, subSock, way=2)
+                collectRecv.start()
+                while 1:
+                    if collectRecv.is_alive():
+                        collectSend = collect_thread.Send(str(centreFreq), str(bdWdith), samprate, pubSock)
+                        collectSend.start()
+                        break
+                while localQueue.empty():
+                    pass
+                else:
+                    data = localQueue.get()
+                    logger.info('localQueue:' + str(type(data)))
+                    repSocket.send(data)
+
+def getSockerLink(pubAddr, subAddr):
+    pubSocket = socketInit.connect(pubAddr, 'PUB')
+    subSocket = socketInit.connect(subAddr, 'SUB')
+    return pubSocket, subSocket
 
 if __name__ == '__main__':
     # print "working demo"

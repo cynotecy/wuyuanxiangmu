@@ -19,7 +19,8 @@ class VirtualScaner():
                     content = f.read()
                     self.scanDataList.append(content)  # 每个文件的文本存到list中
 
-    def scan(self):
+    def scan(self, logger, source):
         i = int(random.randint(0, 15))
-        print i
+        # print i
+        logger.debug("{}扫频转发，第{}个文件".format(source, i))
         self.socket.send(bytes(self.scanDataList[i]))

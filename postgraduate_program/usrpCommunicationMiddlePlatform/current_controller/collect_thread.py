@@ -43,11 +43,12 @@ class Send(Thread):
         print 'end collect_send at:', ctime()
 
 class Recv(Thread):
-    def __init__(self, q, sub_socket, path=0):
+    def __init__(self, q, sub_socket, way = 1, path=0):
         super(Recv, self).__init__()
         self.q = q
         self.socket = sub_socket
         self.path = path
+        self.way = way
     def run(self):
         try:
             while True:
@@ -92,20 +93,6 @@ class Recv(Thread):
                 real_part = struct.unpack('!%s' % ('f' * num_samp,), DATA[36:36 + num_samp * 4])
                 imag_part = struct.unpack('!%s' % ('f' * num_samp,), DATA[36 + num_samp * 4:36 + num_samp * 8])
                 # Do what you want to do, here is a example.
-                # iq = []
-                # for x in range(num_samp):
-                #     iq.append(real_part[x] + imag_part[x] * 1j)
-                # fft_size = 2 ** int(scipy.log2(num_samp))
-                # iq_fft = scipy.fft(iq[0:fft_size])
-                # fft_bin = [0.0, ] * fft_size
-                # freq_list = [0.0, ] * fft_size
-                # freq_resolution = samp_rate / fft_size
-                # for x in range(fft_size):
-                #     fft_bin[(x + fft_size / 2) % fft_size] = 10 * scipy.log10(
-                #         max((iq_fft[x].imag) ** 2 + (iq_fft[x].real) ** 2, 1e-12)) - 20 * scipy.log10(fft_size)
-                #     freq_list[x] = (freq_resolution * x - samp_rate / 2 + freq) / 1e6
-                # self.q.put(fft_bin)
-                # self.q.put(freq_list)
                 endtime = datetime.datetime.now()
                 strTime = "解包花费：{}ms".format((endtime - starttime).seconds * 1000
                                              + (endtime - starttime).microseconds / 1000)
@@ -114,7 +101,9 @@ class Recv(Thread):
                 starttime1 = datetime.datetime.now()
                 collectInfo = str(freq) + ' '+ str(bandwidth) + ' ' + str(samp_rate)+' '
                 real_part_strlist = map(str, list(real_part))
+                imag_part_strlist = map(str, list(imag_part))
                 realPartStr = " ".join(real_part_strlist)
+                imagPartStr = " ".join(imag_part_strlist)
                 reslt = collectInfo + realPartStr
                 if self.path:
                     f = open(self.path, 'w')
@@ -122,12 +111,13 @@ class Recv(Thread):
                     f.close()
                     self.q.put("recvd")
                 else:
-
-                    self.q.put(reslt)
+                    if self.way == 1:
+                        self.q.put(reslt)
+                    elif self.way == 2:
+                        self.q.put(realPartStr+";"+imagPartStr)
                 endtime1 = datetime.datetime.now()
-                strTime1 = "写入花费：{}ms".format((endtime1 - starttime1).seconds * 1000
+                strTime1 = "采集花费：{}ms".format((endtime1 - starttime1).seconds * 1000
                                              + (endtime1 - starttime1).microseconds / 1000)
-                print strTime1
                 break
         except KeyboardInterrupt:
             pass
