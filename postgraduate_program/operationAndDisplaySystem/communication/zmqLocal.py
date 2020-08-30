@@ -7,7 +7,7 @@ class localZMQ():
     后续为用户在生产环境中的使用考虑，应提供可更改该端口号的配置文件。
     为方便开发调试，本连接的超时重连功能暂时被注释掉了，请不要删除，后续可能需要重新设计并启用。
     """
-    def __init__(self, address="tcp://127.0.0.1:6667"):
+    def __init__(self, address="tcp://127.0.0.1:5678"):
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REQ)
         self.address = address

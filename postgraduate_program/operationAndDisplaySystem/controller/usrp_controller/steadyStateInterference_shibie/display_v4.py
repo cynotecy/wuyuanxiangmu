@@ -38,7 +38,7 @@ class WindowClass(QWidget):
         for list in lists:
             self.dataHandle(list)
         self.signalHandle(lists)
-        print("push button")
+        # print("push button")
         self.tableWidget.setRowCount(len(self.signal))  # 行数
         if len(self.data) == 0:
             self.tableWidget.setRowCount(0)
@@ -48,7 +48,7 @@ class WindowClass(QWidget):
             col = []
             for i in self.data:
                 str = i[0].__str__() + "——" + i[1].__str__()
-                print(str)
+                # print(str)
                 col.append(str)
             self.tableWidget.setHorizontalHeaderLabels(col)
             for i in range(len(self.signal)):
@@ -61,15 +61,15 @@ class WindowClass(QWidget):
                         self.tableWidget.setItem(i, j, item)
 
                         self.tableWidget.setColumnWidth(j, 300)# 固定列宽
-        print("stop data view")
+        # print("stop data view")
 
     # 表格数据体处理方法
     def signalHandle(self, lists):
-        print("数据处理开始：", lists)
-        print(self.data)
+        # print("数据处理开始：", lists)
+        # print(self.data)
         self.signal = [[[-1, -1] for x in self.data] for x in lists]  # 初始化辅助数组长度
-        print(self.signal)
-        print(len(lists))
+        # print(self.signal)
+        # print(len(lists))
         # 根据已处理好的表头参数设置表格体
         for i in range(len(lists)):# list层数2
             for k in range(len(lists[i])):# list每层列数2\1
@@ -94,16 +94,16 @@ class WindowClass(QWidget):
                     #         self.signal[i][j][0] = max(self.signal[i][k][0], lists[i][k][2])
                     #         self.signal[i][j][1] = max(self.signal[i][k][1], lists[i][k][3])
 
-        print("数据处理完毕：", self.signal)
+        # print("数据处理完毕：", self.signal)
 
     # 表头处理方法
     def dataHandle(self, list):
-        print("表头处理开始：", self.data, list)
+        # print("表头处理开始：", self.data, list)
         for i in list:
             self.data.append(i)
-        print(self.data)
+        # print(self.data)
         self.data.sort(key=itemgetter(0, 1))
-        print("排序后：", self.data)
+        # print("排序后：", self.data)
         data = [(self.data[0][0], self.data[0][1])]
         if len(self.data) == 1:
             pass
@@ -119,7 +119,7 @@ class WindowClass(QWidget):
                     data.append((self.data[j][0], self.data[j][1]))
                     i += 1
         self.data = data
-        print("表头处理完毕：", data)
+        # print("表头处理完毕：", data)
 
 class myQTableWidget(QTableWidget):
     def __init__(self, rowNum):
@@ -133,7 +133,7 @@ class myQTableWidget(QTableWidget):
         if item:
             self.rowNum.queue.clear()
             self.rowNum.put(item.row())
-            print("item clicked at ", item.row(), " ", item.column())
+            # print("item clicked at ", item.row(), " ", item.column())
 
 if __name__ == "__main__":
     import queue

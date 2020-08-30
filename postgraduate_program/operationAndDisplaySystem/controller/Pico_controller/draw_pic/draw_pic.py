@@ -24,8 +24,9 @@ from matplotlib.figure import Figure
 
 
 class ApplicationWindow(QWidget):
-    def __init__(self, filepath, device_name):
+    def __init__(self, filepath, device_name, logger):
         super().__init__()
+        self.logger = logger
         self.filepath = filepath
         self.y1List = []
         self.device_name = device_name
@@ -59,12 +60,12 @@ class ApplicationWindow(QWidget):
                                db='cast',  # 库名
                                charset='utf8')  # 链接字符集
         select = ("SELECT `data` FROM `sample_data` WHERE `id`=%s") % self.device_name
-        print(select)
+        # print(select)
         cursor = conn.cursor()
         cursor.execute(select)
         # 获取所有记录列表
         results = str(cursor.fetchall())
-        print("查询结果：" + results)
+        # print("查询结果：" + results)
         results = results.split('/')
         # print(results)
         results = results[-1]
@@ -73,7 +74,7 @@ class ApplicationWindow(QWidget):
         # print(results)
         self.path = '..\data\EMCfile\data\sample_data\%s' % results
 
-        print("样本图路径", self.path)
+        self.logger.info("开关脉冲识别样本图路径"+self.path)
 
         file2 = open(self.path)
         y2 = file2.read().split('\n')
@@ -118,7 +119,7 @@ class ApplicationWindow(QWidget):
     def draw(self):
         # 重绘频谱图
         x1, y1, x2, y2 = self.getData()
-        print('successful getdata')
+        # print('successful getdata')
         # x = range(len(y))
 
         self.axs[0].cla()
@@ -133,8 +134,8 @@ class ApplicationWindow(QWidget):
         self.axs[1].set_ylabel('电压/v',fontsize=14)
         self.axs[0].figure.canvas.draw()
         self.axs[0].figure.canvas.flush_events()
-        print('successful draw')
         # return line
+        self.logger.info("开关脉冲识别结果绘制成功")
 
 
 

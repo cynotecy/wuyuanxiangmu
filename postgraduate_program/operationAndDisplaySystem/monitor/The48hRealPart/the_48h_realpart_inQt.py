@@ -29,12 +29,13 @@ from scipy.io import loadmat
 """
 """
 class MaxminRealpart(QWidget):
-    def __init__(self, path):
+    def __init__(self, path, logger):
         super().__init__()
         matplotlib.rcParams['font.family'] = ['SimHei']  # 用来正常显示中文标签
         matplotlib.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
         self.currenttime = datetime.datetime.now()
         self.path = path
+        self.logger = logger
         layout = QtWidgets.QVBoxLayout(self)
         self.freqCanvas = FigureCanvas(Figure(figsize=(9, 12)))
 
@@ -52,20 +53,20 @@ class MaxminRealpart(QWidget):
 
     def getData(self, mat_list):
         list_num = len(mat_list)-1
-        print(list_num)
+        # print(list_num)
         dat_path = self.path
-        print(dat_path)
+        # print(dat_path)
         max_group = []
         min_group = []
-        print('min_group')
+        # print('min_group')
         firsttime = os.path.getmtime(dat_path+'\\'+mat_list[0])
         endtime = os.path.getmtime(dat_path + '\\' + mat_list[-2])
-        print(firsttime)
-        print(type(endtime))
+        # print(firsttime)
+        # print(type(endtime))
         self.firsttime = datetime.datetime.fromtimestamp(firsttime)
         self.endtime = datetime.datetime.fromtimestamp(endtime)
         self.countFiles = len(mat_list)-1
-        print('len lists',self.countFiles)
+        # print('len lists',self.countFiles)
         for num in range(list_num):
             datas = pd.read_csv(dat_path+'\\'+mat_list[num], skiprows=1, usecols=[1])
             datas = datas.values[:, 0]
@@ -76,7 +77,7 @@ class MaxminRealpart(QWidget):
             min_group.append(np.min(datas))
         # txt = np.loadtxt(file_latest, dtype=str)[:]
         # print(max_group)
-        print(len(max_group))
+        # print(len(max_group))
 
         # min_group = [0.1 for _ in range(len(max_group))]
         return max_group, min_group
@@ -103,18 +104,18 @@ class MaxminRealpart(QWidget):
         # end_time_ = self.currenttime + delay * (len(max_group) - 1)
         # print(end_time_)
         self.time_range_2 = matplotlib.dates.drange(self.firsttime, self.endtime, delay)
-        print('len')
-        print(len(self.time_range_2))
-        print(len(max_group))
+        # print('len')
+        # print(len(self.time_range_2))
+        # print(len(max_group))
         # 为了解决薛定谔的drange，根据drange尺寸决定要不要丢掉一个y
         if len(self.time_range_2) < len(max_group):
             max_group = max_group[:len(self.time_range_2)]
             min_group = min_group[:len(self.time_range_2)]
         elif len(self.time_range_2) > len(max_group):
             self.time_range_2 = self.time_range_2[:len(max_group)]
-        print('len2')
-        print(len(self.time_range_2))
-        print(len(max_group))
+        # print('len2')
+        # print(len(self.time_range_2))
+        # print(len(max_group))
         # fig, ax = plt.subplots()
         # plt.xlabel('时间')
         # plt.ylabel('电压/v')
@@ -130,15 +131,18 @@ class MaxminRealpart(QWidget):
         self.axs[0].set_ylabel('电压/mv',fontsize=14)
         date_format = matplotlib.dates.DateFormatter('%H:%M:%S')
         self.axs[0].xaxis.set_major_formatter(date_format, )
-        print('successful draw')
+        # print('successful draw')
+        self.logger.info("成功绘制时域监测图")
 
     def drawFreq(self, event):  # 点击回溯
         po = event.xdata
-        print(po)
+        # print(po)
         if po == None:
-            print("提示:点击位置不对")
+            # print("提示:点击位置不对")
+            self.logger.info("时域监测回溯-无效位置")
         elif po>self.time_range_2[-1] or po<self.time_range_2[0]:
-            print("提示:该位置没有数据")
+            # print("提示:该位置没有数据")
+            self.logger.info("时域监测回溯-点击位置无数据")
         else:
             mat_list = self.getDataList()
             y = self.getOldData(mat_list, po)
@@ -149,12 +153,14 @@ class MaxminRealpart(QWidget):
             self.axs[1].set_title('时域信号图', fontsize=16)
             self.axs[1].set_xlabel('时间/us', fontsize=14)
             self.axs[1].set_ylabel('电压/mV', fontsize=14)
+            self.logger.info("成功查看时域监测图历史回溯")
 
     def getOldData(self, mat_list, po):
         dat_path = self.path
         num = len(self.time_range_2)-int(len(self.time_range_2)*(self.time_range_2[-1]-po)/(self.time_range_2[-1]-self.time_range_2[0]))
-        print(num)
-        print(dat_path + '\\' + mat_list[num-1])
+        # print(num)
+        # print(dat_path + '\\' + mat_list[num-1])
+        self.logger.info("时域监测图历史回溯文件路径"+dat_path + '\\' + mat_list[num-1])
         datas = pd.read_csv(dat_path + '\\' + mat_list[num-1], skiprows=1, usecols=[1])
         datas = datas.values[:, 0]
         datas = datas.astype(np.float32)
@@ -163,6 +169,6 @@ class MaxminRealpart(QWidget):
 
 if __name__ == "__main__":
     qapp = QtWidgets.QApplication(sys.argv)
-    app = MaxminRealpart(r'..\realpart_files\pico')
+    app = MaxminRealpart(r'D:\myPrograms\CASTProgram\postgraduate_program\data\realpart_recvfiles\pico')
     app.show()
     qapp.exec_()

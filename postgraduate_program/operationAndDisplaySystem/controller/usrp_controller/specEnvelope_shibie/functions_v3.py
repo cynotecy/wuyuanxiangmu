@@ -105,12 +105,12 @@ def classify(xinhao_name, online_sig, normal_data, bound): #
         a = max(add_two)
         location = add_two.index(a)
         num_for_yangben = index_for_above[location]#最相似的模板的编号
-        print('基于LCS的相似度大于0.6：', list_above)
-        print('对应的模板坐标：', index_for_above)
-        print('备选项中基于frenchet的相似度：', rate_for_f)
-        print('总的相似度', add_two)
-        print('基于LCS对所有模板的相似度：', list_possible)
-        print('最相似的模板编号：', num_for_yangben)
+        # print('基于LCS的相似度大于0.6：', list_above)
+        # print('对应的模板坐标：', index_for_above)
+        # print('备选项中基于frenchet的相似度：', rate_for_f)
+        # print('总的相似度', add_two)
+        # print('基于LCS对所有模板的相似度：', list_possible)
+        # print('最相似的模板编号：', num_for_yangben)
         return 1, a ,num_for_yangben
     else:
         #a = ave(list_possible)

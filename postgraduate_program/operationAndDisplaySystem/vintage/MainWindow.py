@@ -22,8 +22,8 @@ from PyQt5.QtWidgets import QMainWindow, QSystemTrayIcon, QMessageBox, QTableWid
 
 from loadingDialog.Message import Loading
 from loadingDialog.MessageForOc import OcLoading
-from SNR import snrDrawPic
-from SNR.SNR_Estimate import SNR_finally
+from SNR.vintage import snrDrawPic
+from SNR.vintage.SNR_Estimate import SNR_finally
 from Ui.UitoPy.Ui_MainWindow import Ui_MainWindow
 from Ui.file_ui import show_png
 from vintage.Wave import UsrpProcess, OcUsrpProcess, PicoProcess_online, PicoProcess_offline, specEnvelopeProcess, steadyStateInterference
@@ -35,7 +35,7 @@ from monitor.The48hRealPart import the_48h_realpart_inQt
 from monitor.waterfall import WaterFall, WaterFallForPico
 from function import filesOrDirsOperate
 from plotTools import Timer, spec, antenna_draw
-from spectrum_analyze import spec_analyze_v2
+from monitor.spectrum_analyze import spec_analyze_v2
 from controller.usrp_controller.usrp_shibie import oc_list_getting_v1,oc_list_display_v1
 
 
@@ -165,7 +165,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_57.clicked.connect(self.on_pushButton_clicked_57)  # USRP1清空数据库及文件夹
         self.pushButton_58.clicked.connect(self.on_pushButton_clicked_58)  # USRP2清空数据库及文件夹
         self.pushButton_59.clicked.connect(self.on_pushButton_clicked_59)  # pico清空数据库及文件夹
-        # 时域最值图
+        # 时域监测
         self.pushButton_34.clicked.connect(self.on_pushButton_clicked_34)# 采集
         self.pushButton_35.clicked.connect(self.on_pushButton_clicked_35)# 绘图
         self.pushButton_62.clicked.connect(self.on_pushButton_clicked_62)  # 数据清空
@@ -1200,10 +1200,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_53.setText('范围选定')
         self.pushButton_54.setText('范围选定')
 
-
-
-
-
     # 仪器连接检查
     def on_pushButton_clicked_30(self):
         self.socket.send(str.encode('Imok'))
@@ -1461,14 +1457,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.verticalLayout_26.addWidget(self.specAnalyze_fig)
             self.path = ''
         else:
-            self.specAnalyze_fig = spec_analyze_v2.ApplicationWindow(
-                r'..\realtime_recv')
+            self.specAnalyze_fig = spec_analyze_v2.ApplicationWindow(r'..\realtime_recv')
             self.verticalLayout_26.addWidget(self.specAnalyze_fig)
             self.specAnalyze_flag = 1
             self.path = ''
         ####################
 
-    # 时域图清空数据
+    # 实施频谱分析清空数据
     def on_pushButton_clicked_63(self):
         # try:
         shutil.rmtree(r'..\realtime_recv')

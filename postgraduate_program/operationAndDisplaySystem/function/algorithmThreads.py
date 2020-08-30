@@ -15,7 +15,8 @@ from controller.usrp_controller.specEnvelope_shibie import specEnvelope_shibie_v
 from controller.usrp_controller.steadyStateInterference_shibie import steadyStateInterference_shibie_v2
 from controller.Pico_controller import pico_jicheng_online_pack_v2, pico_jicheng_offline_v2
 from controller.usrp_controller.interference_cancellation import interferenceCancellationCalling
-
+from SNR import snr_estimation_integration
+from SNR.component import dataGet, dataSave
 # py2线程（函数形式）
 def py2Thread():
     currentPath = os.path.dirname(__file__)
@@ -101,7 +102,7 @@ class SaveSpectrumThread(Thread):
         endtime = datetime.datetime.now()
         strTime = '存储线程花费:%dms' % (
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-        print(strTime)
+        # print(strTime)
         self.q.put(self.path)
 
 # IQ识别线程
@@ -112,13 +113,13 @@ class IQSingleProcess(Thread):
         self.data = ''
         self.q = q
     def run(self):
-        print("IQ识别开始......")
+        # print("IQ识别开始......")
         starttime = datetime.datetime.now()
         rslt = usrp_shibie_v3.play(self.path)
         endtime = datetime.datetime.now()
         strTime = '识别线程花费:%dms' % (
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-        print(strTime)
+        # print(strTime)
         self.q.put(rslt)
 
 # IQ存储进程
@@ -135,7 +136,7 @@ class IQDataSaveProcess(Thread):
         self.data = data
         self.q = q
     def run(self):
-        print('saving process start')
+        # print('saving process start')
         f = open(self.path, 'w')
         f.write(self.data)
         f.close()
@@ -159,7 +160,7 @@ class specEnvelopeOnlineProcess(Thread):
         endtime = datetime.datetime.now()
         strTime = '识别线程耗时:%dms' % (
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-        print(strTime)
+        # print(strTime)
         self.algorithmProcessQ.put(rslt)
 
     # 数据存储
@@ -171,7 +172,7 @@ class specEnvelopeOnlineProcess(Thread):
         filesOrDirsOperate.makesureDirExist(dirPath)
         local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
         filePath = os.path.join(dirPath, r'specEnvelope_data_{}.txt'.format(local_time))
-        print('存储文件名为:', filePath)
+        # print('存储文件名为:', filePath)
         f = open(filePath, 'w')
         f.write(data[0])
         f.write('\n')
@@ -180,7 +181,7 @@ class specEnvelopeOnlineProcess(Thread):
         endtime = datetime.datetime.now()
         strTime = '存储线程耗时:%dms' % (
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-        print(strTime)
+        # print(strTime)
         self.savingProcessQ.put(filePath)
 
     def run(self):
@@ -224,7 +225,7 @@ class specEnvelopeOfflineProcess(Thread):
         endtime = datetime.datetime.now()
         strTime = '识别线程耗时:%dms' % (
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-        print(strTime)
+        # print(strTime)
         self.q.put(rslt)
 
 # 脉冲在线识别线程
@@ -236,7 +237,7 @@ class PulseRecognizeOnlineProcess(Thread):
         self.length = length
     def run(self):
         reslt, targetFile = pico_jicheng_online_pack_v2.configuration(self.path, self.length)
-        print("pulse recognize reslt, target file path:", reslt, targetFile)
+        # print("pulse recognize reslt, target file path:", reslt, targetFile)
         self.q.put(reslt)
         self.q.put(targetFile)
 
@@ -249,7 +250,7 @@ class PulseRecognizeOfflineProcess(Thread):
         self.length = length
     def run(self):
         reslt= pico_jicheng_offline_v2.configuration(self.path, self.length)
-        print("pulse recognize reslt:", reslt)
+        # print("pulse recognize reslt:", reslt)
         self.q.put(reslt)
 
 # 稳态干扰判断线程
@@ -273,9 +274,33 @@ class interferenceCancellationProcess(Thread):
     def __init__(self, q, arg):
         super(interferenceCancellationProcess, self).__init__()
         self.arg = arg
-        print('arg', arg)
         self.q = q
 
     def run(self):
         targetx, targety = interferenceCancellationCalling.callInterferenceCancellation(self.arg)
         self.q.put([targetx, targety])
+
+# 信噪比分析线程
+class SNREstimationIntegrationThread(Thread):
+    def __init__(self, arg, q):
+        super(SNREstimationIntegrationThread, self).__init__()
+        self.q = q
+        self.arg = arg
+
+    def run(self):
+        data = dataGet.dataGet(self.arg)
+
+        result = snr_estimation_integration.snr_estimation(data)
+        self.q.put(result)
+
+# 信噪比数据存储
+class SNRDataSave(Thread):
+    def __init__(self, data, dirPath, prefix, q):
+        super(SNRDataSave, self).__init__()
+        self.q = q
+        self.data = data
+        self.dirPath = dirPath
+        self.prefix = prefix
+    def run(self):
+        savePath = dataSave.dataSave(self.data, self.dirPath, "txt", self.prefix)
+        self.q.put(savePath)

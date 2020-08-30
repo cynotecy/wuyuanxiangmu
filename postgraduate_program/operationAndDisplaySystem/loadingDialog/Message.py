@@ -12,7 +12,7 @@ from PyQt5 import QtCore
 class Loading(QDialog):
     def __init__(self, parent = None):
         super(Loading, self).__init__(parent)
-        print("loading start")
+        # print("loading start")
         self.setObjectName("Form")
         self.setFixedSize(275, 175)
         self.setWindowFlags(QtCore.Qt.ToolTip)

@@ -327,7 +327,7 @@ def play(file_path):
     else:
         input_data = read_file(file_path)
     reslt = model_test(net, logdir, inputs=input_data)
-    print("IQ识别结果" + str(reslt))
+    # print("IQ识别结果" + str(reslt))
     return reslt
 
 

@@ -3,21 +3,25 @@ import datetime
 import os
 import time
 import win32api
+import shutil
 import queue
 from multiprocessing import Queue as mq
 import threading
 from PyQt5.QtCore import Qt, QFileInfo, QTimer
+import logging
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTableWidgetItem, QFileDialog, QApplication
 
 from loadingDialog import Message
 from function import plotWithCursor, filesOrDirsOperate, algorithmThreads
+from monitor.The48hRealPart import the_48h_realpart_inQt
 from Ui.UitoPy.Ui_socketDEMO import Ui_MainWindow
 from controller.usrp_controller.usrp_shibie import (oc_list_display_v1)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelopeDrawpic
 from controller.usrp_controller.steadyStateInterference_shibie import display_v4
 from controller.Pico_controller.draw_pic import draw_pic
 from monitor.waterfall import waterfallDialogEngin
+from monitor.spectrum_analyze import spec_analyze_v2
 from function.numOrLetters import *
 from communication import zmqLocal
 
@@ -29,6 +33,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
         # py2 = threading.Thread(target=algorithmThreads.py2Thread, args=(), daemon=True)
         # py2.start()
+
+        self.logger = logging.getLogger("UILogger")
+        self.logger.setLevel(logging.DEBUG)
+        LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
+        DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
+        logging.basicConfig(level=logging.INFO,
+                            format=LOG_FORMAT, datefmt=DATE_FORMAT)
 
         # 初始化当前路径和其父路径，用于拼接后续地址进行非文件夹依赖的寻址
         self.currentPath = os.path.dirname(__file__)
@@ -48,11 +59,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.steadyStatePicStateFlag = 0  # 稳态干扰图区状态，0代表没有图，1代表原始图，2代表结果图
         self.steadyStateTableFlag = 0  # 稳态干扰表区标志位
         self.steadyStateHistoryFigFlag = 0  # 稳态干扰历史图区标志位
+        self.realpart_flag = 0  # 时域监测图区标志位
+        self.specAnalyze_flag = 0  # 实时频谱分析图区标志位
         self.interferenceCancellationFigFlag = 0  # 干扰对消图区标志位
         # 初始化变量
         self.steadyStateHistoryData = []  # 稳态干扰历史数据
         self.steadyStateHistoryResult = []  # 稳态干扰历史结果
         self.childWindowDic = {}
+        self.scanRslt = ''
+        self.SNRData = ''
         # 实例化zmq
         self.zmqLocal = zmqLocal.localZMQ()
         # 第一页，IQ识别
@@ -90,9 +105,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 第五页，48h频谱监测
         self.pushButton_23.clicked.connect(self.on_pushButton_clicked_23)  # usrp1开始监测
         self.pushButton_24.clicked.connect(self.on_pushButton_clicked_24)  # usrp2开始监测
-        # self.pushButton_25.clicked.connect(self.on_pushButton_clicked_25)  # usrp3开始监测
-        # self.pushButton_26.clicked.connect(self.on_pushButton_clicked_26)  # usrp4开始监测
-        # self.pushButton_27.clicked.connect(self.on_pushButton_clicked_27)  # 长频谱开始监测
+        self.pushButton_25.clicked.connect(self.on_pushButton_clicked_25)  # usrp3开始监测
+        self.pushButton_26.clicked.connect(self.on_pushButton_clicked_26)  # usrp4开始监测
+
+        # 第六页，时域监测
+        self.pushButton_34.clicked.connect(self.on_pushButton_clicked_34)  # 采集
+        self.pushButton_35.clicked.connect(self.on_pushButton_clicked_35)  # 绘图
+        self.pushButton_62.clicked.connect(self.on_pushButton_clicked_62)  # 数据清空
+
+        # 第七页，实时分析
+        # 实时频谱查看
+
+        # 实时频谱分析
+        self.pushButton_33.clicked.connect(self.on_pushButton_clicked_33)  # 采集
+        self.pushButton_37.clicked.connect(self.on_pushButton_clicked_37)  # 绘图
+        self.pushButton_63.clicked.connect(self.on_pushButton_clicked_63)  # 数据清空
 
         # 第八页，位置比对
         # 2，干扰对消
@@ -100,7 +127,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_29.clicked.connect(self.on_pushButton_clicked_29)  # 离线对消
         self.pushButton_30.clicked.connect(self.on_pushButton_clicked_30)  # 选择文件1
         self.pushButton_31.clicked.connect(self.on_pushButton_clicked_31)  # 选择文件2
-        # self.pushButton_27.clicked.connect(self.on_pushButton_clicked_27)  # 长频谱开始监测
+
+        # 第九页，信噪比分析
+        self.pushButton_36.clicked.connect(self.on_pushButton_clicked_36)  # 采集分析
+        self.pushButton_40.clicked.connect(self.on_pushButton_clicked_40)  # 保存数据
+        self.pushButton_38.clicked.connect(self.on_pushButton_clicked_38)  # 选择文件
+        self.pushButton_39.clicked.connect(self.on_pushButton_clicked_39)  # 离线分析
 
     # IQ扫频按键
     def on_pushButton_clicked_1(self):
@@ -138,7 +170,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             QMessageBox.Yes,
                                             QMessageBox.Yes)
                     else:
-                        print(type(reslt))
                         resltList = reslt.split(';')
                         self.scanRslt = resltList
                         freqList = resltList[0].split(' ')
@@ -154,9 +185,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.verticalLayout.addWidget(self.getPosition)
                         self.specPicFlag = 1
                         endtime = datetime.datetime.now()
-                        strTime = 'funtion time use:%dms' % (
+                        strTime = '扫频耗时:%dms' % (
                                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                        print(strTime)
+                        logging.info(strTime)
             else:
                 QMessageBox.warning(self,
                                     '错误',
@@ -189,7 +220,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 gui()
             else:
                 loading.close()
-                print('频谱文件存储于：', self.savingProcessQ.get())
+                logging.info('频谱保存-频谱文件存储于：'+self.savingProcessQ.get())
         else:
             QMessageBox.warning(self,
                                 '提示',
@@ -206,7 +237,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.path = filename
         # fileinfo = QFileInfo(filename)
         # self.name = fileinfo.fileName()
-        print("IQ频谱图查看选择文件：", filename)
+        logging.info("IQ频谱图查看选择文件：", filename)
         self.lineEdit_3.setText(filename)
 
     # 查看频谱图
@@ -315,7 +346,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # 获取行号
             starttime = datetime.datetime.now()
             self.ocRowNumSelectList = self.ocTableDisplay.getRow()
-            print('用户选中的行为:', self.ocRowNumSelectList)
+            logging.info('IQ自动识别-用户选中的行为:'+self.ocRowNumSelectList)
             if self.ocRowNumSelectList:
                 while not self.algorithmProcessQ.empty():
                     self.algorithmProcessQ.get()
@@ -345,9 +376,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.ocTableDisplay.tableWidget.setItem(rowName, 3, item1)
                         self.ocTableDisplay.tableWidget.setItem(rowName, 4, item2)
                     endtime = datetime.datetime.now()
-                    strTime = "本次识别耗时：%sms" % ((endtime - starttime).seconds * 1000
-                                             + (endtime - starttime).microseconds / 1000)
-                    print(strTime)
+                    strTime = "IQ自动识别-条数：%i，耗时：%sms" % (len(self.ocRowNumSelectList),
+                    (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                    logging.info(strTime)
             else:
                 QMessageBox.warning(self,
                                     '提示',
@@ -363,6 +394,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # IQ手动识别（并行）
     def on_pushButton_clicked_2(self):
+        self.logger.info("开始IQ识别……")
         while not self.zmqLocalQ.empty():
             self.zmqLocalQ.get()
         starttime = datetime.datetime.now()
@@ -391,7 +423,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     gui()
                 else:
                     loading.close()
-                    print("after loading1 close")
+                    # print("after loading1 close")
                     reslt = self.zmqLocalQ.get()
                     if reslt == "超时":
                         loading.close()
@@ -411,18 +443,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         savingProcess.start()
 
                         endtime = datetime.datetime.now()
-                        strTime = '开启存储线程耗时:%dms' % (
+                        strTime = 'IQ手动识别-开启存储线程耗时:%dms' % (
                                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                        print(strTime)
+                        # print(strTime)
+                        self.logger.debug(strTime)
                         # 开启识别进程/线程
                         # starttime = datetime.datetime.now()
                         recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ)
                         recognizeProcess.start()
 
                         endtime = datetime.datetime.now()
-                        strTime = '开启识别线程耗时:%dms' % (
+                        strTime = 'IQ手动识别-开启识别线程耗时:%dms' % (
                                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                        print(strTime)
+                        # print(strTime)
+                        self.logger.debug(strTime)
                         # 调用识别loading
                         loading = Message.Loading()
                         loading.setWindowModality(Qt.ApplicationModal)
@@ -431,9 +465,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             gui()
                         else:
                             loading.close()
-                            print("IQ识别结束......")
+                            # print("IQ识别结束......")
                             dataPath = self.savingProcessQ.get()
-                            print("IQ数据存储于：", dataPath)
                             recognizeResult = self.algorithmProcessQ.get()
                             item1 = QTableWidgetItem("%.1f" % float(recognizeResult[0]))  # 中心频率
                             item2 = QTableWidgetItem("%.1f" % float(recognizeResult[1]))  # 带宽
@@ -443,6 +476,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             self.tableWidget_3.setItem(0, 2, item2)
                             self.tableWidget_3.setItem(0, 3, item3)
                             self.tableWidget_3.setItem(0, 4, item4)
+                            self.logger.info("IQ识别结束，数据存储于："+dataPath)
                             # endtime = datetime.datetime.now()
                             # strTime = '并行识别花费:%dms' % (
                             #         (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
@@ -469,11 +503,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.path = filename
         # fileinfo = QFileInfo(filename)
         # self.name = fileinfo.fileName()
-        print("IQ频谱图查看选择文件：", filename)
+        self.logger.info("IQ频谱图查看选择文件："+filename)
         self.lineEdit_7.setText(filename)
 
     # IQ手动离线识别
     def on_pushButton_clicked_4(self):
+        self.logger.info("开始IQ识别（离线）……")
         starttime = datetime.datetime.now()
         if self.lineEdit_7.text():
             filePath = self.lineEdit_7.text()
@@ -498,9 +533,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.tableWidget_3.setItem(0, 3, item3)
                 self.tableWidget_3.setItem(0, 4, item4)
                 endtime = datetime.datetime.now()
-                strTime = 'funtion time use:%dms' % (
+                strTime = 'IQ手动识别耗时:%dms' % (
                         (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                print(strTime)
+                self.logger.debug(strTime)
+                self.logger.info("IQ识别（手动）结束")
         else:
             QMessageBox.warning(self,
                                 '提示',
@@ -546,11 +582,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     gui()
                 else:
                     loading.close()
-                    print("频谱包络识别算法终止......")
                     recognizeResult = self.algorithmProcessQ.get()
-                    print("识别结果：", recognizeResult)
+                    self.logger.info("频谱包络识别结果："+recognizeResult)
                     saveResult = self.savingProcessQ.get()
-                    print("包络文件存储于", saveResult)
+                    self.logger.info("包络文件存储于："+saveResult)
                     data = self.dataQ.get()
                     if recognizeResult == '超时':
                         QMessageBox.warning(self,
@@ -617,7 +652,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             self.specEnvelopeSampleFigId = ''
                             ##############
                         endtime = datetime.datetime.now()
-                        strTime = 'funtion time use:%dms' % (
+                        strTime = '频谱包络识别耗时:%dms' % (
                                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
                         print(strTime)
             else:
@@ -644,7 +679,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.path = filename
         fileinfo = QFileInfo(filename)
         self.name = fileinfo.fileName()
-        print("频谱包络识别选择文件：", filename)
+        self.logger.info("频谱包络识别选择文件："+filename)
         self.lineEdit_9.setText(self.path)
 
     # 频谱包络离线识别
@@ -667,7 +702,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 gui()
             else:
                 loading.close()
-                print("频谱包络识别算法终止......")
                 recognizeResult = self.algorithmProcessQ.get()
                 ########################################################
                 if len(recognizeResult) == 1:
@@ -730,9 +764,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.specEnvelopeSampleFigId = ''
                             ##############
                         endtime = datetime.datetime.now()
-                        strTime = 'funtion time use:%dms' % (
+                        strTime = '离线频谱包络识别耗时:%dms' % (
                                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                        print(strTime)
+                        self.logger.info(strTime)
         else:
             QMessageBox.warning(self,
                                 '提示',
@@ -746,8 +780,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             win32api.ShellExecute(0, "open", "controller\\Pico_controller\\PicoScope 6.lnk", "", "", 1)
             time = QTimer(self)
             self.pushButton_13.setEnabled(False)
-        except:
-            pass
+        except Exception as e:
+            self.logger.error(e)
 
         def forbidden():
             self.pushButton_13.setEnabled(True)
@@ -761,7 +795,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             length = 10
             dirPath = os.path.join(self.fatherPath, r'data\interference_files\matfile')
-            print(dirPath)
+            self.logger.info("脉冲在线识别文件地址："+dirPath)
             filesOrDirsOperate.makesureDirExist(dirPath)
             pulseRecognizeOnlineT = algorithmThreads.PulseRecognizeOnlineProcess(dirPath, self.algorithmProcessQ, length)
             pulseRecognizeOnlineT.start()
@@ -796,16 +830,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     if self.pulsePicFlag:
                         # 标志位为1时清空图区
                         self.verticalLayout_20.removeWidget(self.samplefig)
-                        self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId)
+                        self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId, self.logger)
                         self.verticalLayout_20.addWidget(self.samplefig)
                         self.pulsePicFlag = 1
                     else:
-                        self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId)
+                        self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId, self.logger)
                         self.verticalLayout_20.addWidget(self.samplefig)
                         self.pulsePicFlag = 1
                     ##############
-        except:
-            pass
+        except Exception as e:
+            self.logger.error(
+                e
+            )
 
     # 脉冲选择文件
     def on_pushButton_clicked_15(self):
@@ -813,7 +849,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         dirpath = QFileDialog.getExistingDirectory(self, "选择文件夹", os.path.join(self.fatherPath,
                                                                                r'interference_files\txt'))
         dirname = dirpath.split('/')[-1]
-        print(dirname)
         self.pulsePath = dirpath
         newItem = QTableWidgetItem(dirname)
         self.tableWidget_6.setItem(0, 0, newItem)
@@ -824,7 +859,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if not self.pulsePath:
                 QMessageBox.information(self, "提示", "请选择文件")
             else:
-                print('选择识别的文件夹为：', self.pulsePath)
+                self.logger.info('脉冲离线识别选择识别的文件夹为：'+self.pulsePath)
                 filesOrDirsOperate.makesureDirExist(self.pulsePath)
                 length = 10
                 pulseRecognizeOfflineT = algorithmThreads.PulseRecognizeOfflineProcess(self.pulsePath,
@@ -862,17 +897,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         if self.pulsePicFlag:
                             # 标志位为1时清空图区
                             self.verticalLayout_20.removeWidget(self.samplefig)
-                            self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId)
+                            self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId, self.logger)
                             self.verticalLayout_20.addWidget(self.samplefig)
                             self.pulsePicFlag = 1
                         else:
-                            self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId)
+                            self.samplefig = draw_pic.ApplicationWindow(targetFile, self.pulseSampleFigId, self.logger)
                             self.verticalLayout_20.addWidget(self.samplefig)
                             self.pulsePicFlag = 1
                         ##############
 
-        except:
-            pass
+        except Exception as e:
+            self.logger.error(e)
 
     # 稳态干扰扫频
     def on_pushButton_clicked_17(self):
@@ -941,9 +976,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.verticalLayout_30.addWidget(self.steadyStateFig)
                         self.steadyStatePicStateFlag = 1
                         endtime = datetime.datetime.now()
-                        strTime = '扫频花费:%dms' % (
+                        strTime = '稳态干扰扫频花费:%dms' % (
                                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                        print(strTime)
+                        self.logger.info(strTime)
             else:
                 QMessageBox.warning(self,
                                     '错误',
@@ -963,7 +998,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         defultPath = os.path.join(self.fatherPath, r'steadyStateInterference_recvfiles')
         filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
                                                   defultPath, "*.txt")
-        print("IQ频谱图查看选择文件：", filename)
+        self.logger.info("稳态干扰选择文件："+filename)
         self.lineEdit_17.setText(filename)
 
     # 稳态干扰离线频谱图查看
@@ -1066,6 +1101,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                                             self.lineEdit_16.text())
                 self.verticalLayout_30.addWidget(self.steadyStateFig)
                 self.steadyStatePicStateFlag = 3
+                self.logger.info("稳态干扰判断结束")
 
     # 稳态干扰历史查看
     def on_pushButton_clicked_20(self):
@@ -1213,8 +1249,108 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
 
+    # usrp3, 48h频谱监测
+    def on_pushButton_clicked_25(self):
+        usrpNum = "3"
+        startfreq = self.lineEdit_31.text()
+        endfreq = self.lineEdit_30.text()
+        if isNum(startfreq) and isNum(endfreq):
+            startfreq = float(startfreq)
+            endfreq = float(endfreq)
+            # if (startfreq < endfreq and startfreq >= 30 and endfreq <= 5000 and (endfreq - startfreq) <= 25):
+            startfreq = startfreq * 1000000
+            endfreq = endfreq * 1000000
+            msg = (usrpNum + ',scan,specMonitor,'
+                   + str(startfreq) + ";" + str(endfreq))
+            zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+                                         args=(self.zmqLocal, msg, self.zmqLocalQ))
+            zmqThread.start()
+            while self.zmqLocalQ.empty():
+                pass
+            else:
+                paraRepStartReslt = self.zmqLocalQ.get()
+                # print(paraRepStartReslt)
+                if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum) or paraRepStartReslt == '超时':
+                    QMessageBox.warning(self, '错误：', '子窗口通信建立失败！\n {}'.format(paraRepStartReslt))
+                else:
+                    paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
+                    # 弹出子窗口
+                    dbFilesRootDir = os.path.join(self.fatherPath, 'EMCfile')
+                    self.childWindowDic[usrpNum] = waterfallDialogEngin.WaterfallDialog(usrpNum, paraSocket,
+                                                                                        startfreq, endfreq,
+                                                                                        dbFilesRootDir)
+                    # self.childWindow = waterfallDialogEngin.WaterfallDialog()
+                    self.childWindowDic[usrpNum].signal.connect(self.waterfallDialogCloseSlot)
+                    self.childWindowDic[usrpNum].show()
+
+                    # 开启循环任务
+                    self.circulateT = threading.Timer(1, self.childWindowDic[usrpNum].circulate)
+                    self.circulateT.start()
+            # else:
+            # QMessageBox.warning(self,
+            #                     '错误',
+            #                     "请输入正确参数！",
+            #                     QMessageBox.Yes,
+            #                     QMessageBox.Yes)
+        else:
+            QMessageBox.warning(self,
+                                '错误',
+                                "请输入正确参数！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
+    # usrp4, 48h频谱监测
+    def on_pushButton_clicked_26(self):
+        usrpNum = "4"
+        startfreq = self.lineEdit_22.text()
+        endfreq = self.lineEdit_23.text()
+        if isNum(startfreq) and isNum(endfreq):
+            startfreq = float(startfreq)
+            endfreq = float(endfreq)
+            # if (startfreq < endfreq and startfreq >= 30 and endfreq <= 5000 and (endfreq - startfreq) <= 25):
+            startfreq = startfreq * 1000000
+            endfreq = endfreq * 1000000
+            msg = (usrpNum + ',scan,specMonitor,'
+                   + str(startfreq) + ";" + str(endfreq))
+            zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+                                         args=(self.zmqLocal, msg, self.zmqLocalQ))
+            zmqThread.start()
+            while self.zmqLocalQ.empty():
+                pass
+            else:
+                paraRepStartReslt = self.zmqLocalQ.get()
+                # print(paraRepStartReslt)
+                if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum) or paraRepStartReslt == '超时':
+                    QMessageBox.warning(self, '错误：', '子窗口通信建立失败！\n {}'.format(paraRepStartReslt))
+                else:
+                    paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
+                    # 弹出子窗口
+                    dbFilesRootDir = os.path.join(self.fatherPath, 'EMCfile')
+                    self.childWindowDic[usrpNum] = waterfallDialogEngin.WaterfallDialog(usrpNum, paraSocket,
+                                                                                        startfreq, endfreq,
+                                                                                        dbFilesRootDir)
+                    # self.childWindow = waterfallDialogEngin.WaterfallDialog()
+                    self.childWindowDic[usrpNum].signal.connect(self.waterfallDialogCloseSlot)
+                    self.childWindowDic[usrpNum].show()
+
+                    # 开启循环任务
+                    self.circulateT = threading.Timer(1, self.childWindowDic[usrpNum].circulate)
+                    self.circulateT.start()
+            # else:
+            # QMessageBox.warning(self,
+            #                     '错误',
+            #                     "请输入正确参数！",
+            #                     QMessageBox.Yes,
+            #                     QMessageBox.Yes)
+        else:
+            QMessageBox.warning(self,
+                                '错误',
+                                "请输入正确参数！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
     def waterfallDialogCloseSlot(self, signalContent):
-        print('{}号子窗口关闭'.format(signalContent))
+        self.logger.info('{}号子窗口关闭'.format(signalContent))
         self.childWindowDic[signalContent] = ""
         # msg = (signalContent + ',scan,specMonitor,'
         #        + '0;0')
@@ -1226,6 +1362,84 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # else:
         #     paraRepCloseReslt = self.zmqLocalQ.get()
         #     print(paraRepCloseReslt)
+
+    # 时域图采集
+    def on_pushButton_clicked_34(self):
+        try:
+            win32api.ShellExecute(0, "open", "controller\\Pico_controller\\PicoScope 6.lnk", "", "", 1)
+            # time = QTimer(self)
+        except:
+            pass
+
+    # 时域图绘图
+    def on_pushButton_clicked_35(self):
+        dirPath = r'D:\myPrograms\CASTProgram\postgraduate_program\data\realpart_recvfiles\pico'
+        # 判断文件夹中是否有文件
+        lists = os.listdir(dirPath)
+        self.logger.info("时域监测绘图文件数" + str(len(lists)))
+        if not len(lists) == 0:
+            for path in lists:
+                if '.csv' in path:
+                    ####################
+                    if self.realpart_flag:
+                        # 标志位为1时清空图区
+                        self.verticalLayout_33.removeWidget(self.realpart_fig)
+                        self.realpart_fig = the_48h_realpart_inQt.MaxminRealpart(
+                            dirPath, self.logger)
+                        self.verticalLayout_33.addWidget(self.realpart_fig)
+                        self.path = ''
+                    else:
+                        self.realpart_fig = the_48h_realpart_inQt.MaxminRealpart(
+                            dirPath, self.logger)
+                        self.verticalLayout_33.addWidget(self.realpart_fig)
+                        self.realpart_flag = 1
+                        self.path = ''
+                    ####################
+                    break
+                else:
+                    QMessageBox.warning(self, '错误', '请先采集数据', )
+                    break
+        else:
+            QMessageBox.warning(self, '错误', '请先采集数据')
+
+    # 时域图清空数据
+    def on_pushButton_clicked_62(self):
+        dirPath = r'D:\myPrograms\CASTProgram\postgraduate_program\data\realpart_recvfiles\pico'
+        shutil.rmtree(dirPath)
+        time.sleep(1)
+        os.mkdir(dirPath)
+        self.logger.info("时域监测数据清空，路径"+dirPath)
+
+    # 实时频谱分析采集
+    def on_pushButton_clicked_33(self):
+        pass
+
+    # 实时频谱分析仪绘图
+    def on_pushButton_clicked_37(self):
+        dirPath = r"D:\myPrograms\CASTProgram\postgraduate_program\data\realtime_recvfiles"
+
+        ####################
+        if self.specAnalyze_flag:
+            self.specAnalyze_fig._timer.stop()
+            # 标志位为1时清空图区
+            self.verticalLayout_35.removeWidget(self.specAnalyze_fig)
+            self.specAnalyze_fig = spec_analyze_v2.ApplicationWindow(
+                dirPath)
+            self.verticalLayout_35.addWidget(self.specAnalyze_fig)
+            self.path = ''
+        else:
+            self.specAnalyze_fig = spec_analyze_v2.ApplicationWindow(dirPath)
+            self.verticalLayout_35.addWidget(self.specAnalyze_fig)
+            self.specAnalyze_flag = 1
+            self.path = ''
+        ####################
+
+    # 实施频谱分析清空数据
+    def on_pushButton_clicked_63(self):
+        dirPath = r"D:\myPrograms\CASTProgram\postgraduate_program\data\realtime_recvfiles"
+        shutil.rmtree(dirPath)
+        time.sleep(1)
+        os.mkdir(dirPath)
 
     # 干扰对消在线
     def on_pushButton_clicked_28(self):
@@ -1359,7 +1573,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles\interface_cancellation')
         filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
                                                   defultPath, "*.txt")
-        print("干扰对消选择文件1：", filename)
+        self.logger.info("干扰对消选择文件1："+filename)
         self.lineEdit_18.setText(filename)
 
     # 干扰对消选择文件2
@@ -1368,8 +1582,157 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles\interface_cancellation')
         filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
                                                   defultPath, "*.txt")
-        print("干扰对消选择文件2：", filename)
+        self.logger.info("干扰对消选择文件2："+filename)
         self.lineEdit_19.setText(filename)
+
+    # 信噪比分析采集计算
+    def on_pushButton_clicked_36(self):
+        starttime = datetime.datetime.now()
+        # 请求数据，调用算法
+        usrpNum = self.comboBox_10.currentText()
+        centrefreq = self.lineEdit_32.text()
+        bandwidth = self.lineEdit_33.text()
+        sampleRate = self.lineEdit_34.text()
+        if isNum(centrefreq) and isNum(bandwidth) and isNum(sampleRate):
+            centrefreq = float(centrefreq)
+            bandwidth = float(bandwidth)
+            sampleRate = float(sampleRate)
+            if centrefreq <= 5000 and centrefreq >= 30:
+                centrefreq = centrefreq * 1000000
+                bandwidth = bandwidth * 1000000
+                sampleRate = sampleRate * 1000000
+                msg = (usrpNum + ',collect,2way,' + str(centrefreq) + ";" + str(bandwidth)
+                       + ";" + str(sampleRate))
+                zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+                                             args=(self.zmqLocal, msg, self.zmqLocalQ))
+                zmqThread.start()
+                # 调用识别loading
+                loading = Message.Loading()
+                loading.setWindowModality(Qt.ApplicationModal)
+                loading.show()
+                gui = QGuiApplication.processEvents
+                while self.zmqLocalQ.empty():
+                    gui()
+                else:
+                    loading.close()
+                    reslt = self.SNRData = self.zmqLocalQ.get()
+                    if reslt == "超时":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "本地连接超时！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                    else:
+                        while not self.algorithmProcessQ.empty():
+                            self.algorithmProcessQ.get()
+                        # 开启识别进程/线程
+                        recognizeProcess = algorithmThreads.SNREstimationIntegrationThread(reslt, self.algorithmProcessQ)
+                        recognizeProcess.start()
+                        # 调用识别loading
+                        loading = Message.Loading()
+                        loading.setWindowModality(Qt.ApplicationModal)
+                        loading.show()
+                        while self.algorithmProcessQ.empty():
+                            gui()
+                        else:
+                            loading.close()
+                            recognizeResult = self.algorithmProcessQ.get()
+                            # self.logger.debug("信噪比分析结果："+recognizeResult)
+                            self.lineEdit_36.setText(recognizeResult)
+                            endtime = datetime.datetime.now()
+                            strTime = '信噪比分析线程耗时:%dms' % (
+                                    (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                            self.logger.debug(strTime)
+            else:
+                QMessageBox.warning(self,
+                                    '错误1',
+                                    "请输入正确参数！",
+                                    QMessageBox.Yes,
+                                    QMessageBox.Yes)
+        else:
+            QMessageBox.warning(self,
+                                '错误2',
+                                "请输入正确参数！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
+    # 信噪比分析保存数据
+    def on_pushButton_clicked_40(self):
+        if self.SNRData == '':
+            QMessageBox.warning(self,
+                                '错误',
+                                "无数据！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+        else:
+            while not self.savingProcessQ.empty():
+                self.savingProcessQ.get()
+            dirPath = os.path.join(self.fatherPath, r'SNR_data')
+            filesOrDirsOperate.makesureDirExist(dirPath)
+            SNRSavingThread = algorithmThreads.SNRDataSave(self.SNRData, dirPath,
+                                                           "SNR_data", self.savingProcessQ)
+            SNRSavingThread.start()
+            loading = Message.Loading()
+            loading.setWindowModality(Qt.ApplicationModal)
+            gui = QGuiApplication.processEvents
+            loading.show()
+            while self.savingProcessQ.empty():
+                gui()
+            else:
+                loading.close()
+                self.logger.info("信噪比数据存储成功，路径：{}".format(self.savingProcessQ.get()))
+                self.SNRData = ''
+
+    # 信噪比分析选择文件
+    def on_pushButton_clicked_38(self):
+        self.lineEdit_35.clear()
+        defultPath = os.path.join(self.fatherPath, r'SNR_data')
+        filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
+                                                  defultPath, "*.txt")
+        logging.info("SNR分析选择文件："+filename)
+        self.lineEdit_35.setText(filename)
+
+    # 信噪比分析离线计算
+    def on_pushButton_clicked_39(self):
+        # 读取文件中的数据，调用算法
+        starttime = datetime.datetime.now()
+        if self.lineEdit_35.text():
+            filePath = self.lineEdit_35.text()
+            if os.path.exists(filePath):
+                while not self.algorithmProcessQ.empty():
+                    self.algorithmProcessQ.get()
+                # 开启识别进程/线程
+                recognizeProcess = algorithmThreads.SNREstimationIntegrationThread(filePath,
+                                                                                   self.algorithmProcessQ)
+                recognizeProcess.start()
+                # 调用识别loading
+                loading = Message.Loading()
+                loading.setWindowModality(Qt.ApplicationModal)
+                loading.show()
+                gui = QGuiApplication.processEvents
+                while self.algorithmProcessQ.empty():
+                    gui()
+                else:
+                    loading.close()
+                    recognizeResult = self.algorithmProcessQ.get()
+                    # self.logger.debug("信噪比分析结果："+recognizeResult)
+                    self.lineEdit_36.setText(recognizeResult)
+                    endtime = datetime.datetime.now()
+                    strTime = '信噪比分析线程耗时:%dms' % (
+                            (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                    self.logger.debug(strTime)
+            else:
+                QMessageBox.warning(self,
+                                    '错误1',
+                                    "所选路径无文件！",
+                                    QMessageBox.Yes,
+                                    QMessageBox.Yes)
+        else:
+            QMessageBox.warning(self,
+                                '错误2',
+                                "请先选择文件！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
 
     # # 重写关闭事件
     # def closeEvent(self, event):
