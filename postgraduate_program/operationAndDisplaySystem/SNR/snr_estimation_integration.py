@@ -75,8 +75,8 @@ def snr_estimation(data):
     model = ResNet18()
     model.to(device)                                        # 送入GPU，利用GPU计算
     model.load_state_dict(torch.load(model_file, map_location = device))#"cuda:0"
-    start = 500#10000000
-    data = data[start:start+10000, :]
+    #start = 500#10000000
+    #data = data[start:start+10000, :]
     model.eval()
     with torch.no_grad():
         data = gonglv(data)
@@ -90,6 +90,7 @@ def snr_estimation(data):
         output = model(data)
         #print('output: '+str(output))
         out_cpu = output.cpu()
+    #return str(out_cpu.numpy()[0,0])
     return str(out_cpu.numpy()[0,0])
 
 def add_noise(data, original_snr, target_snr):
@@ -100,6 +101,12 @@ def add_noise(data, original_snr, target_snr):
     #   target_snr: 目标信噪比，单位dB
     #输出:
     #   加噪声后的数据 samples*2
+
+    realPart = data.split(";")[1]
+    imagPart = data.split(";")[2]
+    realPartList = np.array(realPart.split(" ")).astype(np.float32)
+    imagPartList = np.array(imagPart.split(" ")).astype(np.float32)
+    data = np.transpose(np.vstack((realPartList, imagPartList)))
 
     ratio1 = 10**(original_snr/10)
     x0 = data[:,0]
@@ -114,15 +121,25 @@ def add_noise(data, original_snr, target_snr):
 
     data_noise_added = awgn(data, pnp)
 
-    return data_noise_added
+    str1 = " ".join(str(i) for i in data_noise_added[:, 0])
+    str2 = " ".join(str(i) for i in data_noise_added[:, 1])
+
+    return str1+';'+str2
 
 if __name__ == '__main__':
     #测试用例
-
+    from SNR.component import dataGet
     data_root = 'GMSK.wav'
-    wave_data, fs = read_wav_data(data_root)
+    #wave_data, fs = read_wav_data(data_root)
+    wave_data = dataGet.dataGet(r"D:\myPrograms\CASTProgram\postgraduate_program\data\usrp_recvfiles\single_collect_20200914183911.txt")
     original = snr_estimation(wave_data)
     print(original)
-    data_with_noise = add_noise(wave_data, original, 3)
-    snr_after = snr_estimation(data_with_noise)
+    data_with_noise = add_noise(wave_data, float(original), 3)
+
+    realPart = data_with_noise.split(";")[0]
+    imagPart = data_with_noise.split(";")[1]
+    realPartList = np.array(realPart.split(" ")).astype(np.float32)
+    imagPartList = np.array(imagPart.split(" ")).astype(np.float32)
+    dataArray = np.transpose(np.vstack((realPartList, imagPartList)))
+    snr_after = snr_estimation(dataArray)
     print(snr_after)

@@ -1,5 +1,10 @@
 import zmq
-
+import logging
+logger = logging.getLogger("localSocketLogger")
+LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
+DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
+logging.basicConfig(level=logging.DEBUG,
+                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
 class localZMQ():
     """
     本类用于与py2.7编写的通信中台进行本机通信。由于是本机通信，ip地址应被设置为localhost(127.0.0.1)，
@@ -16,7 +21,7 @@ class localZMQ():
 
         # self.poll = zmq.Poller()# 超时判断
         # self.poll.register(self.socket, zmq.POLLIN)
-    def sendMessege(self, messege):
+    def sendMessage(self, message):
         """
         本方法发送消息并阻塞当前线程直到收到回传的消息后返回回传消息内容。
         Args:
@@ -25,8 +30,8 @@ class localZMQ():
         Returns:回传消息内容，类型为str
 
         """
-        print("{} py3 to py2 msg send!".format(self.address))
-        self.socket.send(str.encode(messege))
+        logger.debug("{} [operation system] to [data platform] msg send!".format(self.address))
+        self.socket.send(str.encode(message))
         # socks = dict(self.poll.poll(20000))
         # if socks.get(self.socket) == zmq.POLLIN:
         result = bytes.decode(self.socket.recv())
@@ -63,5 +68,5 @@ def zmqThread(socket, msg, q):
     Returns:
 
     """
-    reslt = socket.sendMessege(msg)
+    reslt = socket.sendMessage(msg)
     q.put(reslt)

@@ -11,6 +11,13 @@ import sys
 """
 频谱图绘图类，输入不定长参数，参数中包含绘图模式、绘图地址或绘图数据，根据具体传入的参数绘制相应的频谱图
 """
+import logging
+logging.getLogger('matplotlib.font_manager').disabled = True
+logger = logging.getLogger("getPosPlotLogger")
+LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
+DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
+logging.basicConfig(level=logging.DEBUG,
+                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
 class getPos(QWidget):
     def __init__(self, *arg, parent=None):
         super(getPos, self).__init__(parent)
@@ -104,7 +111,7 @@ class getPos(QWidget):
             pos = event.ydata
             if self.lineEdit:
                 self.lineEdit.setText(str(pos))
-            print('print in on_key_press:' + str(pos))
+            logger.debug('用户点击位置:' + str(pos))
 
 
 

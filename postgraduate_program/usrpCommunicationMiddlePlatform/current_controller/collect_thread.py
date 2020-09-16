@@ -7,8 +7,12 @@ import crcmod
 import scipy
 from PyQt4.QtCore import QThread
 from threading import Thread
-
-
+import logging
+logger = logging.getLogger("collectThreadLogger")
+LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
+DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
+logging.basicConfig(level=logging.DEBUG,
+                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
 class Send(Thread):
     def __init__(self, centre, bdwidth, samprate, pub_socket):
         super(Send, self).__init__()
@@ -17,7 +21,7 @@ class Send(Thread):
         self.samp_rate = samprate
         self.bdwidth = bdwidth
     def run(self):
-        # print 'start collect_send at:', ctime()
+        logger.debug('start collect_send at:'+ctime())
         crc16_ibm = crcmod.mkCrcFun(0x18005, rev=True, initCrc=0x0000, xorOut=0x0000)
         fft_size = 2 ** 13
         HEADER = '\xAA'
@@ -38,9 +42,8 @@ class Send(Thread):
         CRC16 = struct.pack('!H', crc16_ibm(CODE + DATA) & 0xffff)
         LENGTH = struct.pack('!I', (len(CODE) + len(DATA) + len(CRC16)) & 0xffffffff)
         msg = HEADER + LENGTH + CODE + DATA + CRC16
-        print 'start collect_send at:', ctime()
         self.socket.send(msg)
-        print 'end collect_send at:', ctime()
+        logger.debug('end collect_send at:'+ctime())
 
 class Recv(Thread):
     def __init__(self, q, sub_socket, way = 1, path=0):
@@ -53,10 +56,9 @@ class Recv(Thread):
         try:
             while True:
                 crc16_ibm = crcmod.mkCrcFun(0x18005, rev=True, initCrc=0x0000, xorOut=0x0000)
-                print 'start recv at:', ctime()
+                logger.debug('start recv at:'+ctime())
                 msg = self.socket.recv()
                 starttime = datetime.datetime.now()
-                print 'finish recv'
                 if len(msg) < 6:
                     print 'warning: length of msg is less than 6! Ignore this msg'
                     continue
@@ -96,39 +98,27 @@ class Recv(Thread):
                 endtime = datetime.datetime.now()
                 strTime = "解包花费：{}ms".format((endtime - starttime).seconds * 1000
                                              + (endtime - starttime).microseconds / 1000)
-                print strTime
-
                 starttime1 = datetime.datetime.now()
-                collectInfo = str(freq) + ' '+ str(bandwidth) + ' ' + str(samp_rate)+' '
+                collectInfo = str(freq) + ' '+ str(bandwidth) + ' ' + str(samp_rate)
                 real_part_strlist = map(str, list(real_part))
                 imag_part_strlist = map(str, list(imag_part))
                 realPartStr = " ".join(real_part_strlist)
                 imagPartStr = " ".join(imag_part_strlist)
-                reslt = collectInfo + realPartStr
+                reslt = collectInfo + ";" + realPartStr + ";" + imagPartStr
                 if self.path:
                     f = open(self.path, 'w')
-                    f.write(reslt)
+                    f.writelines([collectInfo+"\n", realPartStr+"\n", imagPartStr])
                     f.close()
                     self.q.put("recvd")
                 else:
-                    if self.way == 1:
-                        self.q.put(reslt)
-                    elif self.way == 2:
-                        self.q.put(realPartStr+";"+imagPartStr)
+                    self.q.put(reslt)
                 endtime1 = datetime.datetime.now()
                 strTime1 = "采集花费：{}ms".format((endtime1 - starttime1).seconds * 1000
                                              + (endtime1 - starttime1).microseconds / 1000)
                 break
         except KeyboardInterrupt:
             pass
-        print 'end collect_recv at:', ctime()
+        logger.debug('end collect_recv at:'+ctime())
 
 if __name__ == '__main__':
-    import Queue
-    from socketTest import socket
-    localQueue = Queue.Queue()
-
-    collectRecv = collect_thread.Recv(localQueue, subSock, path=filePath)
-    collectSend = collect_thread.Send(str(centreFreq), str(bdWdith), '25e6', pubSock)
-    collectRecv.start()
-    collectSend.run()
+    pass

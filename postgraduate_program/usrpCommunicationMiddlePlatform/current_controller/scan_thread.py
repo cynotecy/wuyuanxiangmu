@@ -4,7 +4,12 @@ from time import ctime
 import struct
 import crcmod
 from functions.spectrum_smooth import spectrum_smooth_v4
-
+import logging
+logger = logging.getLogger("scanThreadLogger")
+LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
+DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
+logging.basicConfig(level=logging.DEBUG,
+                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
 class Send(object):
     def __init__(self, starts, end, pub_socket):
         super(Send, self).__init__()
@@ -13,7 +18,7 @@ class Send(object):
         self.socket = pub_socket
         self.pointnum = 10000000
     def run(self):
-        print 'start scan_send at:', ctime()
+        logger.debug('start scan_send at:'+ctime())
         crc16_ibm = crcmod.mkCrcFun(0x18005, rev=True, initCrc=0x0000, xorOut=0x0000)
         # fft_size = 2 ** 13
         HEADER = '\xAA'
@@ -40,7 +45,7 @@ class Send(object):
         msg = HEADER + LENGTH + CODE + DATA + CRC16
         # print len(msg)
         self.socket.send(msg)
-        print 'end scan_send at:', ctime()
+        logger.debug('end scan_send at:'+ctime())
 
 class Recv(QThread):
     def __init__(self, q, sub_socket, standard):
@@ -54,13 +59,11 @@ class Recv(QThread):
         self.runningFlag = 0
 
     def run(self):
-        print 'start scan_recv at:', ctime()
+        logger.debug('start scan_recv at:'+ctime())
         try:
             while self.runningFlag:
                 crc16_ibm = crcmod.mkCrcFun(0x18005, rev=True, initCrc=0x0000, xorOut=0x0000)
-                print 'before socket.recv'
                 msg = self.socket.recv()
-                print 'recved'
                 if len(msg) < 6:
                     print 'warning: length of msg is less than 6! Ignore this msg'
                     continue
@@ -90,7 +93,7 @@ class Recv(QThread):
                     print "warning1: the length of msg is not equal to LENGTH! Ignore this msg"
                     continue
 
-                print 'receiving a spectrum msg!'
+                logger.debug('receiving a spectrum msg from remoter')
                 bins = struct.unpack('!%s' % ('f' * n_freq,), DATA[12:12 + n_freq * 4])
                 freq_list = struct.unpack('!%s' % ('d' * n_freq,), DATA[12 + n_freq * 4:12 + n_freq * (4 + 8)])
                 # Do what you want to do, here is a example.
@@ -104,4 +107,4 @@ class Recv(QThread):
                 break
         except KeyboardInterrupt:
             pass
-        print 'end scan_recv at:', ctime()
+        logger.debug('end scan_recv at:'+ctime())

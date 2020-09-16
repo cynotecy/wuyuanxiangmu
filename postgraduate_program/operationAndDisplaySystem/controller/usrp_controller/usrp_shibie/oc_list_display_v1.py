@@ -65,17 +65,17 @@ class WindowClass(QWidget):
     # 更新table入口，参数为[[(),()...]]
     def pushButton(self, lists):
 
-        print("push button")
+        # print("push button")
         self.tableWidget.setRowCount(len(lists[0]))  # 行数
-        print(len(lists[0]))
-        print(range(len(lists[0])))
+        # print(len(lists[0]))
+        # print(range(len(lists[0])))
         for i in range(len(lists[0])):
             se = lists[0][i][0].__str__()+':'+lists[0][i][1].__str__()
             md = lists[0][i][2].__str__()
             hg = lists[0][i][3].__str__()
-            print(se)
-            print(md)
-            print(hg)
+            # print(se)
+            # print(md)
+            # print(hg)
             item1 = QTableWidgetItem(se)
             item2 = QTableWidgetItem(md)
             item3 = QTableWidgetItem(hg)
@@ -97,7 +97,7 @@ class WindowClass(QWidget):
         #     self.rowNum.get()
         #     self.rowNum.put(self.selectedRow)
         # print("选中的行：", end='')
-        print(self.selectedRow)
+        # print(self.selectedRow)
         return self.selectedRow
 
 

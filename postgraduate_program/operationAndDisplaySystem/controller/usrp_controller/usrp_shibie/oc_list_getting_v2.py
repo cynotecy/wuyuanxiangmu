@@ -53,7 +53,7 @@ def position(x, y, threshold):
     c = []
     d = []
     e = []
-    print("len(outputlist_fre_amp_list)=", str(len(outputlist_fre_amp_list)))
+    # print("len(outputlist_fre_amp_list)=", str(len(outputlist_fre_amp_list)))
     for i in range(len(outputlist_fre_amp_list)):
         c.append(str(outputlist_range_list[i].replace("(", '').replace(")", '')) + ',' + str(outputlist_fre_amp_list[i]).replace("(", '').replace(")", ''))
         cc = c[i].split(',')

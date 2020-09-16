@@ -11,7 +11,13 @@ import time
 from current_controller import scan_thread, collect_thread
 from threading import Thread
 import threading
+import logging
 
+logger = logging.getLogger("repParaThreadLogger")
+LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
+DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
+logging.basicConfig(level=logging.DEBUG,
+                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
 
 class RepParaThread(Thread):
     def __init__(self, repSocket, pubSocket, subSocket, standar, remoteTimeOut):
@@ -22,22 +28,17 @@ class RepParaThread(Thread):
         self.standar = standar
         self.remoteTimeOut = remoteTimeOut
         self.localQueue = Queue.Queue()
-        # self.stopEvent = threading.Event()
 
 
     def run(self):
         while True:
-            # if self.stopEvent.is_set():
-            #     print 'catched the stop event'
-            #     self.repSocket.close()
-            #     break
-            # else:
             try:
-                print '等待本地采集指令'
+                logger.info("并行本地连接-启动")
+                logger.debug('等待本地采集指令')
                 localRecv = self.repSocket.recv()
-                print '收到本地采集指令'
+                logger.debug('收到本地采集指令')
                 if localRecv == 'close':
-                    print 'catched the stop event by socket'
+                    logger.info("并行本地连接-收到处理端关闭指令")
                     self.repSocket.send('para socket thread closed')
                     self.repSocket.close()
                     break
@@ -56,6 +57,7 @@ class RepParaThread(Thread):
                         if period > self.remoteTimeOut:
                             scanRecv.stop()
                             self.repSocket.send('超时')
+                            logger.info("并行本地连接-远端超时")
                             break
                     else:
                         bins = self.localQueue.get()
@@ -69,10 +71,6 @@ class RepParaThread(Thread):
                         freqbins = ';'.join(freqbinsList)
                         self.repSocket.send(freqbins)
             except Exception, e:
-                print 'repParaThread run方法错误：{}'.format(repr(e))
+                logger.error(e)
             finally:
                 time.sleep(0.3)
-
-    # def terminate(self):
-    #     self.stopEvent.set()
-    #     print 'terminate'

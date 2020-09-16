@@ -8,6 +8,12 @@
 import random
 import os
 
+import logging
+logger = logging.getLogger("virtualScanerLogger")
+LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
+DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
+logging.basicConfig(level=logging.DEBUG,
+                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
 class VirtualScaner():
     def __init__(self, pub_socket, scanDataDirPath):
         self.socket = pub_socket
@@ -21,6 +27,6 @@ class VirtualScaner():
 
     def scan(self, logger, source):
         i = int(random.randint(0, 15))
-        # print i
-        logger.debug("{}扫频转发，第{}个文件".format(source, i))
+        msg = "{}扫频转发，第{}个文件".format(source, str(i))
+        logger.debug(msg)
         self.socket.send(bytes(self.scanDataList[i]))

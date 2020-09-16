@@ -6,24 +6,28 @@ import datetime
 import Queue
 import logging
 import thread
+import threading
 import zmq
 # sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from current_controller import scan_thread, collect_thread
 from socketTest import socketInit, repParaThread
 from functions import filesOrDirsOperate
+import keyboard
 """
 数据中台
 """
 
-logger = logging.getLogger("transmitLogger")
-logger.setLevel(logging.DEBUG)
+logger = logging.getLogger("transmitPlatformLogger")
 LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
 DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.DEBUG,
                     format=LOG_FORMAT, datefmt=DATE_FORMAT)
 
 def threadControl():
+    logger.debug("shell path:"+ os.getcwd())
     stopFlag = 0
+    keyboardListerThread = threading.Thread(target=keyboardListener, args=(stopFlag,))
+    keyboardListerThread.start()
     standar = '-11'  # USRP定标
     # standar = '0'  # USRP定标
     remoteTimeOut = 10  # 远程连接超时时限
@@ -75,25 +79,41 @@ def threadControl():
             continue
 
         msg = localRecv.split(',')
-        print msg
+        logger.info(msg)
         if ';' in msg[0]:
             pubSockList = []
             subSockList = []
-            usrpNumList = msg[0].split(';')
-            for usrpNumStr in usrpNumList:
-                usrpNum = int(usrpNumStr)
-                pubSock = socketDic[usrpNum - 1][0]
-                subSock = socketDic[usrpNum - 1][1]
-                pubSockList.append(pubSock)
-                subSockList.append(subSock)
+            if not ":" in msg[0]:
+                usrpNumList = msg[0].split(';')
+                for usrpNumStr in usrpNumList:
+                    usrpNum = int(usrpNumStr)
+                    pubSock = socketDic[usrpNum - 1][0]
+                    subSock = socketDic[usrpNum - 1][1]
+                    pubSockList.append(pubSock)
+                    subSockList.append(subSock)
+            elif "." in msg[0]:
+                # 设备名解析
+                deviceAntennaList = msg[0].split(".")
+                compareReqDic = dict()
+                for record in deviceAntennaList:
+                    recordList = record.split(":")
+                    compareReqDic[recordList[0]] = recordList[1:]
+                    usrpNum = int(recordList[0].strip("USRP"))
+                    pubSock = socketDic[usrpNum - 1][0]
+                    subSock = socketDic[usrpNum - 1][1]
+                    pubSockList.append(pubSock)
+                    subSockList.append(subSock)
+
         else:
             if "USRP" in msg[0]:
                 usrpNum = int(msg[0].strip("USRP"))
+                pubSock = socketDic[usrpNum - 1][0]
+                subSock = socketDic[usrpNum - 1][1]
             else:
-                logger.error("错误的设备名称")
-
-            pubSock = socketDic[usrpNum - 1][0]
-            subSock = socketDic[usrpNum - 1][1]
+                usrpNum = int(msg[0])
+                pubSock = socketDic[usrpNum - 1][0]
+                subSock = socketDic[usrpNum - 1][1]
+                # logger.error("错误的设备名称")
         mode = msg[1]  # e.g. scan
         action = msg[2]  # e.g. IQ
         instructionInfo = msg[3]
@@ -128,6 +148,7 @@ def threadControl():
                     freqbinsList = [freqStr, binStr]
                     freqbins = ';'.join(freqbinsList)
                     repSocket.send(freqbins)
+
             # 48H监测扫频（连续）（1-4线程）
             elif action == 'specMonitor':
                 # if not instructionInfoList[0] == '0':
@@ -138,24 +159,24 @@ def threadControl():
                     repParaThreadDic[usrpNum].start()
                     repSocket.send(repParaAddressList[usrpNum-1])
                 except Exception, e:
-                    print repr(e)
+                    logger.error(e)
                     # 虽然我不知道为啥有时候terminate会不好使，但是通过这句话让terminate失灵时本该关闭的socket连接关闭了
-                    repSocket.send("paraSocket {} build failed".format(str(usrpNum)))
+                    # repSocket.send("paraSocket {} build failed".format(str(usrpNum)))
 
-            # 实时频谱仪扫频（连续）
-            elif action == 'realtimeSpecMonitor':
-                pass
-
-            # 干扰对消
-            elif action == 'interferenceCancellation':
+            # 多设备扫频(同频段)
+            elif action == 'plural':
                 startFreq = instructionInfoList[0]
                 endFreq = instructionInfoList[1]
                 scanRecvList = []
                 scanSendList = []
                 i = 0
                 j = 0
+                dataQList = []
+                for usrpN in usrpNumList:
+                    q = Queue.Queue()
+                    dataQList.append(q)
                 for subSock in subSockList:
-                    scanRecvList.append(scan_thread.Recv(localQueue, subSock, standar))
+                    scanRecvList.append(scan_thread.Recv(dataQList[i], subSock, standar))
                     scanRecvList[i].start()
                     i += 1
                 for pubSock in pubSockList:
@@ -163,7 +184,9 @@ def threadControl():
                     scanSendList[j].run()
                     j += 1
                 startTime = datetime.datetime.now()
-                while localQueue.qsize() != len(pubSockList):
+                # 查询直至所有的dataQ都有两个元素
+                dataReadyFlag = False
+                while not dataReadyFlag:
                     nowTime = datetime.datetime.now()
                     period = (nowTime - startTime).seconds
                     if period > remoteTimeOut:
@@ -171,25 +194,82 @@ def threadControl():
                             scanRecv.stop()
                         repSocket.send('超时')
                         break
+                    else:
+                        for q in dataQList:
+                            dataReadyFlag = dataReadyFlag and (~(q.qsize == 2))
+                        if not dataReadyFlag:
+                            dataReadyFlag = True
                 else:
-                    freqbinses = []
-                    for j in range(localQueue.qsize()):
-                        bins = localQueue.get()
-                        freqList = localQueue.get()
+                    reportDataList = []
+                    for k in range(len(dataQList)):
+                        deviceNum = "USRP"+usrpNumList[k]
+                        bins = dataQList[k].get()
+                        freqList = dataQList[k].get()
                         # 将回传的频谱直接发给py3
                         bins = [str(i) for i in bins]
                         freqlist = [str(i) for i in freqList]
                         binStr = " ".join(bins)
                         freqStr = " ".join(freqlist)
-                        freqbinsList = [freqStr, binStr]
-                        freqbins = ';'.join(freqbinsList)
-                        freqbinses.append(freqbins)
-                    freqbinses = '|'.join(freqbinses)
-                    repSocket.send(freqbinses)
+                        freqbins = ';'.join([freqStr, binStr])
+                        reportData = ":".join([deviceNum, freqbins])
+                        reportDataList.append(reportData)
+                    reportDataMsg = "|".join(reportDataList)
+                    repSocket.send(reportDataMsg)
 
             # 天线（每个usrp的两个天线串行采集，不同usrp并行采集）（1或2线程）
-            elif action == 'antenna':
-                pass
+            elif action == 'compare':
+                startFreq = instructionInfoList[0]
+                endFreq = instructionInfoList[1]
+                scanRecvList = []
+                scanSendList = []
+                i = 0
+                j = 0
+                dataQDic = dict()
+                # 在dataQDic中创建应有数量的Q
+                for device in compareReqDic:
+                    for antenna in compareReqDic[device]:
+                        q = Queue.Queue()
+                        dataQDic[":".join([device, antenna])] = q
+                for subSock in subSockList:
+                    scanRecvList.append(scan_thread.Recv(dataQList[i], subSock, standar))
+                    scanRecvList[i].start()
+                    i += 1
+                for pubSock in pubSockList:
+                    scanSendList.append(scan_thread.Send(startFreq, endFreq, pubSock))
+                    scanSendList[j].run()
+                    j += 1
+                startTime = datetime.datetime.now()
+                # 查询直至所有的dataQ都有两个元素
+                dataReadyFlag = False
+                while not dataReadyFlag:
+                    nowTime = datetime.datetime.now()
+                    period = (nowTime - startTime).seconds
+                    if period > remoteTimeOut:
+                        for scanRecv in scanRecvList:
+                            scanRecv.stop()
+                        repSocket.send('超时')
+                        break
+                    else:
+                        for q in dataQList:
+                            dataReadyFlag = dataReadyFlag and (~(q.qsize == 2))
+                        if not dataReadyFlag:
+                            dataReadyFlag = True
+                else:
+                    reportDataList = []
+                    for k in range(len(dataQList)):
+                        deviceNum = "USRP" + usrpNumList[k]
+                        bins = dataQList[k].get()
+                        freqList = dataQList[k].get()
+                        # 将回传的频谱直接发给py3
+                        bins = [str(i) for i in bins]
+                        freqlist = [str(i) for i in freqList]
+                        binStr = " ".join(bins)
+                        freqStr = " ".join(freqlist)
+                        freqbins = ';'.join([freqStr, binStr])
+                        reportData = ":".join([deviceNum, freqbins])
+                        reportDataList.append(reportData)
+                    reportDataMsg = "|".join(reportDataList)
+                    repSocket.send(reportDataMsg)
 
         # 采集模式
         elif mode == 'collect':
@@ -197,14 +277,15 @@ def threadControl():
             if action == 'IQoc':
                 centreFreq = float(instructionInfoList[0])
                 bdWdith = float(instructionInfoList[1])
-                currentPath = os.path.dirname(__file__)
+                # currentPath = os.path.abspath(os.path.dirname(__file__))
+                currentPath = os.getcwd()
+                logger.debug("self path: "+currentPath)
                 fatherPath = os.path.join(os.path.dirname(currentPath), "data")
                 dirPath = os.path.join(fatherPath, r'usrp_recvfiles\auto_recognize')
                 filesOrDirsOperate.makesureDirExist(dirPath)
                 local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
                 filePath = os.path.join(dirPath, r'oc_collect_{}.txt'.format(local_time))
-                # print "oc文件路径", filePath
-                logger.info("oc文件路径"+filePath)
+                logger.info("oc file path: "+filePath)
                 localQueue.queue.clear()
                 collectRecv = collect_thread.Recv(localQueue, subSock, path=filePath)
                 collectRecv.start()
@@ -217,7 +298,6 @@ def threadControl():
                     pass
                 else:
                     logger.info('localQueue:'+localQueue.get())
-                    # print 'localQueue:'+localQueue.get()
                     repSocket.send(filePath)
 
             # 单个采集（并行，返回采集数据）
@@ -238,7 +318,6 @@ def threadControl():
                 else:
                     data = localQueue.get()
                     logger.info('localQueue:' + str(type(data)))
-                    # print 'localQueue:' + str(type(data))
                     repSocket.send(data)
 
             # 两路IQ采集
@@ -266,6 +345,9 @@ def getSockerLink(pubAddr, subAddr):
     subSocket = socketInit.connect(subAddr, 'SUB')
     return pubSocket, subSocket
 
+def keyboardListener(stopFlag):
+    keyboard.wait("q")
+    stopFlag = 1
+
 if __name__ == '__main__':
-    # print "working demo"
     threadControl()

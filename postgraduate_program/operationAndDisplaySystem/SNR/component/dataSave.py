@@ -10,6 +10,6 @@ def dataSave(data, path, type, prefix):
     localTime = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
     fileName = "{}_{}.{}".format(prefix, localTime, type)
     savePath = os.path.join(path, fileName)
-    with open(savePath, "w+") as file:
+    with open(savePath, "w") as file:
         file.write(data)
     return savePath

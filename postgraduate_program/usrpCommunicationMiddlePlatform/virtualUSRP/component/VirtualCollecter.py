@@ -7,6 +7,7 @@
 """
 import random
 import os
+
 class VirtualCollecter():
     def __init__(self, pub_socket, collectDataDirPath):
         self.socket = pub_socket
@@ -20,6 +21,6 @@ class VirtualCollecter():
 
     def collect(self, logger, source):
         i = int(random.randint(0, 15))
-        # print i
-        logger.debug("{}采集转发，第{}个文件".format(source, i))
+        msg = "{}采集转发，第{}个文件".format(source, str(i))
+        logger.debug(msg)
         self.socket.send(bytes(self.collectDataList[i]))

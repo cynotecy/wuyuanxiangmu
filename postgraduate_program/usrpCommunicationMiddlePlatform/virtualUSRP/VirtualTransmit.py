@@ -1,19 +1,22 @@
 # -*- coding: UTF-8 -*-
 """
-@File:fakeTransmit.py
+@File:virtualTransmit.py
 @Author:lcx
 @Date:2020/1/1511:10
 @Desc:虚拟远端中转，伪装工程机接收消息，回传扫频或采集数据
 """
 from threading import Thread
-import logging
+import os
+import sys
 
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+sys.path.append("..")
 from socketTest import socketInit
 from virtualUSRP.component import Decoder, VirtualCollecter, VirtualScaner
 
 
-logger = logging.getLogger("transmitLogger")
-logger.setLevel(logging.DEBUG)
+import logging
+logger = logging.getLogger("virtualTransmitLogger")
 LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
 DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
 logging.basicConfig(level=logging.DEBUG,
@@ -32,15 +35,14 @@ def virtualTransmit1():
     virtualCollecter1 = VirtualCollecter.VirtualCollecter(pubSocket, collectDataDirPath)
 
     while True:
-        # print '转发线程1准备就绪'
-        logger.debug('转发线程1准备就绪')
+        logger.debug('transmit thread-1 ready')
         msg = subSocket.recv()
         action = Decoder.decodeMsg(msg)
-        print action
+        logger.debug(action)
         if action == "scan":
-            virtualScaner1.scan(logger, '转发线程1')
+            virtualScaner1.scan(logger, 'transmit thread-1')
         elif action == "collect":
-            virtualCollecter1.collect(logger, '转发线程1')
+            virtualCollecter1.collect(logger, 'transmit thread-1')
 
 def virtualTransmit2():
     subAddress = 'tcp://127.0.0.1:6001'
@@ -55,15 +57,14 @@ def virtualTransmit2():
     virtualCollecter2 = VirtualCollecter.VirtualCollecter(pubSocket, collectDataDirPath)
 
     while True:
-        # print '转发线程2准备就绪'
-        logger.debug('转发线程2准备就绪')
+        logger.debug('transmit thread-2 ready')
         msg = subSocket.recv()
         action = Decoder.decodeMsg(msg)
-        print action
+        logger.debug(action)
         if action == "scan":
-            virtualScaner2.scan(logger, '转发线程2')
+            virtualScaner2.scan(logger, 'transmit thread-2')
         elif action == "collect":
-            virtualCollecter2.collect(logger, '转发线程2')
+            virtualCollecter2.collect(logger, 'transmit thread-2')
 
 def virtualTransmit3():
     subAddress = 'tcp://127.0.0.1:6002'
@@ -78,15 +79,14 @@ def virtualTransmit3():
     virtualCollecter3 = VirtualCollecter.VirtualCollecter(pubSocket, collectDataDirPath)
 
     while True:
-        # print '转发线程3准备就绪'
-        logger.debug('转发线程3准备就绪')
+        logger.debug('transmit thread-3 ready')
         msg = subSocket.recv()
         action = Decoder.decodeMsg(msg)
-        print action
+        logger.debug(action)
         if action == "scan":
-            virtualScaner3.scan(logger, '转发线程3')
+            virtualScaner3.scan(logger, 'transmit thread-3')
         elif action == "collect":
-            virtualCollecter3.collect(logger, '转发线程3')
+            virtualCollecter3.collect(logger, 'transmit thread-3')
 
 def virtualTransmit4():
     subAddress = 'tcp://127.0.0.1:6003'
@@ -101,15 +101,14 @@ def virtualTransmit4():
     virtualCollecter4 = VirtualCollecter.VirtualCollecter(pubSocket, collectDataDirPath)
 
     while True:
-        # print '转发线程4准备就绪'
-        logger.debug('转发线程4准备就绪')
+        logger.debug('transmit thread-4 ready')
         msg = subSocket.recv()
         action = Decoder.decodeMsg(msg)
-        print action
+        logger.debug(action)
         if action == "scan":
-            virtualScaner4.scan(logger, '转发线程4')
+            virtualScaner4.scan(logger, 'transmit thread-4')
         elif action == "collect":
-            virtualCollecter4.collect(logger, '转发线程4')
+            virtualCollecter4.collect(logger, 'transmit thread-4')
 
 if __name__ == '__main__':
     t1 = Thread(target=virtualTransmit1, name="transmitThread1")

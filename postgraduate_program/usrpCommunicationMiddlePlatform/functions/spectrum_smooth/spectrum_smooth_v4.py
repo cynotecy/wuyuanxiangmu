@@ -34,13 +34,13 @@ def smooth_spectrum(spectrum_x, spectrum_y, base_x, base_y, dirPath):
     '''30-100M减底噪'''
     if spectrum_x[0] < 86.5:
         start = binary_search(base_x, spectrum_x[0])
-        print "start:", start
+        # print "start:", start
         if spectrum_x[-1] < 86.5:
             spectrum_y = spectrum_y - base_y[start: start + len(spectrum_y)] - 102
         else:
             stop = binary_search(base_x, 86.5)
-            print "stop:", stop
-            print "len_spectrum_y:", len(spectrum_y[0: stop]), "len_base_y:", len(base_y[start: stop])
+            # print "stop:", stop
+            # print "len_spectrum_y:", len(spectrum_y[0: stop]), "len_base_y:", len(base_y[start: stop])
             
             spectrum_y[0: (stop - start)] = spectrum_y[0: (stop - start)] - base_y[start: stop] - 102
 
@@ -72,7 +72,7 @@ def smooth_spectrum(spectrum_x, spectrum_y, base_x, base_y, dirPath):
     
 def smoothMain(x, y):
     dirPath = os.path.dirname(__file__)
-    print dirPath
+    # print dirPath
     base = np.load(os.path.join(dirPath, 'base_30_86.npy'))
     base_x = base[0, :]
     base_y = base[1, :]

@@ -8,13 +8,25 @@ from controller.usrp_controller.interference_cancellation import interference_ca
 import numpy as np
 
 def callInterferenceCancellation(arg):
-    print(type(arg))
-    print(len(arg))
     # if '/' in arg or '\\' in arg:
-    if len(arg) == 2:
+    if len(arg) == 2 and ".txt" in arg[0]:
         x1, y1, x2, y2 = getdata(arg)
     else:
-        x1, y1, x2, y2 = arg
+        data1, data2 = arg
+        if ":" in data1:
+            data1 = data1.split(":")[1]
+        if ":" in data2:
+            data2 = data2.split(":")[1]
+        data1List = data1.split(';')
+        freq1List = data1List[0].split(' ')
+        bins1List = data1List[1].split(" ")
+        x1 = [float(i) for i in freq1List]
+        y1 = [float(i) for i in bins1List]
+        data2List = data2.split(';')
+        freq2List = data2List[0].split(' ')
+        bins2List = data2List[1].split(" ")
+        x2 = [float(i) for i in freq2List]
+        y2 = [float(i) for i in bins2List]
         x1 = np.asarray(np.float32(x1))
         y1 = np.asarray(np.float32(y1))
         x2 = np.asarray(np.float32(x2))

@@ -20,11 +20,15 @@ from controller.usrp_controller.usrp_shibie import (oc_list_display_v1)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelopeDrawpic
 from controller.usrp_controller.steadyStateInterference_shibie import display_v4
 from controller.Pico_controller.draw_pic import draw_pic
-from monitor.waterfall import waterfallDialogEngin
+from monitor.waterfall import waterfallDialogEngin, waterfallDialogEnginFor3900
 from monitor.spectrum_analyze import spec_analyze_v2
 from function.numOrLetters import *
 from communication import zmqLocal
-
+from function.dbInfo import dbInfo
+from controller.usrp_controller.usrp_shibie.component import freqListQuery
+from communication import circulationZmqThread, communicationProxy, pluralCommunicationProxy
+from communication.ceyearController import ceyearProxy
+from monitor.spectrum_view import realtimeSpecView
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -35,11 +39,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # py2.start()
 
         self.logger = logging.getLogger("UILogger")
-        self.logger.setLevel(logging.DEBUG)
         LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
         DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
         logging.basicConfig(level=logging.INFO,
                             format=LOG_FORMAT, datefmt=DATE_FORMAT)
+        self.dbInfo = dbInfo
 
         # 初始化当前路径和其父路径，用于拼接后续地址进行非文件夹依赖的寻址
         self.currentPath = os.path.dirname(__file__)
@@ -62,14 +66,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.realpart_flag = 0  # 时域监测图区标志位
         self.specAnalyze_flag = 0  # 实时频谱分析图区标志位
         self.interferenceCancellationFigFlag = 0  # 干扰对消图区标志位
+        self.realtimeSpecAnalyzeDataSaveFlag = 0  # 实时频谱分析数据存储标志位
+        self.specPicFlag = 0  # 扫频图区标志位
+        self.realtimeSpecViewFigFlag = 0  # 实时频谱查看图区
         # 初始化变量
         self.steadyStateHistoryData = []  # 稳态干扰历史数据
         self.steadyStateHistoryResult = []  # 稳态干扰历史结果
         self.childWindowDic = {}
         self.scanRslt = ''
         self.SNRData = ''
+        self.circultaionZmqThread = None
         # 实例化zmq
-        self.zmqLocal = zmqLocal.localZMQ()
+        self.usrpCommu = zmqLocal.localZMQ()
+        self.av3900Commu = ceyearProxy.CeyearProxy("172.141.11.202", self.fatherPath)
         # 第一页，IQ识别
         ## 自动识别
         self.pushButton_1.clicked.connect(self.on_pushButton_clicked_1)  # 扫频
@@ -107,6 +116,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_24.clicked.connect(self.on_pushButton_clicked_24)  # usrp2开始监测
         self.pushButton_25.clicked.connect(self.on_pushButton_clicked_25)  # usrp3开始监测
         self.pushButton_26.clicked.connect(self.on_pushButton_clicked_26)  # usrp4开始监测
+        self.pushButton_85.clicked.connect(self.on_pushButton_clicked_85)  # 3900开始监测
 
         # 第六页，时域监测
         self.pushButton_34.clicked.connect(self.on_pushButton_clicked_34)  # 采集
@@ -115,11 +125,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 第七页，实时分析
         # 实时频谱查看
+        self.pushButton_27.clicked.connect(self.on_pushButton_clicked_27)  # 单次扫频
+        self.pushButton_32.clicked.connect(self.on_pushButton_clicked_32)  # 连续扫频
 
         # 实时频谱分析
-        self.pushButton_33.clicked.connect(self.on_pushButton_clicked_33)  # 采集
-        self.pushButton_37.clicked.connect(self.on_pushButton_clicked_37)  # 绘图
-        self.pushButton_63.clicked.connect(self.on_pushButton_clicked_63)  # 数据清空
+        self.pushButton_37.clicked.connect(self.on_pushButton_clicked_37)  # 开始/停止绘图
 
         # 第八页，位置比对
         # 2，干扰对消
@@ -128,11 +138,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_30.clicked.connect(self.on_pushButton_clicked_30)  # 选择文件1
         self.pushButton_31.clicked.connect(self.on_pushButton_clicked_31)  # 选择文件2
 
+        # 3，设备比对
+        self.pushButton_33.clicked.connect(self.on_pushButton_clicked_33)  # 设备比对
+
         # 第九页，信噪比分析
         self.pushButton_36.clicked.connect(self.on_pushButton_clicked_36)  # 采集分析
         self.pushButton_40.clicked.connect(self.on_pushButton_clicked_40)  # 保存数据
         self.pushButton_38.clicked.connect(self.on_pushButton_clicked_38)  # 选择文件
         self.pushButton_39.clicked.connect(self.on_pushButton_clicked_39)  # 离线分析
+
+        #
 
     # IQ扫频按键
     def on_pushButton_clicked_1(self):
@@ -147,17 +162,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if startfreq < endfreq and startfreq >= 30 and endfreq <= 5000:
                 startfreq = startfreq*1000000
                 endfreq = endfreq*1000000
-                usrpNum = self.comboBox_2.currentText()
-                msg = (usrpNum + ',scan,IQ,'
+                deviceNum = self.comboBox_2.currentText()
+                msg = (deviceNum + ',scan,IQ,'
                           + str(startfreq) + ";" +str(endfreq))
-                zmqThread = threading.Thread(target=zmqLocal.zmqThread, args=(self.zmqLocal, msg, self.zmqLocalQ))
-                zmqThread.start()
+                communicationThread = communicationProxy.CommunicationProxy(msg, self.zmqLocalQ, self.usrpCommu, self.av3900Commu)
+                communicationThread.start()
                 # 调用loading
                 loading = Message.Loading()
                 loading.setWindowModality(Qt.ApplicationModal)
                 loading.show()
                 gui = QGuiApplication.processEvents
-                # while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
                 while self.zmqLocalQ.empty():
                     gui()
                 else:
@@ -234,10 +248,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles\usrp_scan')
         filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
                                                   defultPath, "*.txt")
-        # self.path = filename
-        # fileinfo = QFileInfo(filename)
-        # self.name = fileinfo.fileName()
-        logging.info("IQ频谱图查看选择文件：", filename)
+        logging.info("IQ频谱图查看选择文件："+filename)
         self.lineEdit_3.setText(filename)
 
     # 查看频谱图
@@ -321,7 +332,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             # 置入超频点列表
                             if self.ocTableDisplayFlag:
                                 self.verticalLayout_4.removeWidget(self.ocTableDisplay)
-                                # sip.delete(self.ocTableDisplay)
                                 self.ocTableDisplay = oc_list_display_v1.WindowClass()
                                 self.ocTableDisplay.pushButton(self.ocOverThresholdList)
                                 self.verticalLayout_4.addWidget(self.ocTableDisplay)
@@ -346,19 +356,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # 获取行号
             starttime = datetime.datetime.now()
             self.ocRowNumSelectList = self.ocTableDisplay.getRow()
-            logging.info('IQ自动识别-用户选中的行为:'+self.ocRowNumSelectList)
+            logging.info('IQ自动识别-用户选中的行为:'+str(self.ocRowNumSelectList))
             if self.ocRowNumSelectList:
                 while not self.algorithmProcessQ.empty():
                     self.algorithmProcessQ.get()
-                usrpNum = self.comboBox_2.currentText()
+                self.logger.debug("算法结果队列清空完成")
+                deviceNum = self.comboBox_2.currentText()
+                # 频点列表查询
+                tableName = 'used_freq_point'
+                freqList = freqListQuery.freqListQuery(self.dbInfo, tableName)
+                self.logger.debug("频点列表查询完成")
                 # 创建行号-IQ识别结果字典
                 self.ocRsltDict = dict.fromkeys(self.ocRowNumSelectList, 'null')
-                collectThread = algorithmThreads.OcCollectThread(usrpNum, self.ocRsltDict,
-                                                                 self.ocOverThresholdList, self.zmqLocal, self.ocCollectPathQ)
+                # self.ocRsltDict.keys()
+                self.logger.debug("结果字典创建完成")
+                collectThread = algorithmThreads.OcCollectThread(deviceNum, self.ocRsltDict,
+                                                                 self.ocOverThresholdList, self.usrpCommu,
+                                                                 self.av3900Commu, self.ocCollectPathQ)
                 recognizeThread = algorithmThreads.OcRecognizeThread(self.ocRsltDict,
-                                                                     self.ocCollectPathQ, self.algorithmProcessQ)
+                                                                     self.ocCollectPathQ, self.algorithmProcessQ, freqList)
                 collectThread.start()
                 recognizeThread.start()
+                self.logger.debug("双线程开启")
                 # 调用识别loading
                 loading = Message.Loading()
                 loading.setWindowModality(Qt.ApplicationModal)
@@ -394,10 +413,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # IQ手动识别（并行）
     def on_pushButton_clicked_2(self):
+        self.tableWidget_3.clearContents()
         self.logger.info("开始IQ识别……")
         while not self.zmqLocalQ.empty():
             self.zmqLocalQ.get()
-        starttime = datetime.datetime.now()
         centrefreq = self.lineEdit_4.text()
         bdwidth = self.lineEdit_5.text()
         samprate = self.lineEdit_8.text()
@@ -409,11 +428,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 centrefreq = centrefreq * 1000000
                 bdwidth = bdwidth * 1000000
                 samprate = samprate * 1000000
-                usrpNum = self.comboBox_3.currentText()
-                msg = (usrpNum + ',collect,IQsingle,'+ str(centrefreq) + ";" + str(bdwidth)
+                deviceNum = self.comboBox_3.currentText()
+                msg = (deviceNum + ',collect,IQsingle,'+ str(centrefreq) + ";" + str(bdwidth)
                       + ";" + str(samprate))
-                zmqThread = threading.Thread(target=zmqLocal.zmqThread,args=(self.zmqLocal, msg, self.zmqLocalQ))
-                zmqThread.start()
+                communicationThread = communicationProxy.CommunicationProxy(msg, self.zmqLocalQ, self.usrpCommu,
+                                                                            self.av3900Commu)
+                communicationThread.start()
                 # 调用识别loading
                 loading = Message.Loading()
                 loading.setWindowModality(Qt.ApplicationModal)
@@ -423,7 +443,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     gui()
                 else:
                     loading.close()
-                    # print("after loading1 close")
                     reslt = self.zmqLocalQ.get()
                     if reslt == "超时":
                         loading.close()
@@ -437,26 +456,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             self.algorithmProcessQ.get()
                         while not self.savingProcessQ.empty():
                             self.savingProcessQ.get()
-                        # 开启存储进程/线程，该线程耗时异常长
-                        starttime = datetime.datetime.now()
+                        # 开启原始数据存储进程/线程
                         savingProcess = algorithmThreads.IQDataSaveProcess(reslt, self.savingProcessQ)
                         savingProcess.start()
-
-                        endtime = datetime.datetime.now()
-                        strTime = 'IQ手动识别-开启存储线程耗时:%dms' % (
-                                (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                        # print(strTime)
-                        self.logger.debug(strTime)
-                        # 开启识别进程/线程
-                        # starttime = datetime.datetime.now()
-                        recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ)
+                        self.logger.debug("原始数据存储开始……")
+                        # 信噪比计算
+                        while not self.algorithmProcessQ.empty():
+                            self.algorithmProcessQ.get()
+                        # 开启SNR计算线程
+                        recognizeProcess = algorithmThreads.SNREstimationIntegrationThread(reslt,
+                                                                                           self.algorithmProcessQ)
                         recognizeProcess.start()
-
-                        endtime = datetime.datetime.now()
-                        strTime = 'IQ手动识别-开启识别线程耗时:%dms' % (
-                                (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                        # print(strTime)
-                        self.logger.debug(strTime)
                         # 调用识别loading
                         loading = Message.Loading()
                         loading.setWindowModality(Qt.ApplicationModal)
@@ -465,22 +475,77 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             gui()
                         else:
                             loading.close()
-                            # print("IQ识别结束......")
+                            recognizeResult = self.algorithmProcessQ.get()
                             dataPath = self.savingProcessQ.get()
+                            item5 = QTableWidgetItem(recognizeResult)  # 信噪比
+                            self.tableWidget_3.setItem(0, 5, item5)
+                            self.logger.info("IQ手动识别信噪比计算结束，原始文件存储至："+dataPath+"，信噪比值："+recognizeResult)
+
+                        secondSaveFlag = 0
+                        # 若存在加入噪声数值
+                        if self.lineEdit_37.text():
+                            originSNR = float(recognizeResult)
+                            target_snr = float(self.lineEdit_37.text())
+                            if target_snr > 0 and target_snr < originSNR:
+                                self.logger.info("开始加入噪声，目标信噪比"+self.lineEdit_37.text()+"dB")
+                                data = reslt
+                                while not self.algorithmProcessQ.empty():
+                                    self.algorithmProcessQ.get()
+                                NoiseAddProcess = algorithmThreads.NoiseAdd(data, originSNR, target_snr,
+                                                                            self.algorithmProcessQ)
+                                NoiseAddProcess.start()
+                                # 调用识别loading
+                                loading = Message.Loading()
+                                loading.setWindowModality(Qt.ApplicationModal)
+                                loading.show()
+                                while self.algorithmProcessQ.empty():
+                                    gui()
+                                else:
+                                    loading.close()
+                                    collectInfo = reslt.split(";")[0]
+                                    reslt = ";".join([collectInfo, self.algorithmProcessQ.get()])
+                                    self.logger.info("加噪声结束")
+                                    # 开启存储进程/线程
+                                    while not self.savingProcessQ.empty():
+                                        self.savingProcessQ.get()
+                                    savingProcess = algorithmThreads.IQDataSaveProcess(reslt, self.savingProcessQ)
+                                    savingProcess.start()
+                                    secondSaveFlag = 1
+                            else:
+                                QMessageBox.warning(self,
+                                                    '错误',
+                                                    "目标不能大于原始信噪比！",
+                                                    QMessageBox.Yes,
+                                                    QMessageBox.Yes)
+                        # 开启识别进程/线程
+                        tableName = 'used_freq_point'
+                        freqList = freqListQuery.freqListQuery(self.dbInfo, tableName)
+                        recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ, freqList)
+                        recognizeProcess.start()
+                        # 调用识别loading
+                        loading = Message.Loading()
+                        loading.setWindowModality(Qt.ApplicationModal)
+                        loading.show()
+                        while self.algorithmProcessQ.empty():
+                            gui()
+                        else:
+                            if secondSaveFlag == 1:
+                                while self.savingProcessQ.empty():
+                                    gui()
+                                else:
+                                    self.logger.info("IQ识别结束，数据存储于："+self.savingProcessQ.get())
+                            loading.close()
                             recognizeResult = self.algorithmProcessQ.get()
                             item1 = QTableWidgetItem("%.1f" % float(recognizeResult[0]))  # 中心频率
                             item2 = QTableWidgetItem("%.1f" % float(recognizeResult[1]))  # 带宽
                             item3 = QTableWidgetItem(recognizeResult[2])  # 调制方式
                             item4 = QTableWidgetItem(recognizeResult[3])  # 频点识别
+                            item6 = QTableWidgetItem(recognizeResult[4])  # 计算信噪比
                             self.tableWidget_3.setItem(0, 1, item1)
                             self.tableWidget_3.setItem(0, 2, item2)
                             self.tableWidget_3.setItem(0, 3, item3)
                             self.tableWidget_3.setItem(0, 4, item4)
-                            self.logger.info("IQ识别结束，数据存储于："+dataPath)
-                            # endtime = datetime.datetime.now()
-                            # strTime = '并行识别花费:%dms' % (
-                            #         (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                            # print(strTime)
+                            self.tableWidget_3.setItem(0, 6, item6)
             else:
                 QMessageBox.warning(self,
                                     '错误',
@@ -508,11 +573,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # IQ手动离线识别
     def on_pushButton_clicked_4(self):
+        self.tableWidget_3.clearContents()
         self.logger.info("开始IQ识别（离线）……")
         starttime = datetime.datetime.now()
         if self.lineEdit_7.text():
             filePath = self.lineEdit_7.text()
-            recognizeProcess = algorithmThreads.IQSingleProcess(filePath, self.algorithmProcessQ)
+            tableName = 'used_freq_point'
+            freqList = freqListQuery.freqListQuery(self.dbInfo, tableName)
+            recognizeProcess = algorithmThreads.IQSingleProcess(filePath, self.algorithmProcessQ, freqList)
             recognizeProcess.start()
             # 调用识别loading
             loading = Message.Loading()
@@ -528,10 +596,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 item2 = QTableWidgetItem("%.1f" % float(recognizeResult[1]))  # 带宽
                 item3 = QTableWidgetItem(recognizeResult[2])  # 调制方式
                 item4 = QTableWidgetItem(recognizeResult[3])  # 频点识别
+                item5 = QTableWidgetItem(recognizeResult[4])  # 信噪比
                 self.tableWidget_3.setItem(0, 1, item1)
                 self.tableWidget_3.setItem(0, 2, item2)
                 self.tableWidget_3.setItem(0, 3, item3)
                 self.tableWidget_3.setItem(0, 4, item4)
+                self.tableWidget_3.setItem(0, 6, item5)
                 endtime = datetime.datetime.now()
                 strTime = 'IQ手动识别耗时:%dms' % (
                         (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
@@ -565,10 +635,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if startfreq < endfreq and startfreq >= 30 and endfreq <= 5000 and (endfreq - startfreq) <= 150:
                 startfreq = startfreq * 1000000
                 endfreq = endfreq * 1000000
-                usrpNum = self.comboBox_4.currentText()
-                msg = (usrpNum + ',scan,specEnvelope,'
+                deviceNum = self.comboBox_4.currentText()
+                msg = (deviceNum + ',scan,specEnvelope,'
                        + str(startfreq) + ";" + str(endfreq))
-                specEnvelopThread = algorithmThreads.specEnvelopeOnlineProcess(self.zmqLocal,
+                specEnvelopThread = algorithmThreads.specEnvelopeOnlineProcess(self.usrpCommu, self.av3900Commu,
                                                                                msg, self.dataQ,
                                                                                self.algorithmProcessQ,
                                                                                self.savingProcessQ)
@@ -583,7 +653,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 else:
                     loading.close()
                     recognizeResult = self.algorithmProcessQ.get()
-                    self.logger.info("频谱包络识别结果："+recognizeResult)
+                    self.logger.info("频谱包络识别结果："+recognizeResult[0])
                     saveResult = self.savingProcessQ.get()
                     self.logger.info("包络文件存储于："+saveResult)
                     data = self.dataQ.get()
@@ -794,10 +864,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_pushButton_clicked_14(self):
         try:
             length = 10
-            dirPath = os.path.join(self.fatherPath, r'data\interference_files\matfile')
+            dirPath = os.path.join(self.fatherPath, r'interference_files\matfile')
             self.logger.info("脉冲在线识别文件地址："+dirPath)
             filesOrDirsOperate.makesureDirExist(dirPath)
-            pulseRecognizeOnlineT = algorithmThreads.PulseRecognizeOnlineProcess(dirPath, self.algorithmProcessQ, length)
+            pulseRecognizeOnlineT = algorithmThreads.PulseRecognizeOnlineProcess(dirPath, self.algorithmProcessQ,
+                                                                                 length, self.fatherPath)
             pulseRecognizeOnlineT.start()
             loading = Message.Loading()
             loading.setWindowModality(Qt.ApplicationModal)
@@ -815,9 +886,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     if result == 'fan':
                         display = '风扇'
                         self.pulseSampleFigId = 1
-                    elif result == 'power':
+                    elif result == 'PA51':
                         self.pulseSampleFigId = 2
-                        display = '电源'
+                        display = 'PA51'
                     elif result == 'WD_200':
                         self.pulseSampleFigId = 3
                         display = 'WD_200'
@@ -864,7 +935,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 length = 10
                 pulseRecognizeOfflineT = algorithmThreads.PulseRecognizeOfflineProcess(self.pulsePath,
                                                                                        self.algorithmProcessQ,
-                                                                                       length)
+                                                                                       length, self.fatherPath)
                 pulseRecognizeOfflineT.start()
                 loading = Message.Loading()
                 loading.setWindowModality(Qt.ApplicationModal)
@@ -881,9 +952,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         if result == 'fan':
                             self.pulseSampleFigId = 1
                             display = '风扇'
-                        elif result == 'power':
+                        elif result == 'PA51':
                             self.pulseSampleFigId = 2
-                            display = '电源'
+                            display = 'PA51'
                         elif result == 'WD_200':
                             self.pulseSampleFigId = 3
                             display = 'WD_200'
@@ -922,12 +993,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if startfreq < endfreq and startfreq >= 30 and endfreq <= 5000:
                 startfreq = startfreq*1000000
                 endfreq = endfreq*1000000
-                usrpNum = self.comboBox_5.currentText()
-                msg = (usrpNum + ',scan,steadyStateInterference,'
+                deviceNum = self.comboBox_5.currentText()
+                msg = (deviceNum + ',scan,steadyStateInterference,'
                           + str(startfreq) + ";" + str(endfreq))
-                zmqThread = threading.Thread(target=zmqLocal.zmqThread,
-                                             args=(self.zmqLocal, msg, self.zmqLocalQ))
-                zmqThread.start()
+                communicationThread = communicationProxy.CommunicationProxy(msg, self.zmqLocalQ, self.usrpCommu,
+                                                                            self.av3900Commu)
+                communicationThread.start()
                 # 调用loading
                 loading = Message.Loading()
                 loading.setWindowModality(Qt.ApplicationModal)
@@ -1165,7 +1236,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 msg = (usrpNum + ',scan,specMonitor,'
                        + str(startfreq) + ";" + str(endfreq))
                 zmqThread = threading.Thread(target=zmqLocal.zmqThread,
-                                             args=(self.zmqLocal, msg, self.zmqLocalQ))
+                                             args=(self.usrpCommu, msg, self.zmqLocalQ))
                 zmqThread.start()
                 while self.zmqLocalQ.empty():
                     pass
@@ -1214,7 +1285,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             msg = (usrpNum + ',scan,specMonitor,'
                    + str(startfreq) + ";" + str(endfreq))
             zmqThread = threading.Thread(target=zmqLocal.zmqThread,
-                                         args=(self.zmqLocal, msg, self.zmqLocalQ))
+                                         args=(self.usrpCommu, msg, self.zmqLocalQ))
             zmqThread.start()
             while self.zmqLocalQ.empty():
                 pass
@@ -1236,12 +1307,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     # 开启循环任务
                     self.circulateT = threading.Timer(1, self.childWindowDic[usrpNum].circulate)
                     self.circulateT.start()
-            # else:
-                # QMessageBox.warning(self,
-                #                     '错误',
-                #                     "请输入正确参数！",
-                #                     QMessageBox.Yes,
-                #                     QMessageBox.Yes)
         else:
             QMessageBox.warning(self,
                                 '错误',
@@ -1263,7 +1328,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             msg = (usrpNum + ',scan,specMonitor,'
                    + str(startfreq) + ";" + str(endfreq))
             zmqThread = threading.Thread(target=zmqLocal.zmqThread,
-                                         args=(self.zmqLocal, msg, self.zmqLocalQ))
+                                         args=(self.usrpCommu, msg, self.zmqLocalQ))
             zmqThread.start()
             while self.zmqLocalQ.empty():
                 pass
@@ -1313,7 +1378,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             msg = (usrpNum + ',scan,specMonitor,'
                    + str(startfreq) + ";" + str(endfreq))
             zmqThread = threading.Thread(target=zmqLocal.zmqThread,
-                                         args=(self.zmqLocal, msg, self.zmqLocalQ))
+                                         args=(self.usrpCommu, msg, self.zmqLocalQ))
             zmqThread.start()
             while self.zmqLocalQ.empty():
                 pass
@@ -1336,12 +1401,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     # 开启循环任务
                     self.circulateT = threading.Timer(1, self.childWindowDic[usrpNum].circulate)
                     self.circulateT.start()
+        else:
+            QMessageBox.warning(self,
+                                '错误',
+                                "请输入正确参数！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
+
+    # 3900, 48h频谱监测
+    def on_pushButton_clicked_85(self):
+        deviceNum = "3900"
+        startfreq = self.lineEdit_76.text()
+        endfreq = self.lineEdit_75.text()
+        if isNum(startfreq) and isNum(endfreq):
+            startfreq = float(startfreq)
+            endfreq = float(endfreq)
+            # if (startfreq < endfreq and startfreq >= 30 and endfreq <= 5000 and (endfreq - startfreq) <= 25):
+            startfreq = startfreq * 1000000
+            endfreq = endfreq * 1000000
+            msg = (deviceNum + ',scan,specMonitor,'
+                   + str(startfreq) + ";" + str(endfreq))
+            # zmqThread = threading.Thread(target=zmqLocal.zmqThread,
+            #                              args=(self.usrpCommu, msg, self.zmqLocalQ))
+            # zmqThread.start()
+            # while self.zmqLocalQ.empty():
+            #     pass
             # else:
-            # QMessageBox.warning(self,
-            #                     '错误',
-            #                     "请输入正确参数！",
-            #                     QMessageBox.Yes,
-            #                     QMessageBox.Yes)
+            #     paraRepStartReslt = self.zmqLocalQ.get()
+                # print(paraRepStartReslt)
+                # dosnt work
+            # if paraRepStartReslt == 'paraSocket {} build failed'.format(deviceNum) or paraRepStartReslt == '超时':
+            #     QMessageBox.warning(self, '错误：', '子窗口通信建立失败！\n {}'.format(paraRepStartReslt))
+            # else:
+            paraSocket = self.av3900Commu
+            # 弹出子窗口
+            dbFilesRootDir = os.path.join(self.fatherPath, 'EMCfile')
+            self.childWindowDic[deviceNum] = waterfallDialogEnginFor3900.WaterfallDialog(deviceNum, paraSocket,
+                                                                                msg,
+                                                                                dbFilesRootDir)
+            # self.childWindow = waterfallDialogEngin.WaterfallDialog()
+            self.childWindowDic[deviceNum].signal.connect(self.waterfallDialogCloseSlot)
+            self.childWindowDic[deviceNum].show()
+
+            # 开启循环任务
+            self.circulateT = threading.Timer(1, self.childWindowDic[deviceNum].circulate)
+            self.circulateT.start()
         else:
             QMessageBox.warning(self,
                                 '错误',
@@ -1352,16 +1456,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def waterfallDialogCloseSlot(self, signalContent):
         self.logger.info('{}号子窗口关闭'.format(signalContent))
         self.childWindowDic[signalContent] = ""
-        # msg = (signalContent + ',scan,specMonitor,'
-        #        + '0;0')
-        # zmqThread = threading.Thread(target=zmqLocal.zmqThread,
-        #                              args=(self.zmqLocal, msg, self.zmqLocalQ))
-        # zmqThread.start()
-        # while self.zmqLocalQ.empty():
-        #     pass
-        # else:
-        #     paraRepCloseReslt = self.zmqLocalQ.get()
-        #     print(paraRepCloseReslt)
 
     # 时域图采集
     def on_pushButton_clicked_34(self):
@@ -1410,45 +1504,202 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         os.mkdir(dirPath)
         self.logger.info("时域监测数据清空，路径"+dirPath)
 
-    # 实时频谱分析采集
-    def on_pushButton_clicked_33(self):
-        pass
-
-    # 实时频谱分析仪绘图
-    def on_pushButton_clicked_37(self):
-        dirPath = r"D:\myPrograms\CASTProgram\postgraduate_program\data\realtime_recvfiles"
-
-        ####################
-        if self.specAnalyze_flag:
-            self.specAnalyze_fig._timer.stop()
-            # 标志位为1时清空图区
-            self.verticalLayout_35.removeWidget(self.specAnalyze_fig)
-            self.specAnalyze_fig = spec_analyze_v2.ApplicationWindow(
-                dirPath)
-            self.verticalLayout_35.addWidget(self.specAnalyze_fig)
-            self.path = ''
+    # 实时频谱查看 单次扫频
+    def on_pushButton_clicked_27(self):
+        while not self.zmqLocalQ.empty():
+            self.zmqLocalQ.get()
+        starttime = datetime.datetime.now()
+        startfreq = self.lineEdit_20.text()
+        endfreq = self.lineEdit_21.text()
+        if isNum(startfreq) and isNum(endfreq):
+            startfreq = float(startfreq)
+            endfreq = float(endfreq)
+            if startfreq < endfreq and startfreq >= 30 and endfreq <= 5000:
+                startfreq = startfreq*1000000
+                endfreq = endfreq*1000000
+                deviceNum = self.comboBox_8.currentText()
+                msg = (deviceNum + ',scan,IQ,'
+                          + str(startfreq) + ";" +str(endfreq))
+                communicationThread = communicationProxy.CommunicationProxy(msg, self.zmqLocalQ, self.usrpCommu,
+                                                                            self.av3900Commu)
+                communicationThread.start()
+                # 调用loading
+                loading = Message.Loading()
+                loading.setWindowModality(Qt.ApplicationModal)
+                loading.show()
+                gui = QGuiApplication.processEvents
+                while self.zmqLocalQ.empty():
+                    gui()
+                else:
+                    loading.close()
+                    reslt = self.zmqLocalQ.get()
+                    if reslt == "超时":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "本地连接超时！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                    else:
+                        resltList = reslt.split(';')
+                        self.scanRslt = resltList
+                        freqList = resltList[0].split(' ')
+                        binsList = resltList[1].split(" ")
+                        self.onlineSpecX = [float(i) for i in freqList]
+                        self.onlineSpecY = [float(i) for i in binsList]
+                        #####置入绘图####
+                        if self.realtimeSpecViewFigFlag:
+                            self.verticalLayout_27.removeWidget(self.realtimeSpecViewFig)
+                        self.realtimeSpecViewFig = plotWithCursor.getPos('history', self.onlineSpecX,
+                                                                 self.onlineSpecY)
+                        self.verticalLayout_27.addWidget(self.realtimeSpecViewFig)
+                        self.realtimeSpecViewFigFlag = 1
+                        endtime = datetime.datetime.now()
+                        strTime = '扫频耗时:%dms' % (
+                                (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                        logging.info(strTime)
+            else:
+                QMessageBox.warning(self,
+                                    '错误',
+                                    "请输入正确参数！",
+                                    QMessageBox.Yes,
+                                    QMessageBox.Yes)
         else:
-            self.specAnalyze_fig = spec_analyze_v2.ApplicationWindow(dirPath)
-            self.verticalLayout_35.addWidget(self.specAnalyze_fig)
-            self.specAnalyze_flag = 1
-            self.path = ''
-        ####################
+            QMessageBox.warning(self,
+                                '错误',
+                                "请输入正确参数！",
+                                QMessageBox.Yes,
+                                QMessageBox.Yes)
 
-    # 实施频谱分析清空数据
-    def on_pushButton_clicked_63(self):
-        dirPath = r"D:\myPrograms\CASTProgram\postgraduate_program\data\realtime_recvfiles"
-        shutil.rmtree(dirPath)
-        time.sleep(1)
-        os.mkdir(dirPath)
+    # 实时频谱查看 连续扫频
+    def on_pushButton_clicked_32(self):
+        startfreq = self.lineEdit_20.text()
+        endfreq = self.lineEdit_21.text()
+        deviceNum = self.comboBox_8.currentText()
+
+        self.realtimeSpecViewStopFlag = 0
+        if self.pushButton_32.text() == "连续扫频":
+            if isNum(startfreq) and isNum(endfreq):
+                startfreq = float(startfreq)
+                endfreq = float(endfreq)
+                if startfreq < endfreq and startfreq >= 30 and endfreq <= 5000:
+                    self.pushButton_32.setText("停止扫频")
+                    startfreq = startfreq * 1000000
+                    endfreq = endfreq * 1000000
+                    msg = (deviceNum + ',scan,IQ,'
+                           + str(startfreq) + ";" + str(endfreq))
+                    dataCach = queue.Queue()
+                    condition = threading.Condition()
+                    waitNum = 4
+                    notifyNum = 2
+                    self.circultaionZmqThread = circulationZmqThread.CircultaionZmqThread(self.usrpCommu,
+                                                                                          self.av3900Commu,
+                                                                                          msg, dataCach,
+                                                                                          condition, waitNum)
+                    self.circultaionZmqThread.start()
+
+                    #####置入绘图####
+                    if self.realtimeSpecViewFigFlag:
+                        self.verticalLayout_27.removeWidget(self.realtimeSpecViewFig)
+                    self.realtimeSpecViewFig = realtimeSpecView.ApplicationWindow(condition, notifyNum, dataCach)
+                    self.verticalLayout_27.addWidget(self.realtimeSpecViewFig)
+                    self.realtimeSpecViewFig._start()
+
+                else:
+                    QMessageBox.warning(self,
+                                        '错误',
+                                        "请输入正确参数！",
+                                        QMessageBox.Yes,
+                                        QMessageBox.Yes)
+            else:
+                QMessageBox.warning(self,
+                                    '错误',
+                                    "请输入正确参数！",
+                                    QMessageBox.Yes,
+                                    QMessageBox.Yes)
+
+        elif self.pushButton_32.text() == "停止扫频":
+            self.realtimeSpecViewFig._stop()
+            self.verticalLayout_27.removeWidget(self.realtimeSpecViewFig)
+            self.verticalLayout_27.update()
+            self.realtimeSpecViewFigFlag = 0
+            if self.circultaionZmqThread is not None:
+                self.circultaionZmqThread.stop()
+                self.circultaionZmqThread = None
+            self.pushButton_32.setText("连续扫频")
+
+    # 实时频谱分析开始/停止绘图
+    def on_pushButton_clicked_37(self):
+        if self.pushButton_37.text() == "开始绘图":
+            self.pushButton_37.setText("停止绘图")
+            # 确认是否存储数据及存储路径初始化
+            if self.comboBox_11 == "是":
+                self.realtimeSpecAnalyzeDataSaveFlag = 1
+                dirPath = os.path.join(self.fatherPath, "realtime_recvfiles")
+            else:
+                self.realtimeSpecAnalyzeDataSaveFlag = 0
+            # 开启数据采集线程，使用Q作为异步数据池，暴露停止方法
+            startfreq = self.lineEdit_24.text()
+            endfreq = self.lineEdit_25.text()
+            deviceNum = self.comboBox_9.currentText()
+            if isNum(startfreq) and isNum(endfreq):
+                startfreq = float(startfreq)
+                endfreq = float(endfreq)
+                if startfreq < endfreq and startfreq >= 30 and endfreq <= 5000:
+                    startfreq = startfreq * 1000000
+                    endfreq = endfreq * 1000000
+                    msg = (deviceNum + ',scan,IQ,'
+                           + str(startfreq) + ";" + str(endfreq))
+                    dataCach = queue.Queue()
+                    condition = threading.Condition()
+                    waitNum = 4
+                    notifyNum = 2
+                    self.circultaionZmqThread = circulationZmqThread.CircultaionZmqThread(self.usrpCommu,
+                                                                                          self.av3900Commu,
+                                                                                          msg, dataCach,
+                                                                                          condition, waitNum)
+                    self.circultaionZmqThread.start()
+                    # 开启绘图线程，使用Q作为异步数据池，暴露停止方法
+                    ####################
+                    if self.specAnalyze_flag:
+                        self.specAnalyze_fig._timer.stop()
+                        # 标志位为1时清空图区
+                        self.verticalLayout_35.removeWidget(self.specAnalyze_fig)
+                        self.specAnalyze_fig = spec_analyze_v2.ApplicationWindow(
+                            dirPath)
+                        self.verticalLayout_35.addWidget(self.specAnalyze_fig)
+                        self.path = ''
+                    else:
+                        self.specAnalyze_fig = spec_analyze_v2.ApplicationWindow(dirPath)
+                        self.verticalLayout_35.addWidget(self.specAnalyze_fig)
+                        self.specAnalyze_flag = 1
+                        self.path = ''
+                    ####################
+                    pass
+                else:
+                    QMessageBox.warning(self,
+                                        '错误',
+                                        "请输入正确参数！",
+                                        QMessageBox.Yes,
+                                        QMessageBox.Yes)
+            else:
+                QMessageBox.warning(self,
+                                    '错误',
+                                    "请输入正确参数！",
+                                    QMessageBox.Yes,
+                                    QMessageBox.Yes)
+        elif self.pushButton_37.text() == "停止绘图":
+            self.pushButton_37.setText("开始绘图")
+            self.circultaionZmqThread.stop()
+            # 绘图线程停止
 
     # 干扰对消在线
     def on_pushButton_clicked_28(self):
         if self.comboBox_6.currentText() == self.comboBox_7.currentText():
             QMessageBox.warning(self, '提示', "请不同的一体化单元！")
         else:
-            usrpNum1 = self.comboBox_6.currentText()
-            usrpNum2 = self.comboBox_7.currentText()
-            usrpNum = usrpNum1 + ';' +usrpNum2
+            deviceNum1 = self.comboBox_6.currentText()
+            deviceNum2 = self.comboBox_7.currentText()
+            deviceList = [deviceNum1, deviceNum2]
             startfreq = self.lineEdit_14.text()
             endfreq = self.lineEdit_15.text()
             if isNum(startfreq) and isNum(endfreq):
@@ -1457,11 +1708,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if (startfreq < endfreq and startfreq >= 30 and endfreq <= 5000 and (endfreq - startfreq) <= 100):
                     startfreq = startfreq * 1000000
                     endfreq = endfreq * 1000000
-                    msg = (usrpNum + ',scan,interferenceCancellation,'
+                    msg = (',scan,plural,'
                            + str(startfreq) + ";" + str(endfreq))
-                    zmqThread = threading.Thread(target=zmqLocal.zmqThread,
-                                                 args=(self.zmqLocal, msg, self.zmqLocalQ))
-                    zmqThread.start()
+                    pluralcommunicationThread = pluralCommunicationProxy.PluralCommunicationProxy(deviceList,
+                                                                                                  msg, self.zmqLocalQ,
+                                                                                                  self.usrpCommu,
+                                                                                                  self.av3900Commu)
+                    pluralcommunicationThread.start()
                     # 调用loading
                     loading = Message.Loading()
                     loading.setWindowModality(Qt.ApplicationModal)
@@ -1471,22 +1724,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         gui()
                     else:
                         loading.close()
-                        data = self.zmqLocalQ.get()
-                        dataList = data.split('|')
-                        data1 = dataList[0]
-                        data1List = data1.split(';')
-                        freq1List = data1List[0].split(' ')
-                        bins1List = data1List[1].split(" ")
-                        x1 = [float(i) for i in freq1List]
-                        y1 = [float(i) for i in bins1List]
-                        data2 = dataList[1]
-                        data2List = data2.split(';')
-                        freq2List = data2List[0].split(' ')
-                        bins2List = data2List[1].split(" ")
-                        x2 = [float(i) for i in freq2List]
-                        y2 = [float(i) for i in bins2List]
+                        data = self.zmqLocalQ.get().split("|")
+                        data1 = data[0]
+                        data2 = data[1]
                         interferenceCancellationT = algorithmThreads.interferenceCancellationProcess(
-                            self.algorithmProcessQ, (x1, y1, x2, y2))
+                            self.algorithmProcessQ, (data1, data2))
                         interferenceCancellationT.start()
                         # 调用loading
                         loading = Message.Loading()
@@ -1589,7 +1831,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_pushButton_clicked_36(self):
         starttime = datetime.datetime.now()
         # 请求数据，调用算法
-        usrpNum = self.comboBox_10.currentText()
+        deviceNum = self.comboBox_10.currentText()
         centrefreq = self.lineEdit_32.text()
         bandwidth = self.lineEdit_33.text()
         sampleRate = self.lineEdit_34.text()
@@ -1601,11 +1843,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 centrefreq = centrefreq * 1000000
                 bandwidth = bandwidth * 1000000
                 sampleRate = sampleRate * 1000000
-                msg = (usrpNum + ',collect,2way,' + str(centrefreq) + ";" + str(bandwidth)
+                msg = (deviceNum + ',collect,IQsingle,' + str(centrefreq) + ";" + str(bandwidth)
                        + ";" + str(sampleRate))
-                zmqThread = threading.Thread(target=zmqLocal.zmqThread,
-                                             args=(self.zmqLocal, msg, self.zmqLocalQ))
-                zmqThread.start()
+                communicationThread = communicationProxy.CommunicationProxy(msg, self.zmqLocalQ,
+                                                                            self.usrpCommu, self.av3900Commu)
+                communicationThread.start()
                 # 调用识别loading
                 loading = Message.Loading()
                 loading.setWindowModality(Qt.ApplicationModal)
@@ -1626,7 +1868,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         while not self.algorithmProcessQ.empty():
                             self.algorithmProcessQ.get()
                         # 开启识别进程/线程
-                        recognizeProcess = algorithmThreads.SNREstimationIntegrationThread(reslt, self.algorithmProcessQ)
+                        recognizeProcess = algorithmThreads.SNREstimationIntegrationThread(reslt,
+                                                                                           self.algorithmProcessQ)
                         recognizeProcess.start()
                         # 调用识别loading
                         loading = Message.Loading()
@@ -1734,16 +1977,93 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
 
-    # # 重写关闭事件
-    # def closeEvent(self, event):
-    #     # os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
-    #
-    #     socketThread = threading.Thread(target=zmqLocal.zmqThread,
-    #                                     args=(self.zmqLocal, "StopAll", self.zmqLocalQ), daemon=True)
-    #     socketThread.start()
-    #     while not self.zmqLocalQ.empty():
-    #         sys.exit()
-    #         break
+    # 设备比对
+    def on_pushButton_clicked_33(self):
+        # 初始化空的数据请求字典，用来存储设备名和天线名
+        compareReqDic = dict()
+        currentDeviceName = ""
+        antenna1 = "antenna1"
+        antenna2 = "antenna2"
+        # 生成数据请求字典
+        if self.checkBox.isChecked():
+            currentDeviceName = "USRP1"
+            if (not self.checkBox_6.isChecked()) and (not self.checkBox_7.isChecked()):
+                QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
+            else:
+                compareReqDic[currentDeviceName] = []
+                if self.checkBox_6.isChecked():
+                    compareReqDic[currentDeviceName].append(antenna1)
+                elif self.checkBox_7.isChecked():
+                    compareReqDic[currentDeviceName].append(antenna2)
+        if self.checkBox_2.isChecked():
+            currentDeviceName = "USRP2"
+            if (not self.checkBox_9.isChecked()) and (not self.checkBox_8.isChecked()):
+                QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
+            else:
+                compareReqDic[currentDeviceName] = []
+                if self.checkBox_9.isChecked():
+                    compareReqDic[currentDeviceName].append(antenna1)
+                elif self.checkBox_8.isChecked():
+                    compareReqDic[currentDeviceName].append(antenna2)
+        if self.checkBox_3.isChecked():
+            currentDeviceName = "USRP3"
+            if (not self.checkBox_11.isChecked()) and (not self.checkBox_10.isChecked()):
+                QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
+            else:
+                compareReqDic[currentDeviceName] = []
+                if self.checkBox_11.isChecked():
+                    compareReqDic[currentDeviceName].append(antenna1)
+                elif self.checkBox_10.isChecked():
+                    compareReqDic[currentDeviceName].append(antenna2)
+        if self.checkBox_4.isChecked():
+            currentDeviceName = "USRP4"
+            if (not self.checkBox_12.isChecked()) and (not self.checkBox_13.isChecked()):
+                QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
+            else:
+                compareReqDic[currentDeviceName] = []
+                if self.checkBox_12.isChecked():
+                    compareReqDic[currentDeviceName].append(antenna1)
+                elif self.checkBox_13.isChecked():
+                    compareReqDic[currentDeviceName].append(antenna2)
+        if self.checkBox_5.isChecked():
+            currentDeviceName = "3900"
+            if (not self.checkBox_14.isChecked()) and (not self.checkBox_15.isChecked()):
+                QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
+            else:
+                compareReqDic[currentDeviceName] = []
+                if self.checkBox_14.isChecked():
+                    compareReqDic[currentDeviceName].append(antenna1)
+                elif self.checkBox_15.isChecked():
+                    compareReqDic[currentDeviceName].append(antenna2)
+        # 生成数据采集指令内容
+        startfreq = self.lineEdit_74.text()
+        endfreq = self.lineEdit_73.text()
+        if isNum(startfreq) and isNum(endfreq):
+            startfreq = float(startfreq)
+            endfreq = float(endfreq)
+            if startfreq > 30 and endfreq < 5000 and startfreq < endfreq:
+                startfreq = startfreq * 1000000
+                endfreq = endfreq * 1000000
+                msg = (',scan,compare,' + str(startfreq) + ";" + str(endfreq))
+                # 调用通信代理，传入数据请求字典、采集指令内容和等待结果队列
+                pass
+
+            else:
+                QMessageBox.warning(self, '错误', "请输入正确参数！")
+        else:
+            QMessageBox.warning(self, '错误', "请输入正确参数！")
+
+    # 重写关闭事件
+    def closeEvent(self, event):
+        # os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
+
+        # socketThread = threading.Thread(target=zmqLocal.zmqThread,
+        #                                 args=(self.zmqLocal, "StopAll", self.zmqLocalQ), daemon=True)
+        # socketThread.start()
+        # while not self.zmqLocalQ.empty():
+        #     sys.exit()
+        #     break
+        self.usrpCommu.close()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
