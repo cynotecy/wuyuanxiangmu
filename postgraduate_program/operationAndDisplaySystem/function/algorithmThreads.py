@@ -9,10 +9,10 @@ import os
 import queue
 from threading import Thread
 from communication.zmqLocal import zmqThread
-from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,
-                                                    usrp_shibie_v7)
+from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,usrp_shibie_v7,
+                                                    usrp_shibie_v9)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelope_shibie_v3
-from controller.usrp_controller.steadyStateInterference_shibie import steadyStateInterference_shibie_v2
+from controller.usrp_controller.steadyStateInterference_shibie import steadyStateInterference_shibie_v3
 from controller.Pico_controller import pico_jicheng_online_v3, pico_jicheng_offline_v3
 from controller.usrp_controller.interference_cancellation import interferenceCancellationCalling
 from SNR import snr_estimation_integration
@@ -122,18 +122,19 @@ class SaveSpectrumThread(Thread):
 
 # IQ识别线程
 class IQSingleProcess(Thread):
-    def __init__(self, path, q, freqPointList):
+    def __init__(self, path, q, freqPointList, harmonicNum):
         super(IQSingleProcess, self).__init__()
         self.path = path
         self.data = ''
         self.q = q
         self.freqPointList = freqPointList
+        self.harmonicNum = harmonicNum
     def run(self):
         starttime = datetime.datetime.now()
         snrQ = queue.Queue()
         snrThread = SNREstimationIntegrationThread(self.path, snrQ)
         snrThread.start()
-        rslt = usrp_shibie_v7.play(self.freqPointList, self.path)
+        rslt = usrp_shibie_v9.play(self.freqPointList, self.path, self.harmonicNum)
         endtime = datetime.datetime.now()
         strTime = '识别线程花费:%dms' % (
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
@@ -295,7 +296,7 @@ class steadyStateRecognizeProcess(Thread):
         self.standardValue = standardVaule
         self.outputPath = outputPath
     def run(self):
-        reslt = steadyStateInterference_shibie_v2.position(self.x,
+        reslt = steadyStateInterference_shibie_v3.position(self.x,
                                                            self.y,
                                                            self.standardValue,
                                                            self.outputPath)

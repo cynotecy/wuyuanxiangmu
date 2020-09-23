@@ -2,13 +2,18 @@ import sys
 
 import matplotlib
 import numpy as np
+import logging
 from matplotlib.backends.qt_compat import QtWidgets
 
 # from controller.usrp_controller.steadyStateInterference_shibie import steadyResult_draw
 import time
 matplotlib.use('Qt5Agg')
 
-
+logger = logging.getLogger("steadyStateInterfaceLogger")
+LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
+DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
+logging.basicConfig(level=logging.DEBUG,
+                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
 def position(fres, amps, standard_vaule, path_output_filename):
     # save_filename = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
     user_amps = float(standard_vaule)
@@ -31,7 +36,10 @@ def position(fres, amps, standard_vaule, path_output_filename):
 
 
     for j in range(0,len(list_range_lable)-1,2):
-        list_maxpoint_lable.append(list_range_lable[j] + np.argmax(amps[list_range_lable[j] : list_range_lable[j+1]]))
+        try:
+            list_maxpoint_lable.append(list_range_lable[j] + np.argmax(amps[list_range_lable[j] : list_range_lable[j+1]]))
+        except Exception:
+            logger.debug("wrong data at {}".format(j))
 
     for m in range(int(len(list_range_lable)/2)):
         outputlist_range_list.append("("+str(fres[list_range_lable[m*2]])+","
@@ -58,22 +66,15 @@ def position(fres, amps, standard_vaule, path_output_filename):
     return d
 
 if __name__ == '__main__':
-    # d = position(r"..\steadyStateInterference_recvfiles\20190821170048.txt", '-100')
-    d = position(r"..\steadyStateInterference_recvfiles\error1.txt", '-85')
-    lists = []
-    lists.append(d)
-    time.sleep(1)
-    # print(lists)
-    # d = position(r"..\steadyStateInterference_recvfiles\20190821170157.txt", '-120')
-    d = position(r"..\steadyStateInterference_recvfiles\error2.txt", '-85')
-    lists.append(d)
-    print(lists)
+    path = r"C:\Users\gouhu\Desktop\0916联调问题\问题1频谱数据.txt"
+    x = np.loadtxt(path, dtype=str, delimiter=' ')[0, 0:-1]  # 输出频率的一维数组
+    y = np.loadtxt(path, dtype=str, delimiter=' ')[1, 0:-1]  # 输出幅度的一维数组
+    x = np.asarray(np.float32(x))
+    y = np.asarray(np.float32(y))
+    threshold = -100
     import queue
-    from controller.usrp_controller.steadyStateInterference_shibie import display_v4
-    from PyQt5.QtWidgets import QApplication
-    arowNum = queue.Queue()
-    app = QApplication(sys.argv)
-    win = display_v4.WindowClass(arowNum)
-    win.pushButton(lists)
-    win.show()
-    sys.exit(app.exec_())
+
+    q = queue.Queue()
+    d = position(x, y, threshold, r"steadyOutput.txt")
+    print(d)
+    print(len(d[0]))

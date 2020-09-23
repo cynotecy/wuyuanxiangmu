@@ -29,7 +29,7 @@ class Send(object):
         # stop_freq = 800e6
         samp_rate = 25e6
         freq_step = samp_rate * 6 / 8
-        gain = 20.0
+        gain = 0
         num_scan = 1
         n_fft = 100
         num_samps_per_freq = int(self.pointnum)

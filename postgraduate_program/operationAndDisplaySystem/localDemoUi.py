@@ -9,7 +9,7 @@ from multiprocessing import Queue as mq
 import threading
 from PyQt5.QtCore import Qt, QFileInfo, QTimer
 import logging
-from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtGui import QGuiApplication,QFont
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTableWidgetItem, QFileDialog, QApplication
 
 from loadingDialog import Message
@@ -29,14 +29,12 @@ from controller.usrp_controller.usrp_shibie.component import freqListQuery
 from communication import circulationZmqThread, communicationProxy, pluralCommunicationProxy
 from communication.ceyearController import ceyearProxy
 from monitor.spectrum_view import realtimeSpecView
+from plotTools import compare_draw
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
-        # os.system('taskkill /f /t /im python2.exe')  # 杀掉python2任务
-        # py2 = threading.Thread(target=algorithmThreads.py2Thread, args=(), daemon=True)
-        # py2.start()
 
         self.logger = logging.getLogger("UILogger")
         LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
@@ -69,6 +67,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.realtimeSpecAnalyzeDataSaveFlag = 0  # 实时频谱分析数据存储标志位
         self.specPicFlag = 0  # 扫频图区标志位
         self.realtimeSpecViewFigFlag = 0  # 实时频谱查看图区
+        self.deviceCompareFigFlag = 0  # 设备比对图区标志位
+        self.antennaCompareFigFlag = 0  # 天线比对图区标志位
         # 初始化变量
         self.steadyStateHistoryData = []  # 稳态干扰历史数据
         self.steadyStateHistoryResult = []  # 稳态干扰历史结果
@@ -129,14 +129,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_32.clicked.connect(self.on_pushButton_clicked_32)  # 连续扫频
 
         # 实时频谱分析
-        self.pushButton_37.clicked.connect(self.on_pushButton_clicked_37)  # 开始/停止绘图
+        # self.pushButton_37.clicked.connect(self.on_pushButton_clicked_37)  # 开始/停止绘图
 
         # 第八页，位置比对
-        # 2，干扰对消
-        self.pushButton_28.clicked.connect(self.on_pushButton_clicked_28)  # 在线对消
-        self.pushButton_29.clicked.connect(self.on_pushButton_clicked_29)  # 离线对消
+        # 1，干扰对消
+        self.pushButton_29.clicked.connect(self.on_pushButton_clicked_29)  # 在线对消
+        self.pushButton_41.clicked.connect(self.on_pushButton_clicked_41)  # 离线对消
         self.pushButton_30.clicked.connect(self.on_pushButton_clicked_30)  # 选择文件1
         self.pushButton_31.clicked.connect(self.on_pushButton_clicked_31)  # 选择文件2
+
+        # 2，天线比对
+        self.pushButton_28.clicked.connect(self.on_pushButton_clicked_28)  # 天线比对
 
         # 3，设备比对
         self.pushButton_33.clicked.connect(self.on_pushButton_clicked_33)  # 设备比对
@@ -193,6 +196,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         #####置入绘图####
                         if self.specPicFlag:
                             self.verticalLayout.removeWidget(self.getPosition)
+                            self.getPosition.deleteLater()
                         self.getPosition = plotWithCursor.getPos('originOnline', self.onlineSpecX,
                                                                  self.onlineSpecY,
                                                                  self.lineEdit_6)
@@ -260,6 +264,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     #####置入绘图####
                     if self.specPicFlag:
                         self.verticalLayout.removeWidget(self.getPosition)
+                        self.getPosition.deleteLater()
                     self.getPosition = plotWithCursor.getPos('originOfflineWithoutMouseListening', path)
                     self.verticalLayout.addWidget(self.getPosition)
                     self.specPicFlag = 2
@@ -413,6 +418,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # IQ手动识别（并行）
     def on_pushButton_clicked_2(self):
+        self.tableWidget_3.setColumnCount(6)
+        harmonicNum = int(self.comboBox_13.currentText())
         self.tableWidget_3.clearContents()
         self.logger.info("开始IQ识别……")
         while not self.zmqLocalQ.empty():
@@ -478,7 +485,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             recognizeResult = self.algorithmProcessQ.get()
                             dataPath = self.savingProcessQ.get()
                             item5 = QTableWidgetItem(recognizeResult)  # 信噪比
-                            self.tableWidget_3.setItem(0, 5, item5)
+                            self.tableWidget_3.setItem(0, 4, item5)
                             self.logger.info("IQ手动识别信噪比计算结束，原始文件存储至："+dataPath+"，信噪比值："+recognizeResult)
 
                         secondSaveFlag = 0
@@ -520,7 +527,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         # 开启识别进程/线程
                         tableName = 'used_freq_point'
                         freqList = freqListQuery.freqListQuery(self.dbInfo, tableName)
-                        recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ, freqList)
+                        recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ, freqList,
+                                                                            harmonicNum)
                         recognizeProcess.start()
                         # 调用识别loading
                         loading = Message.Loading()
@@ -533,19 +541,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 while self.savingProcessQ.empty():
                                     gui()
                                 else:
-                                    self.logger.info("IQ识别结束，数据存储于："+self.savingProcessQ.get())
+                                    dataPath = self.savingProcessQ.get()
+                                    self.logger.info("IQ识别结束，数据存储于："+dataPath)
                             loading.close()
                             recognizeResult = self.algorithmProcessQ.get()
+
+                            dirPath = os.path.join(self.fatherPath, r'usrp_recvfiles/IQrecogonizeOutput')
+                            filesOrDirsOperate.makesureDirExist(dirPath)
+                            local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+                            filePath = os.path.join(dirPath, r'IQrecogonizeOutput_{}.txt'.format(local_time))
+                            with open(filePath, 'w+') as file_object:
+                                file_object.write("data path: "+ dataPath +"\n")
+                                file_object.write("中心频率（MHz）："+recognizeResult[0]+"\n")
+                                file_object.write("带宽（Hz）：" + recognizeResult[1]+"\n")
+                                file_object.write("调制方式：" + recognizeResult[2]+"\n")
+                                file_object.write("信噪比（dB）：" + recognizeResult[4]+"\n")
+                                file_object.write("频点识别：")
+                                for freqPoint in recognizeResult[3]:
+                                    file_object.write(str(freqPoint)+":"+recognizeResult[3][freqPoint] + ",")
                             item1 = QTableWidgetItem("%.1f" % float(recognizeResult[0]))  # 中心频率
                             item2 = QTableWidgetItem("%.1f" % float(recognizeResult[1]))  # 带宽
                             item3 = QTableWidgetItem(recognizeResult[2])  # 调制方式
-                            item4 = QTableWidgetItem(recognizeResult[3])  # 频点识别
                             item6 = QTableWidgetItem(recognizeResult[4])  # 计算信噪比
                             self.tableWidget_3.setItem(0, 1, item1)
                             self.tableWidget_3.setItem(0, 2, item2)
                             self.tableWidget_3.setItem(0, 3, item3)
-                            self.tableWidget_3.setItem(0, 4, item4)
-                            self.tableWidget_3.setItem(0, 6, item6)
+                            self.tableWidget_3.setItem(0, 5, item6)
+                            freqPointDic = recognizeResult[3]
+                            for freqPoint in freqPointDic:
+                                item = QTableWidgetItem(freqPointDic[freqPoint])
+                                column = self.tableWidget_3.columnCount()
+                                self.tableWidget_3.insertColumn(column)
+                                self.tableWidget_3.setHorizontalHeaderItem(column, item)
+                                item.setText(freqPointDic[freqPoint])
+                                item = QTableWidgetItem(freqPoint)  # 调制方式
+                                self.tableWidget_3.setItem(0, column, item)
             else:
                 QMessageBox.warning(self,
                                     '错误',
@@ -573,14 +603,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # IQ手动离线识别
     def on_pushButton_clicked_4(self):
+        self.tableWidget_3.setColumnCount(6)
+        harmonicNum = int(self.comboBox_13.currentText())
         self.tableWidget_3.clearContents()
         self.logger.info("开始IQ识别（离线）……")
         starttime = datetime.datetime.now()
         if self.lineEdit_7.text():
-            filePath = self.lineEdit_7.text()
+            dataPath = self.lineEdit_7.text()
             tableName = 'used_freq_point'
             freqList = freqListQuery.freqListQuery(self.dbInfo, tableName)
-            recognizeProcess = algorithmThreads.IQSingleProcess(filePath, self.algorithmProcessQ, freqList)
+            recognizeProcess = algorithmThreads.IQSingleProcess(dataPath, self.algorithmProcessQ, freqList, harmonicNum)
             recognizeProcess.start()
             # 调用识别loading
             loading = Message.Loading()
@@ -592,16 +624,38 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 loading.close()
                 recognizeResult = self.algorithmProcessQ.get()
+                dirPath = os.path.join(self.fatherPath, r'usrp_recvfiles/IQrecogonizeOutput')
+                filesOrDirsOperate.makesureDirExist(dirPath)
+                local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+                filePath = os.path.join(dirPath, r'IQrecogonizeOutput_{}.txt'.format(local_time))
+                with open(filePath, 'w+') as file_object:
+                    file_object.write("data path: " + dataPath + "\n")
+                    file_object.write("中心频率（MHz）：" + recognizeResult[0] + "\n")
+                    file_object.write("带宽（Hz）：" + recognizeResult[1] + "\n")
+                    file_object.write("调制方式：" + recognizeResult[2] + "\n")
+                    file_object.write("信噪比（dB）：" + recognizeResult[4] + "\n")
+                    file_object.write("频点识别：")
+                    for freqPoint in recognizeResult[3]:
+                        file_object.write(str(freqPoint) + ":" + recognizeResult[3][freqPoint] + ",")
                 item1 = QTableWidgetItem("%.1f" % float(recognizeResult[0]))  # 中心频率
                 item2 = QTableWidgetItem("%.1f" % float(recognizeResult[1]))  # 带宽
                 item3 = QTableWidgetItem(recognizeResult[2])  # 调制方式
-                item4 = QTableWidgetItem(recognizeResult[3])  # 频点识别
+                # item4 = QTableWidgetItem(recognizeResult[3])  # 频点识别
                 item5 = QTableWidgetItem(recognizeResult[4])  # 信噪比
                 self.tableWidget_3.setItem(0, 1, item1)
                 self.tableWidget_3.setItem(0, 2, item2)
                 self.tableWidget_3.setItem(0, 3, item3)
-                self.tableWidget_3.setItem(0, 4, item4)
-                self.tableWidget_3.setItem(0, 6, item5)
+                # self.tableWidget_3.setItem(0, 4, item4)
+                self.tableWidget_3.setItem(0, 5, item5)
+                freqPointDic = recognizeResult[3]
+                for freqPoint in freqPointDic:
+                    item = QTableWidgetItem(freqPointDic[freqPoint])
+                    column = self.tableWidget_3.columnCount()
+                    self.tableWidget_3.insertColumn(column)
+                    self.tableWidget_3.setHorizontalHeaderItem(column, item)
+                    item.setText(freqPointDic[freqPoint])
+                    item = QTableWidgetItem(freqPoint)  # 调制方式
+                    self.tableWidget_3.setItem(0, column, item)
                 endtime = datetime.datetime.now()
                 strTime = 'IQ手动识别耗时:%dms' % (
                         (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
@@ -1589,8 +1643,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                            + str(startfreq) + ";" + str(endfreq))
                     dataCach = queue.Queue()
                     condition = threading.Condition()
-                    waitNum = 4
-                    notifyNum = 2
+                    waitNum = 2
+                    notifyNum = 1
                     self.circultaionZmqThread = circulationZmqThread.CircultaionZmqThread(self.usrpCommu,
                                                                                           self.av3900Commu,
                                                                                           msg, dataCach,
@@ -1693,15 +1747,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # 绘图线程停止
 
     # 干扰对消在线
-    def on_pushButton_clicked_28(self):
-        if self.comboBox_6.currentText() == self.comboBox_7.currentText():
+    def on_pushButton_clicked_29(self):
+        if self.comboBox_7.currentText() == self.comboBox_12.currentText():
             QMessageBox.warning(self, '提示', "请不同的一体化单元！")
         else:
-            deviceNum1 = self.comboBox_6.currentText()
-            deviceNum2 = self.comboBox_7.currentText()
+            deviceNum1 = self.comboBox_7.currentText()
+            deviceNum2 = self.comboBox_12.currentText()
             deviceList = [deviceNum1, deviceNum2]
-            startfreq = self.lineEdit_14.text()
-            endfreq = self.lineEdit_15.text()
+            startfreq = self.lineEdit_19.text()
+            endfreq = self.lineEdit_38.text()
             if isNum(startfreq) and isNum(endfreq):
                 startfreq = float(startfreq)
                 endfreq = float(endfreq)
@@ -1745,7 +1799,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 self.verticalLayout_25.removeWidget(self.getPosition)
                                 self.getPosition.deleteLater()
                             self.getPosition = plotWithCursor.getPos('history', xyList[0], xyList[1])
-                            self.verticalLayout_25.addWidget(self.getPosition)
+                            self.verticalLayout_42.addWidget(self.getPosition)
                             self.interferenceCancellationFigFlag = 1
                 else:
                     QMessageBox.warning(self,
@@ -1761,10 +1815,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 QMessageBox.Yes)
 
     # 干扰对消离线
-    def on_pushButton_clicked_29(self):
-        if self.lineEdit_18.text() and self.lineEdit_19.text():
+    def on_pushButton_clicked_41(self):
+        if self.lineEdit_18.text() and self.lineEdit_39.text():
             path1 = self.lineEdit_18.text()
-            path2 = self.lineEdit_19.text()
+            path2 = self.lineEdit_39.text()
             if os.path.exists(path1) and os.path.exists(path2):
                 try:
                     while not self.algorithmProcessQ.empty():
@@ -1787,7 +1841,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             self.verticalLayout_25.removeWidget(self.getPosition)
                             self.getPosition.deleteLater()
                         self.getPosition = plotWithCursor.getPos('history', xyList[0], xyList[1])
-                        self.verticalLayout_25.addWidget(self.getPosition)
+                        self.verticalLayout_42.addWidget(self.getPosition)
                         self.interferenceCancellationFigFlag = 1
                 except:
                     QMessageBox.warning(self,
@@ -1820,12 +1874,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 干扰对消选择文件2
     def on_pushButton_clicked_31(self):
-        self.lineEdit_19.clear()
+        self.lineEdit_39.clear()
         defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles\interface_cancellation')
         filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
                                                   defultPath, "*.txt")
         self.logger.info("干扰对消选择文件2："+filename)
-        self.lineEdit_19.setText(filename)
+        self.lineEdit_39.setText(filename)
 
     # 信噪比分析采集计算
     def on_pushButton_clicked_36(self):
@@ -1978,64 +2032,82 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 QMessageBox.Yes)
 
     # 设备比对
-    def on_pushButton_clicked_33(self):
+    def on_pushButton_clicked_28(self):
         # 初始化空的数据请求字典，用来存储设备名和天线名
-        compareReqDic = dict()
-        currentDeviceName = ""
+        deviceName = self.comboBox_6.currentText()
         antenna1 = "antenna1"
         antenna2 = "antenna2"
+        startfreq = self.lineEdit_14.text()
+        endfreq = self.lineEdit_15.text()
+        if isNum(startfreq) and isNum(endfreq):
+            startfreq = float(startfreq)
+            endfreq = float(endfreq)
+            if startfreq > 30 and endfreq < 5000 and startfreq < endfreq:
+                startfreq = startfreq * 1000000
+                endfreq = endfreq * 1000000
+                msg = (deviceName+',scan,antennaCompare,' + str(startfreq) + ";" + str(endfreq))
+                # 调用通信代理，传入数据请求字典、采集指令内容和等待结果队列
+                communicationThread = communicationProxy.CommunicationProxy(msg, self.zmqLocalQ,self.usrpCommu,self.av3900Commu)
+                communicationThread.start()
+                # 等待回传
+                # 调用识别loading
+                loading = Message.Loading()
+                loading.setWindowModality(Qt.ApplicationModal)
+                loading.show()
+                gui = QGuiApplication.processEvents
+                while self.zmqLocalQ.empty():
+                    gui()
+                else:
+                    loading.close()
+                    dataRsltList = self.zmqLocalQ.get().split("|")
+                    self.logger.info(u"天线比对采集结束")
+                    #####置入绘图####
+                    if self.antennaCompareFigFlag:
+                        self.verticalLayout_41.removeWidget(self.antennaComparePic)
+                        self.antennaComparePic.deleteLater()
+                    self.antennaComparePic = compare_draw.ApplicationWindow(dataRsltList, deviceName)
+                    self.verticalLayout_41.addWidget(self.antennaComparePic)
+                    self.antennaCompareFigFlag = 1
+            else:
+                QMessageBox.warning(self, '错误', "请输入正确参数！")
+        else:
+            QMessageBox.warning(self, '错误', "请输入正确参数！")
+
+    # 设备比对
+    def on_pushButton_clicked_33(self):
+        # 初始化空的数据请求字典，用来存储设备名和天线名
+        deviceList = []
+        device1 = "USRP1"
+        device2 = "USRP2"
+        device3 = "USRP3"
+        device4 = "USRP4"
+        # antenna1 = "antenna1"
+        # antenna2 = "antenna2"
         # 生成数据请求字典
         if self.checkBox.isChecked():
-            currentDeviceName = "USRP1"
-            if (not self.checkBox_6.isChecked()) and (not self.checkBox_7.isChecked()):
-                QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
-            else:
-                compareReqDic[currentDeviceName] = []
-                if self.checkBox_6.isChecked():
-                    compareReqDic[currentDeviceName].append(antenna1)
-                elif self.checkBox_7.isChecked():
-                    compareReqDic[currentDeviceName].append(antenna2)
+            deviceList.append(device1)
+            # currentDeviceName = "USRP1"
+            # if (not self.checkBox_6.isChecked()) and (not self.checkBox_7.isChecked()):
+            #     QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
+            #     return 0
+            # else:
+            #     compareReqDic[currentDeviceName] = []
+            #     if self.checkBox_6.isChecked():
+            #         compareReqDic[currentDeviceName].append(antenna1)
+            #     elif self.checkBox_7.isChecked():
+            #         compareReqDic[currentDeviceName].append(antenna2)
         if self.checkBox_2.isChecked():
-            currentDeviceName = "USRP2"
-            if (not self.checkBox_9.isChecked()) and (not self.checkBox_8.isChecked()):
-                QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
-            else:
-                compareReqDic[currentDeviceName] = []
-                if self.checkBox_9.isChecked():
-                    compareReqDic[currentDeviceName].append(antenna1)
-                elif self.checkBox_8.isChecked():
-                    compareReqDic[currentDeviceName].append(antenna2)
+            deviceList.append(device2)
         if self.checkBox_3.isChecked():
-            currentDeviceName = "USRP3"
-            if (not self.checkBox_11.isChecked()) and (not self.checkBox_10.isChecked()):
-                QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
-            else:
-                compareReqDic[currentDeviceName] = []
-                if self.checkBox_11.isChecked():
-                    compareReqDic[currentDeviceName].append(antenna1)
-                elif self.checkBox_10.isChecked():
-                    compareReqDic[currentDeviceName].append(antenna2)
+            deviceList.append(device3)
         if self.checkBox_4.isChecked():
-            currentDeviceName = "USRP4"
-            if (not self.checkBox_12.isChecked()) and (not self.checkBox_13.isChecked()):
-                QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
-            else:
-                compareReqDic[currentDeviceName] = []
-                if self.checkBox_12.isChecked():
-                    compareReqDic[currentDeviceName].append(antenna1)
-                elif self.checkBox_13.isChecked():
-                    compareReqDic[currentDeviceName].append(antenna2)
-        if self.checkBox_5.isChecked():
-            currentDeviceName = "3900"
-            if (not self.checkBox_14.isChecked()) and (not self.checkBox_15.isChecked()):
-                QMessageBox.warning(self, '错误', "{}未选中天线！".format(currentDeviceName))
-            else:
-                compareReqDic[currentDeviceName] = []
-                if self.checkBox_14.isChecked():
-                    compareReqDic[currentDeviceName].append(antenna1)
-                elif self.checkBox_15.isChecked():
-                    compareReqDic[currentDeviceName].append(antenna2)
-        # 生成数据采集指令内容
+            deviceList.append(device4)
+        if (not self.checkBox.isChecked()) and (not self.checkBox_2.isChecked()) and (not self.checkBox_3.isChecked()) and (not self.checkBox_4.isChecked()):
+            QMessageBox.warning(self, '错误', "未选择设备！")
+            return 0
+        if len(deviceList) < 2:
+            QMessageBox.warning(self, '错误', "请选择至少两个设备！")
+            return 0
         startfreq = self.lineEdit_74.text()
         endfreq = self.lineEdit_73.text()
         if isNum(startfreq) and isNum(endfreq):
@@ -2044,10 +2116,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if startfreq > 30 and endfreq < 5000 and startfreq < endfreq:
                 startfreq = startfreq * 1000000
                 endfreq = endfreq * 1000000
-                msg = (',scan,compare,' + str(startfreq) + ";" + str(endfreq))
+                # msgHead = ";".join(deviceList)
+                msg = (',scan,plural,' + str(startfreq) + ";" + str(endfreq))
                 # 调用通信代理，传入数据请求字典、采集指令内容和等待结果队列
-                pass
-
+                communicationThread = pluralCommunicationProxy.PluralCommunicationProxy(deviceList,
+                                                                                        msg, self.zmqLocalQ,
+                                                                            self.usrpCommu, self.av3900Commu)
+                communicationThread.start()
+                # 等待回传
+                # 调用识别loading
+                loading = Message.Loading()
+                loading.setWindowModality(Qt.ApplicationModal)
+                loading.show()
+                gui = QGuiApplication.processEvents
+                while self.zmqLocalQ.empty():
+                    gui()
+                else:
+                    loading.close()
+                    dataRsltList = self.zmqLocalQ.get().split("|")
+                    self.logger.info(u"设备比对采集结束")
+                    #####置入绘图####
+                    if self.deviceCompareFigFlag:
+                        self.verticalLayout_39.removeWidget(self.deviceComparePic)
+                        self.deviceComparePic.deleteLater()
+                    self.deviceComparePic = compare_draw.ApplicationWindow(dataRsltList, "RF2")
+                    self.verticalLayout_39.addWidget(self.deviceComparePic)
+                    self.deviceCompareFigFlag = 1
             else:
                 QMessageBox.warning(self, '错误', "请输入正确参数！")
         else:
