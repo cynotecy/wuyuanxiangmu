@@ -10,7 +10,7 @@ import queue
 from threading import Thread
 from communication.zmqLocal import zmqThread
 from controller.usrp_controller.usrp_shibie import (oc_list_getting_v2, oc_list_display_v1,usrp_shibie_v7,
-                                                    usrp_shibie_v9)
+                                                    usrp_shibie_v10)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelope_shibie_v3
 from controller.usrp_controller.steadyStateInterference_shibie import steadyStateInterference_shibie_v3
 from controller.Pico_controller import pico_jicheng_online_v3, pico_jicheng_offline_v3
@@ -20,11 +20,7 @@ from communication import communicationProxy
 from SNR.component import dataGet, dataSave
 
 import logging
-logger = logging.getLogger("algorithmThreadLogger")
-LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
-DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
-logging.basicConfig(level=logging.DEBUG,
-                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logger = logging.getLogger("Main.algorithmThread")
 
 # py2线程（函数形式）
 def py2Thread():
@@ -134,7 +130,7 @@ class IQSingleProcess(Thread):
         snrQ = queue.Queue()
         snrThread = SNREstimationIntegrationThread(self.path, snrQ)
         snrThread.start()
-        rslt = usrp_shibie_v9.play(self.freqPointList, self.path, self.harmonicNum)
+        rslt = usrp_shibie_v10.play(self.freqPointList, self.path, self.harmonicNum)
         endtime = datetime.datetime.now()
         strTime = '识别线程花费:%dms' % (
                 (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)

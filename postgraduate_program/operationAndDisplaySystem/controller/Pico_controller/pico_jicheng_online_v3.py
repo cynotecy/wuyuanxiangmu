@@ -13,11 +13,7 @@ import logging
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 currentPath = os.path.dirname(__file__)
-
-logging.basicConfig(level=logging.DEBUG,  # 控制台打印的日志级别
-                    format=
-                    '%(asctime)s - %(levelname)s: %(message)s'  # 日志格式
-                    )
+logger = logging.getLogger("Main.pico_jicheng_online")
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 use_cuda = False
@@ -152,7 +148,7 @@ class learn_net(nn.Module):
         x = self.relu(x)
 
         x = x.view(x.size(0), -1)
-        logging.debug("after conv:{}".format(x.shape))
+        logger.debug("after conv:{}".format(x.shape))
         x = self.fc1(x)
         out = self.fc2(x)
         return out
@@ -178,9 +174,9 @@ def train_model(model, inputs_data, Epochs):
             pred_y = torch.max(outputs, 1)[1]
             accuracy += float((pred_y == label).sum())
             total += label.size(0)
-            # logging.debug('[%d %5d] train_loss: %.3f  train_acc: %.3f' % (epoch + 1, i + 1, running_loss / 1, accuracy / total))
+            # logger.debug('[%d %5d] train_loss: %.3f  train_acc: %.3f' % (epoch + 1, i + 1, running_loss / 1, accuracy / total))
             running_loss, accuracy, total = 0.0, 0.0, 0.0
-    logging.debug('finished training!')
+    logger.debug('finished training!')
 
 
 def val_model(model, test_loader):
@@ -203,7 +199,7 @@ def val_model(model, test_loader):
 
 
 def eval_model(model, logdir, test_loader):
-    logging.debug('Evaluating model...')
+    logger.debug('Evaluating model...')
     if use_cuda:
         checkpoint = torch.load(logdir)
     else:
@@ -299,8 +295,8 @@ def copy_move_file(root_dir, class_name, target_dir):
         pass
     for file_path in paths_list:
         shutil.move(file_path, target_path)
-        logging.debug("正在移动文件：" + file_path)
-    logging.debug("done!")
+        logger.debug("正在移动文件：" + file_path)
+    logger.debug("done!")
     return target_path
 
 
@@ -376,7 +372,7 @@ def delete_end_none(dir):
                     f.seek(-1, os.SEEK_END)
                     f.truncate()
                     f.close()
-    logging.debug('数据处理完毕！')
+    logger.debug('数据处理完毕！')
 
 
 def detect_file(dir):
@@ -406,21 +402,21 @@ def configuration(mat_path, length, dataRootPath, class_name="test_device"):
         warnings.filterwarnings("ignore")
         get_testdata(txt_path, test_path, length)
         pre_result = recongnize(test_path, logdir)
-        logging.debug('This is pre_result:' + ''.join(pre_result))
+        logger.debug('This is pre_result:' + ''.join(pre_result))
         pre_result = max_voter(pre_result)
         target_file = copy_move_file(txt_path, pre_result, target_dir)
-        logging.debug('判断结果为：' + pre_result)
-        logging.debug('清空mat缓存区中...')
+        logger.debug('判断结果为：' + pre_result)
+        logger.debug('清空mat缓存区中...')
         remove_files(mat_path)
         remove_files(txt_path)
         os.remove(test_path)
         return pre_result, target_file
     else:
-        logging.debug("测试文件夹为空")
+        logger.debug("测试文件夹为空")
         return '0', '0'
 
 
 if __name__ == '__main__':
     mat_path = r'D:\myPrograms\CASTProgram\postgraduate_program\data\interference_files\matfile'   # pico存mat文件路径
     reslt = configuration(mat_path, 10, "D:\myPrograms\CASTProgram\postgraduate_program\data")
-    logging.info(reslt)
+    logger.info(reslt)

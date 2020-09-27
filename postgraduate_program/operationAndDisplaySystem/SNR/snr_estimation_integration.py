@@ -91,7 +91,7 @@ def snr_estimation(data):
         #print('output: '+str(output))
         out_cpu = output.cpu()
     #return str(out_cpu.numpy()[0,0])
-    return str(out_cpu.numpy()[0,0])
+    return float(out_cpu.numpy()[0,0])
 
 def add_noise(data, original_snr, target_snr):
     #添加噪声

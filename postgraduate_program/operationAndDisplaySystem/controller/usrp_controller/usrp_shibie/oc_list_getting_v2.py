@@ -15,11 +15,7 @@ from controller.usrp_controller.usrp_shibie import oc_list_display_v1
 
 matplotlib.use('Qt5Agg')
 
-logger = logging.getLogger("ocListGettingLogger")
-LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
-DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
-logging.basicConfig(level=logging.DEBUG,
-                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logger = logging.getLogger("Main.ocListGetting")
 def position(x, y, threshold):
     user_amps = float(threshold)
     fres = np.array(x)

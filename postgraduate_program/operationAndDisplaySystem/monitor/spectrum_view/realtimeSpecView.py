@@ -29,11 +29,7 @@ from matplotlib.collections import LineCollection
 from monitor.waterfall.compresse.dbOperation import decompress
 import logging
 logging.getLogger('matplotlib.font_manager').disabled = True
-logger = logging.getLogger("realtimeSpecViewLogger")
-LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
-DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
-logging.basicConfig(level=logging.DEBUG,
-                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logger = logging.getLogger("Main.realtimeSpecView")
 
 
 class ApplicationWindow(QWidget):

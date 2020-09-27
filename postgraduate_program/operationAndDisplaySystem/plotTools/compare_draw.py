@@ -23,11 +23,7 @@ from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationTo
 from matplotlib.figure import Figure
 from plotTools.compareComponent.compareGetData import getCompareData
 import logging
-logger = logging.getLogger("compareDrawLogger")
-LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
-DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
-logging.basicConfig(level=logging.DEBUG,
-                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logger = logging.getLogger("Main.dataCompare")
 
 class ApplicationWindow(QWidget):
     def __init__(self, dataParam, dataRemark):

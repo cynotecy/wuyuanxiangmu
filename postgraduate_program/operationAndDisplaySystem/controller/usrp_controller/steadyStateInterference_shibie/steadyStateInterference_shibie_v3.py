@@ -9,11 +9,7 @@ from matplotlib.backends.qt_compat import QtWidgets
 import time
 matplotlib.use('Qt5Agg')
 
-logger = logging.getLogger("steadyStateInterfaceLogger")
-LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
-DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
-logging.basicConfig(level=logging.DEBUG,
-                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logger = logging.getLogger("Main.steadyStateInterface")
 def position(fres, amps, standard_vaule, path_output_filename):
     # save_filename = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
     user_amps = float(standard_vaule)

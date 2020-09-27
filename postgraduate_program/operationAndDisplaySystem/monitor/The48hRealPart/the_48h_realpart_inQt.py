@@ -25,6 +25,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from scipy.io import loadmat
+import logging
+logging.getLogger('matplotlib.font_manager').disabled = True
+
 
 """
 """

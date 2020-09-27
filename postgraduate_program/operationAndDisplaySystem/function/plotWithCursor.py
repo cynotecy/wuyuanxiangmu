@@ -13,11 +13,7 @@ import sys
 """
 import logging
 logging.getLogger('matplotlib.font_manager').disabled = True
-logger = logging.getLogger("getPosPlotLogger")
-LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
-DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
-logging.basicConfig(level=logging.DEBUG,
-                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logger = logging.getLogger("Main.plotWithCursor")
 class getPos(QWidget):
     def __init__(self, *arg, parent=None):
         super(getPos, self).__init__(parent)

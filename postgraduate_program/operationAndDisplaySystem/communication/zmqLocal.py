@@ -1,10 +1,6 @@
 import zmq
 import logging
-logger = logging.getLogger("localSocketLogger")
-LOG_FORMAT = "%(asctime)s - %(thread)s - %(message)s"
-DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
-logging.basicConfig(level=logging.DEBUG,
-                    format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logger = logging.getLogger("Main.local_socket")
 class localZMQ():
     """
     本类用于与py2.7编写的通信中台进行本机通信。由于是本机通信，ip地址应被设置为localhost(127.0.0.1)，
