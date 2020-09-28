@@ -1,1 +1,0 @@
-print("GUI包依赖于pyqt5")
