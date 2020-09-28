@@ -1,0 +1,7 @@
+09/27 17:46:27 下午 root         INFO     日志记录开始
+09/27 17:46:31 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
+09/27 17:46:37 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
+09/27 17:46:42 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
+09/27 17:46:49 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
+09/27 17:47:02 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
+09/27 17:47:21 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!

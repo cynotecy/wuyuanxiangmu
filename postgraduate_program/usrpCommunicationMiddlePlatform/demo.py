@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 # 加载配置文件
 # 使用minidom解析器打开 XML 文档
-DOMTree = xml.dom.minidom.parse("properties_remote.xml")
+DOMTree = xml.dom.minidom.parse("properties_local.xml")
 collection = DOMTree.documentElement
 # if collection.hasAttribute("shelf"):
 #     print "Root element : %s" % collection.getAttribute("shelf")
@@ -91,6 +91,37 @@ def threadControl():
             repSocket.send("StopAllOk")
             stopFlag = 1
             continue
+        if localRecv == "USRP,device check":
+            checkingTimeOut = 2
+            deviceReadyList = []
+            queryQ = Queue.Queue()
+            for usrpName in socketDic.keys():
+                pub = socketDic[usrpName][0]
+                sub = socketDic[usrpName][1]
+                startFreq = 500e6
+                endFreq = 510e6
+                scanRecv = scan_thread.Recv(queryQ, sub, standar)
+                scanSend = scan_thread.Send(startFreq, endFreq, pub)
+                scanRecv.start()
+                scanSend.run()
+                startTime = datetime.datetime.now()
+                while queryQ.empty():
+                    nowTime = datetime.datetime.now()
+                    period = (nowTime - startTime).seconds
+                    if period > checkingTimeOut:
+                        scanRecv.stop()
+                        break
+                else:
+                    time.sleep(1)
+                    queryQ.get()
+                    deviceReadyList.append(u"USRP%s已连接" % str(int(usrpName+1)))
+            if len(deviceReadyList) == 0:
+                repSocket.send("null")
+            else:
+                repSocket.send_string(" ".join(deviceReadyList))
+            continue
+
+
 
         msg = localRecv.split(',')
         logger.info(msg)

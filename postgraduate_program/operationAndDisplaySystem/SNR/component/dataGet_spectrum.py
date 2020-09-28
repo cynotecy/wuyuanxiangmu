@@ -24,5 +24,6 @@ def dataGet(arg):
         #fre_list = np.array(fre.split(" ")).astype(np.float32)
         amp_list = np.array(amp.split(" ")).astype(np.float32)
         return amp_list
+
 if __name__ == '__main__':
     dataGet(r"test_800.txt")

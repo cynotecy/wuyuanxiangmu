@@ -27,7 +27,7 @@ def virtualTransmit1():
     pubAddress = 'tcp://127.0.0.1:5000'
     subSocket = socketInit.connect(subAddress, 'SUB')
     pubSocket = socketInit.connect(pubAddress, 'PUB')
-    scanDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\scan\900-950'
+    scanDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\scan\900-925'
     collectDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\collect\940d6_3bd'
 
     # 获得虚拟scaner和虚拟collecter实例
@@ -49,7 +49,7 @@ def virtualTransmit2():
     pubAddress = 'tcp://127.0.0.1:5001'
     subSocket = socketInit.connect(subAddress, 'SUB')
     pubSocket = socketInit.connect(pubAddress, 'PUB')
-    scanDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\scan\900-950'
+    scanDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\scan\900-925'
     collectDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\collect\940d6_3bd'
 
     # 获得虚拟scaner和虚拟collecter实例
@@ -71,7 +71,7 @@ def virtualTransmit3():
     pubAddress = 'tcp://127.0.0.1:5002'
     subSocket = socketInit.connect(subAddress, 'SUB')
     pubSocket = socketInit.connect(pubAddress, 'PUB')
-    scanDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\scan\900-950'
+    scanDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\scan\900-925'
     collectDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\collect\940d6_3bd'
 
     # 获得虚拟scaner和虚拟collecter实例
@@ -93,7 +93,7 @@ def virtualTransmit4():
     pubAddress = 'tcp://127.0.0.1:5003'
     subSocket = socketInit.connect(subAddress, 'SUB')
     pubSocket = socketInit.connect(pubAddress, 'PUB')
-    scanDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\scan\900-950'
+    scanDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\scan\900-925'
     collectDataDirPath = r'D:\myPrograms\CASTProgram\fakeData\collect\940d6_3bd'
 
     # 获得虚拟scaner和虚拟collecter实例

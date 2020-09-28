@@ -37,17 +37,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                            datefmt='%m/%d %H:%M:%S %p', filename='/logs/debugLog.log', filemode='w')
+                            datefmt='%m/%d %H:%M:%S %p', filename='./logs/debugLog.log', filemode='w')
         console = logging.StreamHandler()
-        console.setLevel(logging.INFO)
+        console.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
         console.setFormatter(formatter)
         logging.info(u"日志记录开始")
 
         self.logger = logging.getLogger("Main")
+        self.logger.addHandler(console)
         self.IQAccuracyLogger = logging.getLogger("IQAccuracy")
-        fh = logging.FileHandler("/logs/IQAccuracyLog.log")
+        fh = logging.FileHandler("./logs/IQAccuracyLog.log")
+        formatter = logging.Formatter('%(asctime)s- %(message)-2s')
         fh.setLevel(logging.INFO)
+        fh.setFormatter(formatter)
         self.IQAccuracyLogger.addHandler(fh)
         self.dbInfo = dbInfo
 
@@ -96,6 +99,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_8.clicked.connect(self.on_pushButton_clicked_8)  # 超频点查看
         self.pushButton_7.clicked.connect(self.on_pushButton_clicked_7)  # IQ自动识别
         ## 手动识别
+        self.pushButton_2.setText("预采集")
         self.pushButton_2.clicked.connect(self.on_pushButton_clicked_2)  # 采集识别
         self.pushButton_3.clicked.connect(self.on_pushButton_clicked_3)  # IQ选择文件
         self.pushButton_4.clicked.connect(self.on_pushButton_clicked_4)  # 离线识别
@@ -119,7 +123,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_21.clicked.connect(self.on_pushButton_clicked_21)  # 刷新
         self.pushButton_22.clicked.connect(self.on_pushButton_clicked_22)  # 查看频谱图
 
-        # 第五页，48h频谱监测
+        # 第五页，频谱监测
+        # 设备在线情况检测
+        self.pushButton_43.clicked.connect(self.on_pushButton_clicked_43)  # 设备在线情况检测
+        # 频谱监测
         self.pushButton_23.clicked.connect(self.on_pushButton_clicked_23)  # usrp1开始监测
         self.pushButton_24.clicked.connect(self.on_pushButton_clicked_24)  # usrp2开始监测
         self.pushButton_25.clicked.connect(self.on_pushButton_clicked_25)  # usrp3开始监测
@@ -159,6 +166,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_39.clicked.connect(self.on_pushButton_clicked_39)  # 离线分析
 
         #
+
+    # 设备在线情况检测
+    def on_pushButton_clicked_43(self):
+        msg = ("USRP,device check")
+        communicationThread = communicationProxy.CommunicationProxy(msg, self.zmqLocalQ, self.usrpCommu,
+                                                                    self.av3900Commu)
+        communicationThread.start()
+        # 调用loading
+        loading = Message.Loading()
+        loading.setWindowModality(Qt.ApplicationModal)
+        loading.show()
+        gui = QGuiApplication.processEvents
+        while self.zmqLocalQ.empty():
+            gui()
+        else:
+            loading.close()
+            reslt = self.zmqLocalQ.get()
+            local_time = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime(time.time()))
+            self.textBrowser.append("{}-".format(local_time)+reslt)
 
     # IQ扫频按键
     def on_pushButton_clicked_1(self):
@@ -433,187 +459,230 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         4.等待IQ识别结果、等待SNR算法1、2比对结果
         5.结果呈现
         """
+        try:
+            # 初始化生成SNR算法1所需的两个频谱文件的名称
+            self.SNRSpecfileTime = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+            SNRSpecDirPath = os.path.join(self.fatherPath, r'SNR_data')
+            SNRSpecfileName1 = "SNRSpecPro_{}.txt".format(self.SNRSpecfileTime)
+            SNRSpecfileName2 = "SNRSpecCurrent_{}.txt".format(self.SNRSpecfileTime)
+            # 结果表格列数刷新
+            self.tableWidget_3.setColumnCount(5)
+            # 获取用户期望的查表谐波次数
+            harmonicNum = int(self.comboBox_13.currentText())
+            # 结果表格刷新
+            self.tableWidget_3.clearContents()
+            self.logger.info("开始手动IQ识别……")
+            starttime = datetime.datetime.now()
+            while not self.zmqLocalQ.empty():
+                self.zmqLocalQ.get()
+            centrefreq = self.lineEdit_4.text()
+            bdwidth = self.lineEdit_5.text()
+            samprate = self.lineEdit_8.text()
+            # 判断用户输入的参数是否合理
+            if isNum(centrefreq) and isNum(bdwidth) and isNum(samprate):
+                centrefreq = float(centrefreq)
+                bdwidth = float(bdwidth)
+                samprate = float(samprate)
+                # 为保证扫频不超限，这里的参数判断需算入扫频宽度
+                if centrefreq <= 6000-6.25 and centrefreq >= 30+6.25:
+                    # 获取IQ采集数据
+                    centrefreq = centrefreq * 1000000
+                    bdwidth = bdwidth * 1000000
+                    samprate = samprate * 1000000
+                    # 获取扫频数据（for SNR1）
+                    startfreq = centrefreq - 6.25e6
+                    endfreq = centrefreq + 6.25e6
+                    # 获取用户所选的设备号
+                    deviceNum = self.comboBox_3.currentText()
 
-        self.tableWidget_3.setColumnCount(6)
-        harmonicNum = int(self.comboBox_13.currentText())
-        self.tableWidget_3.clearContents()
-        self.logger.info("开始手动IQ识别……")
-        starttime = datetime.datetime.now()
-        while not self.zmqLocalQ.empty():
-            self.zmqLocalQ.get()
-        centrefreq = self.lineEdit_4.text()
-        bdwidth = self.lineEdit_5.text()
-        samprate = self.lineEdit_8.text()
-        if isNum(centrefreq) and isNum(bdwidth) and isNum(samprate):
-            centrefreq = float(centrefreq)
-            bdwidth = float(bdwidth)
-            samprate = float(samprate)
-            if centrefreq <= 5000 and centrefreq >= 30:
-                centrefreq = centrefreq * 1000000
-                bdwidth = bdwidth * 1000000
-                samprate = samprate * 1000000
-                deviceNum = self.comboBox_3.currentText()
-                msg = (deviceNum + ',collect,IQsingle,'+ str(centrefreq) + ";" + str(bdwidth)
-                      + ";" + str(samprate))
-                communicationThread = communicationProxy.CommunicationProxy(msg, self.zmqLocalQ, self.usrpCommu,
-                                                                            self.av3900Commu)
-                communicationThread.start()
-                # 调用识别loading
-                loading = Message.Loading()
-                loading.setWindowModality(Qt.ApplicationModal)
-                loading.show()
-                gui = QGuiApplication.processEvents
-                while self.zmqLocalQ.empty():
-                    gui()
-                else:
-                    loading.close()
-                    reslt = self.zmqLocalQ.get()
-                    if reslt == "超时":
-                        loading.close()
-                        QMessageBox.warning(self,
-                                            '错误',
-                                            "本地连接超时！",
-                                            QMessageBox.Yes,
-                                            QMessageBox.Yes)
-                    else:
-                        while not self.algorithmProcessQ.empty():
-                            self.algorithmProcessQ.get()
-                        while not self.savingProcessQ.empty():
-                            self.savingProcessQ.get()
-                        # 开启原始数据存储进程/线程
-                        savingProcess = algorithmThreads.IQDataSaveProcess(reslt, self.savingProcessQ)
-                        savingProcess.start()
-                        self.logger.debug("IQ原始数据存储开始……")
-                        # 信噪比计算
-                        while not self.algorithmProcessQ.empty():
-                            self.algorithmProcessQ.get()
-                        # 开启SNR计算线程
-                        recognizeProcess = algorithmThreads.SNREstimationIntegrationThread(reslt,
-                                                                                           self.algorithmProcessQ)
-                        recognizeProcess.start()
+                    if self.pushButton_2.text() == "预采集":
+                        self.pushButton_2.setText("正式采集")
+                        # 一次扫频
+                        self.logger.debug("IQ频域信噪比一次扫频开始")
+                        freqMsg = (deviceNum + ',scan,IQ,'
+                                  + str(startfreq) + ";" +str(endfreq))
+                        communicationThread = communicationProxy.CommunicationProxy(freqMsg, self.zmqLocalQ, self.usrpCommu,
+                                                                                    self.av3900Commu)
+                        communicationThread.start()
                         # 调用识别loading
                         loading = Message.Loading()
                         loading.setWindowModality(Qt.ApplicationModal)
                         loading.show()
-                        while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
+                        gui = QGuiApplication.processEvents
+                        while self.zmqLocalQ.empty():
                             gui()
                         else:
                             loading.close()
-                            recognizeResult = self.algorithmProcessQ.get()
-                            dataPath = self.savingProcessQ.get()
-                            item5 = QTableWidgetItem(recognizeResult)  # 信噪比
-                            self.tableWidget_3.setItem(0, 4, item5)
-                            self.logger.info("IQ手动识别信噪比计算结束，原始文件存储至："+dataPath+"，信噪比值："+recognizeResult)
+                        # 一次扫频数据（for SNR1）
+                        self.SNRSpec1 = self.zmqLocalQ.get()
+                        # 开启一次扫频数据存储线程
+                        while not self.savingProcessQ.empty():
+                            self.savingProcessQ.get()
+                        savingProcess = algorithmThreads.SaveSpectrumThread(os.path.join(SNRSpecDirPath, SNRSpecfileName1),
+                                                                            self.SNRSpec1.split(";"), self.savingProcessQ)
+                        savingProcess.start()
+                        # 调用识别loading
+                        loading = Message.Loading()
+                        loading.setWindowModality(Qt.ApplicationModal)
+                        loading.show()
+                        gui = QGuiApplication.processEvents
+                        while self.savingProcessQ.empty():
+                            gui()
+                        else:
+                            loading.close()
+                            self.logger.info("频域信噪比算法一次扫频结束，数据存储于："+self.savingProcessQ.get())
+                    elif self.pushButton_2.text() == "正式采集":
+                        self.pushButton_2.setText("预采集")
+                        # 二次扫频
+                        self.logger.debug("IQ频域信噪比二次扫频开始")
+                        freqMsg = (deviceNum + ',scan,IQ,'
+                                   + str(startfreq) + ";" + str(endfreq))
+                        while not self.zmqLocalQ.empty():
+                            self.zmqLocalQ.get()
+                        communicationThread = communicationProxy.CommunicationProxy(freqMsg, self.zmqLocalQ, self.usrpCommu,
+                                                                                    self.av3900Commu)
+                        communicationThread.start()
+                        # 调用识别loading
+                        loading = Message.Loading()
+                        loading.setWindowModality(Qt.ApplicationModal)
+                        loading.show()
+                        gui = QGuiApplication.processEvents
+                        while self.zmqLocalQ.empty():
+                            gui()
+                        else:
+                            loading.close()
+                        # 二次扫频数据（for SNR1）
+                        SNRSpec2 = self.zmqLocalQ.get()
+                        # 开启二次扫频数据存储线程
+                        while not self.savingProcessQ.empty():
+                            self.savingProcessQ.get()
+                        savingProcess = algorithmThreads.SaveSpectrumThread(os.path.join(SNRSpecDirPath, SNRSpecfileName2),
+                                                                            SNRSpec2.split(";"), self.savingProcessQ)
+                        savingProcess.start()
+                        # 调用识别loading
+                        loading = Message.Loading()
+                        loading.setWindowModality(Qt.ApplicationModal)
+                        loading.show()
+                        gui = QGuiApplication.processEvents
+                        while self.savingProcessQ.empty():
+                            gui()
+                        else:
+                            loading.close()
+                            self.logger.info("频域信噪比算法二次采集结束，数据存储于：" + self.savingProcessQ.get())
 
-                        secondSaveFlag = 0
-                        # 若存在加入噪声数值
-                        if self.lineEdit_37.text():
-                            originSNR = float(recognizeResult)
-                            target_snr = float(self.lineEdit_37.text())
-                            if target_snr > 0 and target_snr < originSNR:
-                                self.logger.info("开始加入噪声，目标信噪比"+self.lineEdit_37.text()+"dB")
-                                data = reslt
+                        # IQ采集
+                        msg = (deviceNum + ',collect,IQsingle,'+ str(centrefreq) + ";" + str(bdwidth)
+                              + ";" + str(samprate))
+                        while not self.zmqLocalQ.empty():
+                            self.zmqLocalQ.get()
+                        communicationThread = communicationProxy.CommunicationProxy(msg, self.zmqLocalQ, self.usrpCommu,
+                                                                                    self.av3900Commu)
+                        communicationThread.start()
+                        # 调用识别loading
+                        loading = Message.Loading()
+                        loading.setWindowModality(Qt.ApplicationModal)
+                        loading.show()
+                        gui = QGuiApplication.processEvents
+                        while self.zmqLocalQ.empty():
+                            gui()
+                        else:
+                            loading.close()
+                            reslt = self.zmqLocalQ.get()
+                            if reslt == "超时":
+                                loading.close()
+                                QMessageBox.warning(self,
+                                                    '错误',
+                                                    "本地连接超时！",
+                                                    QMessageBox.Yes,
+                                                    QMessageBox.Yes)
+                                return 0
+                            else:
                                 while not self.algorithmProcessQ.empty():
                                     self.algorithmProcessQ.get()
-                                NoiseAddProcess = algorithmThreads.NoiseAdd(data, originSNR, target_snr,
-                                                                            self.algorithmProcessQ)
-                                NoiseAddProcess.start()
+                                while not self.savingProcessQ.empty():
+                                    self.savingProcessQ.get()
+                                # 开启IQ数据存储线程
+                                savingProcess = algorithmThreads.IQDataSaveProcess(reslt, self.savingProcessQ)
+                                savingProcess.start()
+                                # self.logger.debug("IQ数据存储开始……")
+                                while not self.algorithmProcessQ.empty():
+                                    self.algorithmProcessQ.get()
+                                tableName = 'used_freq_point'
+                                freqList = freqListQuery.freqListQuery(self.dbInfo, tableName)
+                                recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ, freqList,
+                                                                                    harmonicNum, self.SNRSpec1, SNRSpec2)
+                                recognizeProcess.start()
                                 # 调用识别loading
                                 loading = Message.Loading()
                                 loading.setWindowModality(Qt.ApplicationModal)
                                 loading.show()
-                                while self.algorithmProcessQ.empty():
+                                while self.algorithmProcessQ.empty() or self.savingProcessQ.empty():
                                     gui()
                                 else:
                                     loading.close()
-                                    collectInfo = reslt.split(";")[0]
-                                    reslt = ";".join([collectInfo, self.algorithmProcessQ.get()])
-                                    self.logger.debug("加噪声结束")
-                                    # 开启存储进程/线程
-                                    while not self.savingProcessQ.empty():
-                                        self.savingProcessQ.get()
-                                    savingProcess = algorithmThreads.IQDataSaveProcess(reslt, self.savingProcessQ)
-                                    savingProcess.start()
-                                    secondSaveFlag = 1
-                            else:
-                                QMessageBox.warning(self,
-                                                    '错误',
-                                                    "目标不能大于原始信噪比！",
-                                                    QMessageBox.Yes,
-                                                    QMessageBox.Yes)
-                        # 开启识别进程/线程
-                        tableName = 'used_freq_point'
-                        freqList = freqListQuery.freqListQuery(self.dbInfo, tableName)
-                        recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ, freqList,
-                                                                            harmonicNum)
-                        recognizeProcess.start()
-                        # 调用识别loading
-                        loading = Message.Loading()
-                        loading.setWindowModality(Qt.ApplicationModal)
-                        loading.show()
-                        while self.algorithmProcessQ.empty():
-                            gui()
-                        else:
-                            if secondSaveFlag == 1:
-                                while self.savingProcessQ.empty():
-                                    gui()
-                                else:
+                                    recognizeResult = self.algorithmProcessQ.get()
                                     dataPath = self.savingProcessQ.get()
-                            loading.close()
-                            recognizeResult = self.algorithmProcessQ.get()
+                                    # item4 = QTableWidgetItem(recognizeResult)  # 信噪比
+                                    # self.tableWidget_3.setItem(0, 4, item4)
+                                    # 识别结果输出至文件
+                                    dirPath = os.path.join(self.fatherPath, r'usrp_recvfiles/IQrecogonizeOutput')
+                                    filesOrDirsOperate.makesureDirExist(dirPath)
+                                    local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+                                    filePath = os.path.join(dirPath, r'IQrecogonizeOutput_{}.txt'.format(local_time))
+                                    with open(filePath, 'w+') as file_object:
+                                        file_object.write("data path: "+ dataPath +"\n")
+                                        file_object.write("中心频率（MHz）："+recognizeResult[0]+"\n")
+                                        file_object.write("带宽（Hz）：" + recognizeResult[1]+"\n")
+                                        file_object.write("调制方式：" + recognizeResult[2]+"\n")
+                                        file_object.write("信噪比（dB）：" + recognizeResult[4]+"\n")
+                                        file_object.write("频点识别：")
+                                        for freqPoint in recognizeResult[3]:
+                                            file_object.write(str(freqPoint)+":"+recognizeResult[3][freqPoint] + ",")
+                                    # 界面表格显示
+                                    item1 = QTableWidgetItem("%.1f" % float(recognizeResult[0]))  # 中心频率
+                                    item2 = QTableWidgetItem("%.1f" % float(recognizeResult[1]))  # 带宽
+                                    item3 = QTableWidgetItem(recognizeResult[2])  # 调制方式
+                                    item4 = QTableWidgetItem("%.2f" % float(recognizeResult[4]))  # 信噪比
+                                    self.tableWidget_3.setItem(0, 1, item1)
+                                    self.tableWidget_3.setItem(0, 2, item2)
+                                    self.tableWidget_3.setItem(0, 3, item3)
+                                    self.tableWidget_3.setItem(0, 4, item4)
+                                    freqPointDic = recognizeResult[3]
+                                    for freqPoint in freqPointDic:
+                                        item = QTableWidgetItem(freqPointDic[freqPoint])
+                                        column = self.tableWidget_3.columnCount()
+                                        self.tableWidget_3.insertColumn(column)
+                                        self.tableWidget_3.setHorizontalHeaderItem(column, item)
+                                        item.setText(freqPointDic[freqPoint])
+                                        item = QTableWidgetItem(freqPoint)  # 调制方式
+                                        self.tableWidget_3.setItem(0, column, item)
 
-                            dirPath = os.path.join(self.fatherPath, r'usrp_recvfiles/IQrecogonizeOutput')
-                            filesOrDirsOperate.makesureDirExist(dirPath)
-                            local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
-                            filePath = os.path.join(dirPath, r'IQrecogonizeOutput_{}.txt'.format(local_time))
-                            with open(filePath, 'w+') as file_object:
-                                file_object.write("data path: "+ dataPath +"\n")
-                                file_object.write("中心频率（MHz）："+recognizeResult[0]+"\n")
-                                file_object.write("带宽（Hz）：" + recognizeResult[1]+"\n")
-                                file_object.write("调制方式：" + recognizeResult[2]+"\n")
-                                file_object.write("信噪比（dB）：" + recognizeResult[4]+"\n")
-                                file_object.write("频点识别：")
-                                for freqPoint in recognizeResult[3]:
-                                    file_object.write(str(freqPoint)+":"+recognizeResult[3][freqPoint] + ",")
-                            item1 = QTableWidgetItem("%.1f" % float(recognizeResult[0]))  # 中心频率
-                            item2 = QTableWidgetItem("%.1f" % float(recognizeResult[1]))  # 带宽
-                            item3 = QTableWidgetItem(recognizeResult[2])  # 调制方式
-                            item6 = QTableWidgetItem(recognizeResult[4])  # 计算信噪比
-                            self.tableWidget_3.setItem(0, 1, item1)
-                            self.tableWidget_3.setItem(0, 2, item2)
-                            self.tableWidget_3.setItem(0, 3, item3)
-                            self.tableWidget_3.setItem(0, 5, item6)
-                            freqPointDic = recognizeResult[3]
-                            for freqPoint in freqPointDic:
-                                item = QTableWidgetItem(freqPointDic[freqPoint])
-                                column = self.tableWidget_3.columnCount()
-                                self.tableWidget_3.insertColumn(column)
-                                self.tableWidget_3.setHorizontalHeaderItem(column, item)
-                                item.setText(freqPointDic[freqPoint])
-                                item = QTableWidgetItem(freqPoint)  # 调制方式
-                                self.tableWidget_3.setItem(0, column, item)
+                                    endtime = datetime.datetime.now()
+                                    strTime = 'IQ手动离线识别结束，耗时:%dms' % (
+                                            (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+                                    self.logger.info(strTime+"，数据存储于：" + dataPath + "，识别结果存储于：" + filePath)
+                                    snr = recognizeResult[4]
+                                    accuracyContent = "中心频率：%.1f，带宽：%.1f，信噪比：%.2f，调制方式：%s，信噪比详情：%s" % (
+                                        float(recognizeResult[0]),float(recognizeResult[1]), float(snr), recognizeResult[2],
+                                        recognizeResult[5])
+                                    self.IQAccuracyLogger.info(accuracyContent)
 
-                            endtime = datetime.datetime.now()
-                            strTime = 'IQ手动离线识别结束，耗时:%dms' % (
-                                    (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
-                            self.logger.info(strTime+"，数据存储于：" + dataPath + "，识别结果存储于：" + filePath)
-                            snr = recognizeResult[4]
-                            accuracyContent = "中心频率：%.1f，带宽：%.1f，信噪比：%.1f，调制方式：%s" % (
-                                float(recognizeResult[0]),float(recognizeResult[1]), float(snr), recognizeResult[2])
-                            self.IQAccuracyLogger.info(accuracyContent)
-
+                else:
+                    QMessageBox.warning(self,
+                                        '错误',
+                                        "请输入正确参数！",
+                                        QMessageBox.Yes,
+                                        QMessageBox.Yes)
+                    self.pushButton_2.setText("预采集")
             else:
                 QMessageBox.warning(self,
                                     '错误',
                                     "请输入正确参数！",
                                     QMessageBox.Yes,
                                     QMessageBox.Yes)
-        else:
-            QMessageBox.warning(self,
-                                '错误',
-                                "请输入正确参数！",
-                                QMessageBox.Yes,
-                                QMessageBox.Yes)
+                self.pushButton_2.setText("预采集")
+        except Exception as e:
+            self.logger.error("IQ手动识别："+e)
 
     # IQ选择文件
     def on_pushButton_clicked_3(self):
@@ -629,7 +698,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # IQ手动离线识别
     def on_pushButton_clicked_4(self):
-        self.tableWidget_3.setColumnCount(6)
+        self.tableWidget_3.setColumnCount(5)
         harmonicNum = int(self.comboBox_13.currentText())
         self.tableWidget_3.clearContents()
         self.logger.info("开始手动IQ识别（离线）……")
@@ -672,7 +741,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.tableWidget_3.setItem(0, 2, item2)
                 self.tableWidget_3.setItem(0, 3, item3)
                 # self.tableWidget_3.setItem(0, 4, item4)
-                self.tableWidget_3.setItem(0, 5, item5)
+                self.tableWidget_3.setItem(0, 4, item5)
                 freqPointDic = recognizeResult[3]
                 for freqPoint in freqPointDic:
                     item = QTableWidgetItem(freqPointDic[freqPoint])
