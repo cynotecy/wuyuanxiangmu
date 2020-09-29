@@ -1,0 +1,18 @@
+<collection shelf="linkInfo">
+<deviceName title="USRP1">
+   <scanDataDirPath>F:\CASTProgram\fakeData\scan\900-950</scanDataDirPath>
+   <collectDataDirPath>F:\CASTProgram\fakeData\collect\940d6_3bd</collectDataDirPath>
+   </deviceName>
+<deviceName title="USRP2">
+   <scanDataDirPath>F:\CASTProgram\fakeData\scan\900-950</scanDataDirPath>
+   <collectDataDirPath>F:\CASTProgram\fakeData\collect\940d6_3bd</collectDataDirPath>
+   </deviceName>
+<deviceName title="USRP3">
+   <scanDataDirPath>F:\CASTProgram\fakeData\scan\900-950</scanDataDirPath>
+   <collectDataDirPath>F:\CASTProgram\fakeData\collect\940d6_3bd</collectDataDirPath>
+   </deviceName>
+<deviceName title="USRP4">
+   <scanDataDirPath>F:\CASTProgram\fakeData\scan\900-950</scanDataDirPath>
+   <collectDataDirPath>F:\CASTProgram\fakeData\collect\940d6_3bd</collectDataDirPath>
+   </deviceName>
+</collection>

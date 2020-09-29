@@ -12,7 +12,7 @@ import zmq
 from current_controller import scan_thread, collect_thread, antennaProxy
 from socketTest import socketInit, repParaThread
 from functions import filesOrDirsOperate
-import keyboard
+# import keyboard
 from xml.dom.minidom import parse
 import xml.dom.minidom
 """
@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 # 加载配置文件
 # 使用minidom解析器打开 XML 文档
-DOMTree = xml.dom.minidom.parse("properties_local.xml")
+DOMTree = xml.dom.minidom.parse("properties_remote.xml")
 collection = DOMTree.documentElement
 # if collection.hasAttribute("shelf"):
 #     print "Root element : %s" % collection.getAttribute("shelf")
@@ -35,8 +35,8 @@ collection = DOMTree.documentElement
 def threadControl():
     logger.debug("shell path:"+ os.getcwd())
     stopFlag = 0
-    keyboardListerThread = threading.Thread(target=keyboardListener, args=(stopFlag,))
-    keyboardListerThread.start()
+    # keyboardListerThread = threading.Thread(target=keyboardListener, args=(stopFlag,))
+    # keyboardListerThread.start()
     # standar = '-11'  # USRP定标
     standar = '0'  # USRP定标
     remoteTimeOut = 600  # 远程连接超时时限
@@ -51,15 +51,16 @@ def threadControl():
     standarDic = dict()
 
 
-    dicIndex = 0
     if collection.hasAttribute("shelf"):
         USRPS = collection.getElementsByTagName("deviceName")
         for USRP in USRPS:
-            # if USRP.hasAttribute("PUBIP"):
-            pubAddressDic[dicIndex] = USRP.getElementsByTagName("PUBIP")[0].childNodes[0].data
-            subAddressDic[dicIndex] = USRP.getElementsByTagName("SUBIP")[0].childNodes[0].data
-            standarDic[dicIndex] = USRP.getElementsByTagName("STANDAR")[0].childNodes[0].data
-            dicIndex += 1
+            USRPName = USRP._attrs[u"title"].childNodes[0].nodeValue
+            dicIndex = int(USRPName.strip("USRP"))
+            enable = USRP.getElementsByTagName("ENABLE")[0].childNodes[0].data
+            if enable == "T":
+                pubAddressDic[dicIndex] = USRP.getElementsByTagName("PUBIP")[0].childNodes[0].data
+                subAddressDic[dicIndex] = USRP.getElementsByTagName("SUBIP")[0].childNodes[0].data
+                standarDic[dicIndex] = USRP.getElementsByTagName("STANDAR")[0].childNodes[0].data
     logger.info(u"远端通信地址初始化完毕")
     
     # 本地连接地址，本地连接采用rep/req模式
@@ -73,7 +74,7 @@ def threadControl():
     # 定义连接字典
     socketDic = dict()
 
-    for i in range(0,3):
+    for i in pubAddressDic:
         socketDic[i] = [socketInit.connect(pubAddressDic[i], 'PUB'),
                         socketInit.connect(subAddressDic[i], 'SUB')]
         logger.info(u"连接" + str(i)+u"创建成功")
@@ -100,6 +101,7 @@ def threadControl():
                 sub = socketDic[usrpName][1]
                 startFreq = 500e6
                 endFreq = 510e6
+                queryQ.queue.clear()
                 scanRecv = scan_thread.Recv(queryQ, sub, standar)
                 scanSend = scan_thread.Send(startFreq, endFreq, pub)
                 scanRecv.start()
@@ -114,7 +116,7 @@ def threadControl():
                 else:
                     time.sleep(1)
                     queryQ.get()
-                    deviceReadyList.append(u"USRP%s已连接" % str(int(usrpName+1)))
+                    deviceReadyList.append(u"USRP%s已连接" % str(int(usrpName)))
             if len(deviceReadyList) == 0:
                 repSocket.send("null")
             else:
@@ -133,11 +135,17 @@ def threadControl():
             usrpNumList = msg[0].split(';')
             for usrpNumStr in usrpNumList:
                 usrpNum = int(usrpNumStr)
-                pubSock = socketDic[usrpNum - 1][0]
-                subSock = socketDic[usrpNum - 1][1]
+                if usrpNum not in pubAddressDic.keys():
+                    repSocket.send_string("")
+                    continue
+                pubSock = socketDic[usrpNum][0]
+                subSock = socketDic[usrpNum][1]
                 pubSockList.append(pubSock)
                 subSockList.append(subSock)
-                standarList.append(standarDic[usrpNum - 1])
+                standarList.append(standarDic[usrpNum])
+            if len(pubSockList) == 0:
+                repSocket.send_string("")
+                continue
             # elif "." in msg[0]:
             #     # 设备名解析
             #     deviceAntennaList = msg[0].split(".")
@@ -155,14 +163,20 @@ def threadControl():
         else:
             if "USRP" in msg[0]:
                 usrpNum = int(msg[0].strip("USRP"))
-                pubSock = socketDic[usrpNum - 1][0]
-                subSock = socketDic[usrpNum - 1][1]
-                standar = standarDic[usrpNum - 1]
+                if usrpNum not in pubAddressDic.keys():
+                    repSocket.send_string("")
+                    continue
+                pubSock = socketDic[usrpNum][0]
+                subSock = socketDic[usrpNum][1]
+                standar = standarDic[usrpNum]
             else:
                 usrpNum = int(msg[0])
-                pubSock = socketDic[usrpNum - 1][0]
-                subSock = socketDic[usrpNum - 1][1]
-                standar = standarDic[usrpNum - 1]
+                if usrpNum not in pubAddressDic.keys():
+                    repSocket.send_string("")
+                    continue
+                pubSock = socketDic[usrpNum][0]
+                subSock = socketDic[usrpNum][1]
+                standar = standarDic[usrpNum]
                 # logger.error("错误的设备名称")
         mode = msg[1]  # e.g. scan
         action = msg[2]  # e.g. IQ
@@ -205,7 +219,7 @@ def threadControl():
                 try:
                     repParaSocketDic[usrpNum] = socketInit.connect(repParaAddressList[usrpNum-1], 'REP')
                     repParaThreadDic[usrpNum] = repParaThread.RepParaThread(repParaSocketDic[usrpNum], pubSock, subSock,
-                                                           standarDic[usrpNum-1], remoteTimeOut)
+                                                           standarDic[usrpNum], remoteTimeOut)
                     repParaThreadDic[usrpNum].start()
                     repSocket.send(repParaAddressList[usrpNum-1])
                 except Exception, e:
@@ -348,9 +362,9 @@ def getSockerLink(pubAddr, subAddr):
     subSocket = socketInit.connect(subAddr, 'SUB')
     return pubSocket, subSocket
 
-def keyboardListener(stopFlag):
-    keyboard.wait("q")
-    stopFlag = 1
+# def keyboardListener(stopFlag):
+#     keyboard.wait("q")
+#     stopFlag = 1
 
 if __name__ == '__main__':
     threadControl()

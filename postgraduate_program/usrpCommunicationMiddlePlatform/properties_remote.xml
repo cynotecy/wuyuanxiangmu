@@ -3,20 +3,24 @@
    <PUBIP>tcp://192.168.0.100:6666</PUBIP>
    <SUBIP>tcp://192.168.0.5:6666</SUBIP>
    <STANDAR>0</STANDAR>
+   <ENABLE>T</ENABLE>
 </deviceName>
 <deviceName title="USRP2">
    <PUBIP>tcp://192.168.0.100:7777</PUBIP>
    <SUBIP>tcp://192.168.0.5:7777</SUBIP>
    <STANDAR>0</STANDAR>
+   <ENABLE>F</ENABLE>
 </deviceName>
 <deviceName title="USRP3">
    <PUBIP>tcp://192.168.0.100:8888</PUBIP>
    <SUBIP>tcp://192.168.0.5:8888</SUBIP>
    <STANDAR>0</STANDAR>
+   <ENABLE>F</ENABLE>
 </deviceName>
 <deviceName title="USRP4">
    <PUBIP>tcp://192.168.0.100:9999</PUBIP>
    <SUBIP>tcp://192.168.0.5:9999</SUBIP>
    <STANDAR>0</STANDAR>
+   <ENABLE>F</ENABLE>
 </deviceName>
 </collection>

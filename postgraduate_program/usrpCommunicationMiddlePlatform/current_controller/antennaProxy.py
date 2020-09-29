@@ -5,7 +5,7 @@
 @Date:2020/9/1520:02
 @Desc:
 """
-import queue
+import Queue
 import time
 from current_controller import antennaChangeThread, scan_thread
 def antennaCommandParseProxy(subSock, pubSock, standar, startFreq, endFreq):
@@ -14,7 +14,7 @@ def antennaCommandParseProxy(subSock, pubSock, standar, startFreq, endFreq):
     antennaChangeT = antennaChangeThread.AntennaChangeSend(startFreq, endFreq, pubSock, "1")
     antennaChangeT.start()
     time.sleep(3)
-    RF1dataQ = queue.Queue()
+    RF1dataQ = Queue.Queue()
     recvT = scan_thread.Recv(RF1dataQ, subSock, standar)
     sendT = scan_thread.Send(startFreq, endFreq, pubSock)
     recvT.start()
@@ -24,7 +24,7 @@ def antennaCommandParseProxy(subSock, pubSock, standar, startFreq, endFreq):
     antennaChangeT = antennaChangeThread.AntennaChangeSend(startFreq, endFreq, pubSock, "2")
     antennaChangeT.start()
     time.sleep(3)
-    RF2dataQ = queue.Queue()
+    RF2dataQ = Queue.Queue()
     recvT = scan_thread.Recv(RF2dataQ, subSock, standar)
     sendT = scan_thread.Send(startFreq, endFreq, pubSock)
     recvT.start()
