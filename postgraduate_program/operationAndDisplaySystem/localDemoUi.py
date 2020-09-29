@@ -220,6 +220,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             "本地连接超时！",
                                             QMessageBox.Yes,
                                             QMessageBox.Yes)
+                        return 0
+                    elif reslt == "":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "设备未启用！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                        return 0
                     else:
                         resltList = reslt.split(';')
                         self.scanRslt = resltList
@@ -527,6 +535,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         # self.SNRSpec1 = self.zmqLocalQ.get()
                         # 一次IQ数据（for SNR1）
                         self.SNRIQ1 = self.zmqLocalQ.get()
+                        if self.SNRIQ1 == "":
+                            self.pushButton_2.setText("预采集")
+                            QMessageBox.warning(self,
+                                                '错误',
+                                                "设备未启用！",
+                                                QMessageBox.Yes,
+                                                QMessageBox.Yes)
+                            return 0
                         # 开启一次数据存储线程
                         while not self.savingProcessQ.empty():
                             self.savingProcessQ.get()
@@ -608,6 +624,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 QMessageBox.warning(self,
                                                     '错误',
                                                     "本地连接超时！",
+                                                    QMessageBox.Yes,
+                                                    QMessageBox.Yes)
+                                return 0
+                            elif reslt == "":
+                                self.pushButton_2.setText("预采集")
+                                QMessageBox.warning(self,
+                                                    '错误',
+                                                    "设备未启用！",
                                                     QMessageBox.Yes,
                                                     QMessageBox.Yes)
                                 return 0
@@ -1188,6 +1212,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             "本地连接超时！",
                                             QMessageBox.Yes,
                                             QMessageBox.Yes)
+                        return 0
+                    elif reslt == "":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "设备未启用！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                        return 0
                     else:
                         resltList = reslt.split(';')
                         steadyStateScanRslt = resltList  # 用于存储
@@ -1417,6 +1449,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     # print(paraRepStartReslt)
                     if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum) or paraRepStartReslt == '超时':
                         QMessageBox.warning(self, '错误：', '子窗口通信建立失败！\n {}'.format(paraRepStartReslt))
+                        return 0
+                    elif paraRepStartReslt == "":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "设备未启用！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                        return 0
                     else:
                         paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
                         # 弹出子窗口
@@ -1466,6 +1506,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # print(paraRepStartReslt)
                 if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum) or paraRepStartReslt == '超时':
                     QMessageBox.warning(self, '错误：', '子窗口通信建立失败！\n {}'.format(paraRepStartReslt))
+                    return 0
+                elif paraRepStartReslt == "":
+                    QMessageBox.warning(self,
+                                        '错误',
+                                        "设备未启用！",
+                                        QMessageBox.Yes,
+                                        QMessageBox.Yes)
+                    return 0
                 else:
                     paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
                     # 弹出子窗口
@@ -1509,6 +1557,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # print(paraRepStartReslt)
                 if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum) or paraRepStartReslt == '超时':
                     QMessageBox.warning(self, '错误：', '子窗口通信建立失败！\n {}'.format(paraRepStartReslt))
+                    return 0
+                elif paraRepStartReslt == "":
+                    QMessageBox.warning(self,
+                                        '错误',
+                                        "设备未启用！",
+                                        QMessageBox.Yes,
+                                        QMessageBox.Yes)
+                    return 0
                 else:
                     paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
                     # 弹出子窗口
@@ -1559,6 +1615,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # print(paraRepStartReslt)
                 if paraRepStartReslt == 'paraSocket {} build failed'.format(usrpNum) or paraRepStartReslt == '超时':
                     QMessageBox.warning(self, '错误：', '子窗口通信建立失败！\n {}'.format(paraRepStartReslt))
+                    return 0
+                elif paraRepStartReslt == "":
+                    QMessageBox.warning(self,
+                                        '错误',
+                                        "设备未启用！",
+                                        QMessageBox.Yes,
+                                        QMessageBox.Yes)
+                    return 0
                 else:
                     paraSocket = zmqLocal.localZMQ(paraRepStartReslt)
                     # 弹出子窗口
@@ -1711,6 +1775,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             "本地连接超时！",
                                             QMessageBox.Yes,
                                             QMessageBox.Yes)
+                        return 0
+                    elif reslt == "":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "设备未启用！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                        return 0
                     else:
                         resltList = reslt.split(';')
                         self.scanRslt = resltList
@@ -1896,7 +1968,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         gui()
                     else:
                         loading.close()
-                        data = self.zmqLocalQ.get().split("|")
+                        reslt = self.zmqLocalQ.get()
+                        if reslt == "超时":
+                            QMessageBox.warning(self,
+                                                '错误',
+                                                "本地连接超时！",
+                                                QMessageBox.Yes,
+                                                QMessageBox.Yes)
+                            return 0
+                        elif reslt == "":
+                            QMessageBox.warning(self,
+                                                '错误',
+                                                "设备未启用！",
+                                                QMessageBox.Yes,
+                                                QMessageBox.Yes)
+                            return 0
+                        data = reslt.split("|")
                         data1 = data[0]
                         data2 = data[1]
                         interferenceCancellationT = algorithmThreads.interferenceCancellationProcess(
@@ -2037,6 +2124,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             "本地连接超时！",
                                             QMessageBox.Yes,
                                             QMessageBox.Yes)
+                        return 0
+                    elif reslt == "":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "设备未启用！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                        return 0
                     else:
                         while not self.algorithmProcessQ.empty():
                             self.algorithmProcessQ.get()
@@ -2150,7 +2245,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
 
-    # 设备比对
+    # 天线比对
     def on_pushButton_clicked_28(self):
         # 初始化空的数据请求字典，用来存储设备名和天线名
         deviceName = self.comboBox_6.currentText()
