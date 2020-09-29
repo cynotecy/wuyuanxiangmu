@@ -15,9 +15,9 @@ from controller.usrp_controller.specEnvelope_shibie import specEnvelope_shibie_v
 from controller.usrp_controller.steadyStateInterference_shibie import steadyStateInterference_shibie_v3
 from controller.Pico_controller import pico_jicheng_online_v3, pico_jicheng_offline_v3
 from controller.usrp_controller.interference_cancellation import interferenceCancellationCalling
-from SNR import snr_estimation_integration, snr_spectrum
+from SNR import snr_estimation_integration, snr_spectrum, snr_estimation_iq
 from communication import communicationProxy
-from SNR.component import dataGet, dataSave, dataGet_spectrum
+from SNR.component import dataGet, dataSave, dataGet_spectrum, dataGet_iq
 
 import logging
 logger = logging.getLogger("Main.algorithmThread")
@@ -149,29 +149,62 @@ class IQSingleProcess(Thread):
             IQSNRResult = snrQ.get()
             rslt.append("%.2f" % IQSNRResult)
             self.q.put(rslt)
-        # 在线识别时，能够得到频谱数据
+        # # 频谱SNR，在线识别时，能够得到频谱数据
+        # else:
+        #     # IQSNR算法开启
+        #     snrQ = queue.Queue()
+        #     snrThread = SNREstimationIntegrationThread(self.path, snrQ)
+        #     snrThread.start()
+        #     # SPECSNR算法开启
+        #     specSNRQ = queue.Queue()
+        #     specSNRThread = SpecSNREstimationIntegrationThread(self.spec1, self.spec2, specSNRQ)
+        #     specSNRThread.start()
+        #     # IQ识别算法开启
+        #     rslt = usrp_shibie_v10.play(self.freqPointList, self.path, self.harmonicNum)
+        #     endtime = datetime.datetime.now()
+        #     strTime = '识别线程花费:%dms' % (
+        #             (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+        #     logger.debug(strTime)
+        #     while snrQ.empty() or specSNRQ.empty():
+        #         pass
+        #     strTime = 'SNR线程花费:%dms' % (
+        #             (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
+        #     logger.debug(strTime)
+        #     IQSNRResult = snrQ.get()
+        #     specSNRResult = specSNRQ.get()
+        #     if type(specSNRResult) == type('str'):
+        #         realSNR = IQSNRResult
+        #         rslt.append("%.2f" % realSNR)
+        #         rslt.append("IQSNR:%.2f, specSNR:不可识别" % IQSNRResult)
+        #     else:
+        #         realSNR = min(IQSNRResult, specSNRResult)
+        #         rslt.append("%.2f" % realSNR)
+        #         rslt.append("IQSNR:%.2f, specSNR:%.2f" % (IQSNRResult, specSNRResult))
+        #     # rslt为一个长度为n的列表，倒数第一个元素表征两种算法信噪比值，倒二表征显示信噪比值
+        #     self.q.put(rslt)
+            # 时域SNR，在线识别时，能够得到频谱数据
         else:
             # IQSNR算法开启
             snrQ = queue.Queue()
             snrThread = SNREstimationIntegrationThread(self.path, snrQ)
             snrThread.start()
-            # SPECSNR算法开启
-            specSNRQ = queue.Queue()
-            specSNRThread = SpecSNREstimationIntegrationThread(self.spec1, self.spec2, specSNRQ)
-            specSNRThread.start()
+            # TimeSNR算法开启
+            timeSNRQ = queue.Queue()
+            timeSNRThread = TimeSNREstimationIntegrationThread(self.spec1, self.spec2, timeSNRQ)
+            timeSNRThread.start()
             # IQ识别算法开启
             rslt = usrp_shibie_v10.play(self.freqPointList, self.path, self.harmonicNum)
             endtime = datetime.datetime.now()
             strTime = '识别线程花费:%dms' % (
                     (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
             logger.debug(strTime)
-            while snrQ.empty() or specSNRQ.empty():
+            while snrQ.empty() or timeSNRQ.empty():
                 pass
             strTime = 'SNR线程花费:%dms' % (
                     (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
             logger.debug(strTime)
             IQSNRResult = snrQ.get()
-            specSNRResult = specSNRQ.get()
+            specSNRResult = timeSNRQ.get()
             if type(specSNRResult) == type('str'):
                 realSNR = IQSNRResult
                 rslt.append("%.2f" % realSNR)
@@ -179,7 +212,7 @@ class IQSingleProcess(Thread):
             else:
                 realSNR = min(IQSNRResult, specSNRResult)
                 rslt.append("%.2f" % realSNR)
-                rslt.append("IQSNR:%.2f, specSNR:%.2f" % (IQSNRResult, specSNRResult))
+                rslt.append("IQSNR:%.2f, timeSNR:%.2f" % (IQSNRResult, specSNRResult))
             # rslt为一个长度为n的列表，倒数第一个元素表征两种算法信噪比值，倒二表征显示信噪比值
             self.q.put(rslt)
 
@@ -201,6 +234,20 @@ class IQDataSaveProcess(Thread):
         # f = open(self.path, 'w')
         # f.write(self.data)
         # f.close()
+        dataList = self.data.split(";")
+        dataToWrite = "\n".join(dataList)
+        with open(self.path, "w") as f:
+            f.writelines(dataToWrite)
+        self.q.put(self.path)
+
+# SNRIQ存储线程
+class SNRIQDataSaveProcess(Thread):
+    def __init__(self, path, data, q):
+        super(SNRIQDataSaveProcess, self).__init__()
+        self.path = path
+        self.data = data
+        self.q = q
+    def run(self):
         dataList = self.data.split(";")
         dataToWrite = "\n".join(dataList)
         with open(self.path, "w") as f:
@@ -348,7 +395,7 @@ class interferenceCancellationProcess(Thread):
         targetx, targety = interferenceCancellationCalling.callInterferenceCancellation(self.arg)
         self.q.put([targetx, targety])
 
-# IQ信噪比分析线程
+# IQ信噪比分析线程（深度学习）
 class SNREstimationIntegrationThread(Thread):
     def __init__(self, arg, q):
         super(SNREstimationIntegrationThread, self).__init__()
@@ -358,6 +405,20 @@ class SNREstimationIntegrationThread(Thread):
     def run(self):
         data = dataGet.dataGet(self.arg)
         result = snr_estimation_integration.snr_estimation(data)
+        self.q.put(result)
+
+# 时域信噪比分析线程
+class TimeSNREstimationIntegrationThread(Thread):
+    def __init__(self, arg1, arg2, q):
+        super(TimeSNREstimationIntegrationThread, self).__init__()
+        self.q = q
+        self.arg1 = arg1
+        self.arg2 = arg2
+
+    def run(self):
+        data1 = dataGet_iq.dataGet_iq(self.arg1)
+        data2 = dataGet_iq.dataGet_iq(self.arg2)
+        result = snr_estimation_iq.snr_estimation_iq(data1, data2)
         self.q.put(result)
 
 # 频谱信噪比分析线程

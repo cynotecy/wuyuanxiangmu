@@ -1,7 +1,23 @@
-09/27 17:46:27 下午 root         INFO     日志记录开始
-09/27 17:46:31 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
-09/27 17:46:37 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
-09/27 17:46:42 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
-09/27 17:46:49 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
-09/27 17:47:02 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
-09/27 17:47:21 下午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
+09/29 09:44:57 上午 root         INFO     日志记录开始
+09/29 09:45:03 上午 Main         INFO     开始手动IQ识别……
+09/29 09:45:03 上午 Main         DEBUG    IQ信噪比一次采集开始
+09/29 09:45:03 上午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
+09/29 09:45:19 上午 Main         INFO     频域信噪比算法一次采集结束，数据存储于：D:/myPrograms/CASTProgram/postgraduate_program\data\SNR_data\SNRIQPro_20200929094503.txt
+09/29 09:45:23 上午 Main         INFO     开始手动IQ识别……
+09/29 09:45:23 上午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
+09/29 09:46:32 上午 Main.algorithmThread DEBUG    识别线程花费:58982ms
+09/29 09:46:32 上午 Main.algorithmThread DEBUG    SNR线程花费:58982ms
+09/29 09:46:32 上午 Main         INFO     频域信噪比算法二次采集结束，数据存储于：D:/myPrograms/CASTProgram/postgraduate_program\data\SNR_data\SNRIQCurrent_20200929094523.txt
+09/29 09:46:32 上午 Main         INFO     IQ手动离线识别结束，耗时:69226ms，数据存储于：D:\myPrograms\CASTProgram\postgraduate_program\data\usrp_recvfiles\single_collect_20200929094533.txt，识别结果存储于：D:/myPrograms/CASTProgram/postgraduate_program\data\usrp_recvfiles/IQrecogonizeOutput\IQrecogonizeOutput_20200929094632.txt
+09/29 09:46:32 上午 IQAccuracy   INFO     中心频率：940.6，带宽：3000000.0，信噪比：21.70，调制方式：2FSK:100.0%，信噪比详情：IQSNR:21.70, specSNR:不可识别
+09/29 09:47:42 上午 Main         INFO     开始手动IQ识别……
+09/29 09:47:42 上午 Main         DEBUG    IQ信噪比一次采集开始
+09/29 09:47:42 上午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
+09/29 09:47:57 上午 Main         INFO     频域信噪比算法一次采集结束，数据存储于：D:/myPrograms/CASTProgram/postgraduate_program\data\SNR_data\SNRIQPro_20200929094742.txt
+09/29 09:47:59 上午 Main         INFO     开始手动IQ识别……
+09/29 09:47:59 上午 Main.local_socket DEBUG    tcp://127.0.0.1:5678 [operation system] to [data platform] msg send!
+09/29 09:48:59 上午 Main.algorithmThread DEBUG    识别线程花费:49631ms
+09/29 09:48:59 上午 Main.algorithmThread DEBUG    SNR线程花费:49631ms
+09/29 09:48:59 上午 Main         INFO     频域信噪比算法二次采集结束，数据存储于：D:/myPrograms/CASTProgram/postgraduate_program\data\SNR_data\SNRIQCurrent_20200929094759.txt
+09/29 09:48:59 上午 Main         INFO     IQ手动离线识别结束，耗时:59749ms，数据存储于：D:\myPrograms\CASTProgram\postgraduate_program\data\usrp_recvfiles\single_collect_20200929094809.txt，识别结果存储于：D:/myPrograms/CASTProgram/postgraduate_program\data\usrp_recvfiles/IQrecogonizeOutput\IQrecogonizeOutput_20200929094859.txt
+09/29 09:48:59 上午 IQAccuracy   INFO     中心频率：940.6，带宽：3000000.0，信噪比：-26.40，调制方式：2FSK:100.0%，信噪比详情：IQSNR:21.57, specSNR:-26.40
