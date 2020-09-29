@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 # 加载配置文件
 # 使用minidom解析器打开 XML 文档
-DOMTree = xml.dom.minidom.parse("properties_remote.xml")
+DOMTree = xml.dom.minidom.parse("properties_local.xml")
 collection = DOMTree.documentElement
 # if collection.hasAttribute("shelf"):
 #     print "Root element : %s" % collection.getAttribute("shelf")
@@ -124,7 +124,7 @@ def threadControl():
             continue
 
 
-
+        # 设备号解析，如果请求设备列表中包含配置文件中未启用的设备则直接返回空消息
         msg = localRecv.split(',')
         logger.info(msg)
         if ';' in msg[0]:
@@ -137,14 +137,13 @@ def threadControl():
                 usrpNum = int(usrpNumStr)
                 if usrpNum not in pubAddressDic.keys():
                     repSocket.send_string("")
-                    continue
+                    break
                 pubSock = socketDic[usrpNum][0]
                 subSock = socketDic[usrpNum][1]
                 pubSockList.append(pubSock)
                 subSockList.append(subSock)
                 standarList.append(standarDic[usrpNum])
             if len(pubSockList) == 0:
-                repSocket.send_string("")
                 continue
             # elif "." in msg[0]:
             #     # 设备名解析
