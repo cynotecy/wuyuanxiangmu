@@ -129,17 +129,17 @@ def add_noise(data, original_snr, target_snr):
 if __name__ == '__main__':
     #测试用例
     from SNR.component import dataGet
-    data_root = 'GMSK.wav'
+    # data_root = 'GMSK.wav'
     #wave_data, fs = read_wav_data(data_root)
-    wave_data = dataGet.dataGet(r"D:\myPrograms\CASTProgram\postgraduate_program\data\usrp_recvfiles\single_collect_20200914183911.txt")
+    wave_data = dataGet.dataGet(r"D:\myPrograms\CASTProgram\postgraduate_program\data\SNR_data\SNRIQCurrent_20200929193327.txt")
     original = snr_estimation(wave_data)
     print(original)
-    data_with_noise = add_noise(wave_data, float(original), 3)
-
-    realPart = data_with_noise.split(";")[0]
-    imagPart = data_with_noise.split(";")[1]
-    realPartList = np.array(realPart.split(" ")).astype(np.float32)
-    imagPartList = np.array(imagPart.split(" ")).astype(np.float32)
-    dataArray = np.transpose(np.vstack((realPartList, imagPartList)))
-    snr_after = snr_estimation(dataArray)
-    print(snr_after)
+    # data_with_noise = add_noise(wave_data, float(original), 3)
+    #
+    # realPart = data_with_noise.split(";")[0]
+    # imagPart = data_with_noise.split(";")[1]
+    # realPartList = np.array(realPart.split(" ")).astype(np.float32)
+    # imagPartList = np.array(imagPart.split(" ")).astype(np.float32)
+    # dataArray = np.transpose(np.vstack((realPartList, imagPartList)))
+    # snr_after = snr_estimation(dataArray)
+    # print(snr_after)

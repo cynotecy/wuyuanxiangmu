@@ -65,6 +65,7 @@ def threadControl():
     
     # 本地连接地址，本地连接采用rep/req模式
     repAddress = 'tcp://127.0.0.1:5678'
+    # repAddress = 'tcp://10.128.205.252:5678'
     # 并行本地连接，当多路usrp同时使用时，repAddress地址绑定的socket不可以一直被占用则启用并行连接
     repAddressPara1 = 'tcp://127.0.0.1:6668'
     repAddressPara2 = 'tcp://127.0.0.1:6669'

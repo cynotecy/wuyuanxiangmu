@@ -6,7 +6,7 @@
 """
 import os
 import time
-from communication.ceyearController import spectrum_snapshot, IQ_snapshot
+from communication.ceyearController import spectrum_snapshot, IQ_sweep_interface
 import logging
 class CeyearProxy():
     def __init__(self, ip, fatherPath):
@@ -32,13 +32,16 @@ class CeyearProxy():
             if dataAction == 'IQsingle':
                 centreFreq = float(dataInstructionInfoList[0])
                 bdWidth = float(dataInstructionInfoList[1])
-                data = IQ_snapshot.getIQData(self.ip, centreFreq, bdWidth)
+                samprate = float(dataInstructionInfoList[2])
+                data = IQ_sweep_interface.getIQData(self.ip, centreFreq, bdWidth, samprate)
                 return data
             elif dataAction == "IQoc":
+                samprate = 12.5e6
                 centreFreq = round(float(dataInstructionInfoList[0]), 1)
                 bdWidth = round(float(dataInstructionInfoList[1]), 1)
+                # samprate = round(float(dataInstructionInfoList[2]), 1)
                 self.logger.debug("3900采集开始")
-                data = IQ_snapshot.getIQData(self.ip, centreFreq, bdWidth)
+                data = IQ_sweep_interface.getIQData(self.ip, centreFreq, bdWidth, samprate)
                 dirPath = os.path.join(self.fatherPath, r"usrp_recvfiles\auto_recognize")
                 local_time = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
                 filePath = os.path.join(dirPath, r'oc_collect_{}.txt'.format(local_time))

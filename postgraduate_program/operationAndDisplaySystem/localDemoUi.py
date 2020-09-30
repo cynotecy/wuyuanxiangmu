@@ -708,7 +708,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                         self.tableWidget_3.setItem(0, column, item)
 
                                     endtime = datetime.datetime.now()
-                                    strTime = 'IQ手动离线识别结束，耗时:%dms' % (
+                                    strTime = 'IQ手动在线识别结束，耗时:%dms' % (
                                             (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
                                     self.logger.info(strTime+"，数据存储于：" + dataPath + "，识别结果存储于：" + filePath)
                                     snr = recognizeResult[4]
@@ -859,6 +859,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             "本地连接超时！",
                                             QMessageBox.Yes,
                                             QMessageBox.Yes)
+                        return 0
+                    elif recognizeResult == '设备未启用':
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "设备未启用！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                        return 0
                     elif len(recognizeResult) == 1:
                         newItem1 = QTableWidgetItem(str(recognizeResult[0]))
                         self.tableWidget_7.setItem(0, 1, newItem1)
@@ -2273,7 +2281,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     gui()
                 else:
                     loading.close()
-                    dataRsltList = self.zmqLocalQ.get().split("|")
+                    reslt = self.zmqLocalQ.get()
+                    if reslt == "":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "设备未启用！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                        return 0
+                    dataRsltList = reslt.split("|")
                     self.logger.info(u"天线比对采集结束")
                     #####置入绘图####
                     if self.antennaCompareFigFlag:
@@ -2347,7 +2363,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     gui()
                 else:
                     loading.close()
-                    dataRsltList = self.zmqLocalQ.get().split("|")
+                    reslt = self.zmqLocalQ.get()
+                    if reslt == "":
+                        QMessageBox.warning(self,
+                                            '错误',
+                                            "设备未启用！",
+                                            QMessageBox.Yes,
+                                            QMessageBox.Yes)
+                        return 0
+                    dataRsltList = reslt.split("|")
                     self.logger.info(u"设备比对采集结束")
                     #####置入绘图####
                     if self.deviceCompareFigFlag:

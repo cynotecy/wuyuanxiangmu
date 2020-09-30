@@ -66,22 +66,24 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,
                         format=LOG_FORMAT, datefmt=DATE_FORMAT)
     usrpCommu = zmqLocal.localZMQ()
-    av3900Commu = ceyearProxy.CeyearProxy("172.141.11.202")
+    av3900Commu = ceyearProxy.CeyearProxy("172.141.11.202","")
     startfreq = 900*1000000
     endfreq = 950*1000000
-    usrpNum = "USRP1"
+    usrpNum = "USRP2"
     msg = (usrpNum + ',scan,IQ,' + str(startfreq) + ";" +str(endfreq))
     dataCach = queue.Queue()
     condition = threading.Condition()
     waitNum = 4
-    circultaionZmqThread = CircultaionZmqThread(usrpCommu, av3900Commu, msg, dataCach, condition, waitNum)
+    circultaionZmqThread = CircultaionZmqThread(usrpCommu, av3900Commu, msg, dataCach, condition, waitNum, dataNumPerCell=10)
     circultaionZmqThread.start()
     while 1:
         ipt = input()
         if ipt == "q":
             logger.debug("input q")
             circultaionZmqThread.stop()
+
             break
         elif ipt == "r":
             logger.debug("input r")
             circultaionZmqThread.reset()
+    print("end")

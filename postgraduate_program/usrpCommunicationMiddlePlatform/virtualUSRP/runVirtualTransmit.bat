@@ -1,4 +1,2 @@
 @echo off
-f:
-cd\CASTProgram\postgraduate_program\usrpCommunicationMiddlePlatform\virtualUSRP
 python2 VirtualTransmit.py

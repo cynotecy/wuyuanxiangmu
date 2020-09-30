@@ -208,7 +208,7 @@ class IQSingleProcess(Thread):
             if type(specSNRResult) == type('str'):
                 realSNR = IQSNRResult
                 rslt.append("%.2f" % realSNR)
-                rslt.append("IQSNR:%.2f, specSNR:不可识别" % IQSNRResult)
+                rslt.append("IQSNR:%.2f, timeSNR:不可识别" % IQSNRResult)
             else:
                 realSNR = min(IQSNRResult, specSNRResult)
                 rslt.append("%.2f" % realSNR)
@@ -310,6 +310,11 @@ class specEnvelopeOnlineProcess(Thread):
                 self.dataQ.put('超时')
                 self.algorithmProcessQ.put("超时")
                 self.savingProcessQ.put("超时")
+            elif reslt == "":
+                self.dataQ.put('设备未启用')
+                self.algorithmProcessQ.put("设备未启用")
+                self.savingProcessQ.put("设备未启用")
+                return 0
             else:
                 # 当zmq返回值为数据时，对数据进行切分，得到x和y
                 data = reslt
