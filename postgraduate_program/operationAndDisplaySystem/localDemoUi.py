@@ -718,7 +718,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                         float(recognizeResult[0]),float(recognizeResult[1]), float(snr), recognizeResult[2],
                                         recognizeResult[5])
                                     self.IQAccuracyLogId += 1
-                                    self.IQAccuracyLogger.info("["+str(self.IQAccuracyLogId)+"]-"+accuracyContent)
+                                    self.IQAccuracyLogger.info(str(self.IQAccuracyLogId)+","+accuracyContent)
 
                 else:
                     QMessageBox.warning(self,
