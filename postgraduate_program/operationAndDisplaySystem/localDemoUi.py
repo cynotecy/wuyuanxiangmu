@@ -48,6 +48,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.logger.addHandler(console)
         self.IQAccuracyLogger = logging.getLogger("IQAccuracy")
         fh = logging.FileHandler("./logs/IQAccuracyLog.log")
+        # 识别结果日志格式：时间-[序号]-内容
+        self.IQAccuracyLogId = 0
         formatter = logging.Formatter('%(asctime)s- %(message)-2s')
         fh.setLevel(logging.INFO)
         fh.setFormatter(formatter)
@@ -715,7 +717,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                     accuracyContent = "中心频率：%.1f，带宽：%.1f，信噪比：%.2f，调制方式：%s，信噪比详情：%s" % (
                                         float(recognizeResult[0]),float(recognizeResult[1]), float(snr), recognizeResult[2],
                                         recognizeResult[5])
-                                    self.IQAccuracyLogger.info(accuracyContent)
+                                    self.IQAccuracyLogId += 1
+                                    self.IQAccuracyLogger.info("["+str(self.IQAccuracyLogId)+"]-"+accuracyContent)
 
                 else:
                     QMessageBox.warning(self,
