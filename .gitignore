@@ -17,6 +17,7 @@ venv
 
 # pycharm
 .idea
+**/.pytest_cache/*
 
 #others
 PicoScope6_r6_13_6.exe
