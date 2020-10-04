@@ -22,6 +22,7 @@ venv
 PicoScope6_r6_13_6.exe
 *.xlsx
 *.7z
+*.log
 /fakeData
 /mat
 /postgraduate_program/*
@@ -29,3 +30,6 @@ PicoScope6_r6_13_6.exe
 !/postgraduate_program/usrpCommunicationMiddlePlatform/
 !/postgraduate_program/README*
 !/postgraduate_program/data/EMCfile/data/sample_data
+**/datapath_properties.xml
+**/properties_local.xml
+**/properties_remote.xml
