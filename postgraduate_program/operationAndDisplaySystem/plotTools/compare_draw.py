@@ -103,6 +103,9 @@ class ApplicationWindow(QWidget):
             # 绘频谱图
             self.axs.cla()
             dataDic = getCompareData(self.dataParam, self.dataRemark)
+            if dataDic == "wrong file num":
+                self.close()
+                return 0
             for dataName in dataDic:
                 x = dataDic[dataName][0]
                 y = dataDic[dataName][1]

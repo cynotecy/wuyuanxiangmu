@@ -157,9 +157,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 2，天线比对
         self.pushButton_28.clicked.connect(self.on_pushButton_clicked_28)  # 天线比对
+        self.pushButton_46.clicked.connect(self.on_pushButton_clicked_46)  # 选择文件
+        self.pushButton_44.clicked.connect(self.on_pushButton_clicked_44)  # 离线比对
 
         # 3，设备比对
         self.pushButton_33.clicked.connect(self.on_pushButton_clicked_33)  # 设备比对
+        self.pushButton_47.clicked.connect(self.on_pushButton_clicked_47)  # 选择文件
+        self.pushButton_45.clicked.connect(self.on_pushButton_clicked_45)  # 离线比对
 
         # 第九页，信噪比分析
         self.pushButton_36.clicked.connect(self.on_pushButton_clicked_36)  # 采集分析
@@ -167,7 +171,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_38.clicked.connect(self.on_pushButton_clicked_38)  # 选择文件
         self.pushButton_39.clicked.connect(self.on_pushButton_clicked_39)  # 离线分析
 
-        #
+        self.updateFreqListTable()
+
+    # 初始化频点识别列表名
+    def updateFreqListTable(self):
+        tableNameReg = r'used_freq_point_list*'
+        freqList = freqListQuery.getFreqPointTableList(self.dbInfo, tableNameReg)
+        for index in range(len(freqList)):
+            self.comboBox_14.addItem("")
+            self.comboBox_14.setItemText(index, freqList[index])
 
     # 设备在线情况检测
     def on_pushButton_clicked_43(self):
@@ -655,7 +667,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 # self.logger.debug("IQ数据存储开始……")
                                 while not self.algorithmProcessQ.empty():
                                     self.algorithmProcessQ.get()
-                                tableName = 'used_freq_point'
+                                tableName = self.comboBox_14.currentText()
                                 freqList = freqListQuery.freqListQuery(self.dbInfo, tableName)
                                 # recognizeProcess = algorithmThreads.IQSingleProcess(reslt, self.algorithmProcessQ, freqList,
                                 #                                                     harmonicNum, self.SNRSpec1, SNRSpec2)
@@ -758,7 +770,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         starttime = datetime.datetime.now()
         if self.lineEdit_7.text():
             dataPath = self.lineEdit_7.text()
-            tableName = 'used_freq_point'
+            tableName = self.comboBox_14.currentText()
             freqList = freqListQuery.freqListQuery(self.dbInfo, tableName)
             recognizeProcess = algorithmThreads.IQSingleProcess(dataPath, self.algorithmProcessQ, freqList, harmonicNum)
             recognizeProcess.start()
@@ -2272,6 +2284,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 endfreq = endfreq * 1000000
                 msg = (deviceName+',scan,antennaCompare,' + str(startfreq) + ";" + str(endfreq))
                 # 调用通信代理，传入数据请求字典、采集指令内容和等待结果队列
+                while not self.zmqLocalQ.empty():
+                    self.zmqLocalQ.get()
                 communicationThread = communicationProxy.CommunicationProxy(msg, self.zmqLocalQ,self.usrpCommu,self.av3900Commu)
                 communicationThread.start()
                 # 等待回传
@@ -2293,7 +2307,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             QMessageBox.Yes)
                         return 0
                     dataRsltList = reslt.split("|")
-                    self.logger.info(u"天线比对采集结束")
+                    paramList = dataRsltList
+                    remark = deviceName
+                    localTime = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+                    dirPath = os.path.join(self.fatherPath, r'antenna_compare_recvfiles/{}/'.format(localTime))
+                    filesOrDirsOperate.makesureDirExist(dirPath)
+                    while not self.savingProcessQ.empty():
+                        self.savingProcessQ.get()
+                    savingThread = algorithmThreads.compareSaveProcess(paramList, remark, dirPath, self.savingProcessQ)
+                    savingThread.start()
+                    # 调用识别loading
+                    loading = Message.Loading()
+                    loading.setWindowModality(Qt.ApplicationModal)
+                    loading.show()
+                    gui = QGuiApplication.processEvents
+                    while self.savingProcessQ.empty():
+                        gui()
+                    else:
+                        loading.close()
+                    self.logger.info(u"天线比对采集结束,数据存储于" + self.savingProcessQ.get())
                     #####置入绘图####
                     if self.antennaCompareFigFlag:
                         self.verticalLayout_41.removeWidget(self.antennaComparePic)
@@ -2305,6 +2337,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 QMessageBox.warning(self, '错误', "请输入正确参数！")
         else:
             QMessageBox.warning(self, '错误', "请输入正确参数！")
+
+    # 天线比对选择文件夹
+    def on_pushButton_clicked_46(self):
+        self.lineEdit_37.clear()
+        defultPath = os.path.join(self.fatherPath, r'antenna_compare_recvfiles')
+        dirpath = QFileDialog.getExistingDirectory(self, "选择文件夹", defultPath)
+        self.logger.info("天线比对选择文件夹：" + dirpath)
+        self.lineEdit_37.setText(dirpath)
+
+    # 天线比对离线
+    def on_pushButton_clicked_44(self):
+        # 初始化空的数据请求字典，用来存储设备名和天线名
+        antenna1 = "antenna1"
+        antenna2 = "antenna2"
+        if self.lineEdit_37.text():
+            dirpath = self.lineEdit_37.text()
+            #####置入绘图####
+            if self.antennaCompareFigFlag:
+                self.verticalLayout_41.removeWidget(self.antennaComparePic)
+                self.antennaComparePic.deleteLater()
+            self.antennaComparePic = compare_draw.ApplicationWindow([dirpath], '')
+            self.verticalLayout_41.addWidget(self.antennaComparePic)
+            self.antennaCompareFigFlag = 1
+            # else:
+            #     QMessageBox.warning(self, '错误', "请输入正确参数！")
+        else:
+            QMessageBox.warning(self, '提示', "请先选择文件夹！")
 
     # 设备比对
     def on_pushButton_clicked_33(self):
@@ -2375,7 +2434,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             QMessageBox.Yes)
                         return 0
                     dataRsltList = reslt.split("|")
-                    self.logger.info(u"设备比对采集结束")
+                    paramList = dataRsltList
+                    remark = "RF2"
+                    localTime = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
+                    dirPath = os.path.join(self.fatherPath, r'device_compare_recvfiles/{}/'.format(localTime))
+                    filesOrDirsOperate.makesureDirExist(dirPath)
+                    while not self.savingProcessQ.empty():
+                        self.savingProcessQ.get()
+                    savingThread = algorithmThreads.compareSaveProcess(paramList, remark, dirPath, self.savingProcessQ)
+                    savingThread.start()
+                    # 调用识别loading
+                    loading = Message.Loading()
+                    loading.setWindowModality(Qt.ApplicationModal)
+                    loading.show()
+                    gui = QGuiApplication.processEvents
+                    while self.savingProcessQ.empty():
+                        gui()
+                    else:
+                        loading.close()
+                    self.logger.info(u"设备比对采集结束,数据存储于" + self.savingProcessQ.get())
                     #####置入绘图####
                     if self.deviceCompareFigFlag:
                         self.verticalLayout_39.removeWidget(self.deviceComparePic)
@@ -2387,6 +2464,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 QMessageBox.warning(self, '错误', "请输入正确参数！")
         else:
             QMessageBox.warning(self, '错误', "请输入正确参数！")
+
+    # 设备比对选择文件夹
+    def on_pushButton_clicked_47(self):
+        self.lineEdit_40.clear()
+        defultPath = os.path.join(self.fatherPath, r'device_compare_recvfiles')
+        dirpath = QFileDialog.getExistingDirectory(self, "选择文件夹", defultPath)
+        self.logger.info("设备比对选择文件夹：" + dirpath)
+        self.lineEdit_40.setText(dirpath)
+
+    # 设备比对离线
+    def on_pushButton_clicked_45(self):
+        # 初始化空的数据请求字典，用来存储设备名和天线名
+        antenna1 = "antenna1"
+        antenna2 = "antenna2"
+        if self.lineEdit_40.text():
+            dirpath = self.lineEdit_40.text()
+            #####置入绘图####
+            if self.deviceCompareFigFlag:
+                self.verticalLayout_39.removeWidget(self.deviceComparePic)
+                self.deviceComparePic.deleteLater()
+            self.deviceComparePic = compare_draw.ApplicationWindow([dirpath], "")
+            self.verticalLayout_39.addWidget(self.deviceComparePic)
+            self.deviceCompareFigFlag = 1
+            # else:
+            #     QMessageBox.warning(self, '错误', "请输入正确参数！")
+        else:
+            QMessageBox.warning(self, '提示', "请先选择文件夹！")
 
     # 重写关闭事件
     def closeEvent(self, event):

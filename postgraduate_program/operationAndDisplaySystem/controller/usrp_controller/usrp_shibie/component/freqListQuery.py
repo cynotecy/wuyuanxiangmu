@@ -5,7 +5,28 @@
 @Desc:频点列表的数据库查询工具，输入表名，输出DTO
 """
 import pymysql
+import re
 from controller.usrp_controller.usrp_shibie.component.freqPointList import FreqPointList
+# 频点列表查询
+def getFreqPointTableList(databaseInfo, tableNameReg):
+    conn = pymysql.connect(host=databaseInfo[0],  # ID地址
+                           port=databaseInfo[1],  # 端口号
+                           user=databaseInfo[2],  # 用户名
+                           passwd=databaseInfo[3],  # 密码
+                           db=databaseInfo[4],  # 库名
+                           charset=databaseInfo[5])  # 链接字符集
+    cur = conn.cursor()  # 创建游标
+    select = 'show tables'
+    cur.execute(select)
+    entity = cur.fetchall()
+    tableList = []
+    for line in entity:
+        if re.match(tableNameReg, line[0]):
+            tableList.append(line[0])
+    cur.close()
+    conn.close()
+    return tableList
+
 def freqListQuery(databaseInfo, tableName):
     conn = pymysql.connect(host=databaseInfo[0],  # ID地址
                                 port=databaseInfo[1],  # 端口号
@@ -34,6 +55,5 @@ if __name__ == '__main__':
                 'root',  # 密码
                 'cast',  # 库名
                 'utf8']  # 链接字符集
-    table = 'used_freq_point'
-    rslt = freqListQuery(dbInfo, table)
-    print(rslt.getPointList())
+    table = r'used_freq_point_list*'
+    rslt = getFreqPointTableList(dbInfo, table)

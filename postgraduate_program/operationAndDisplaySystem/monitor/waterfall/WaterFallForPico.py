@@ -149,13 +149,13 @@ class ApplicationWindow(QWidget):
 
     def getData(self):
         path = self.path + '\\'+ '1 (' + str(self.n) +').csv'
-        print(path)
+        # print(path)
         if not path == "noFile":
             if os.path.exists(path):
                 data = pd.read_csv(path, skiprows=5)
                 x = data.values[15:2050, 0]
                 y = data.values[15:2050, 1]
-                print(self.n)
+                # print(self.n)
                 return x, y
         else:
             x = "noFile"
@@ -211,6 +211,6 @@ class ApplicationWindow(QWidget):
 
 if __name__ == "__main__":
     qapp = QtWidgets.QApplication(sys.argv)
-    app = ApplicationWindow(r'D:\myPrograms\CASTProgram\postgraduate_program\usrp_recvfiles\usrp_scan\\')
+    app = ApplicationWindow(r'D:\myPrograms\CASTProgram\postgraduate_program\data\usrp_recvfiles\usrp_scan\\')
     app.show()
     qapp.exec_()

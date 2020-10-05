@@ -18,6 +18,7 @@ from controller.usrp_controller.interference_cancellation import interferenceCan
 from SNR import snr_estimation_integration, snr_spectrum, snr_estimation_iq
 from communication import communicationProxy
 from SNR.component import dataGet, dataSave, dataGet_spectrum, dataGet_iq
+from plotTools.compareComponent import compareSaveData
 
 import logging
 logger = logging.getLogger("Main.algorithmThread")
@@ -466,3 +467,15 @@ class NoiseAdd(Thread):
         # self.data = dataGet.dataGet(self.data)
         data_noise_added = snr_estimation_integration.add_noise(self.data, self.original_snr, self.target_snr)
         self.q.put(data_noise_added)
+
+# 比对数据存储线程
+class compareSaveProcess(Thread):
+    def __init__(self, paramList, remark, dirPath, q):
+        super(compareSaveProcess, self).__init__()
+        self.paramList = paramList
+        self.remark = remark
+        self.dirPath = dirPath
+        self.q = q
+    def run(self):
+        savePath = compareSaveData.saveCompareData(self.paramList, self.remark, self.dirPath)
+        self.q.put(savePath)
