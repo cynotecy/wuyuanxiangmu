@@ -35,7 +35,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
-
         logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                             datefmt='%m/%d %H:%M:%S %p', filename='./logs/debugLog.log', filemode='w')
         console = logging.StreamHandler()

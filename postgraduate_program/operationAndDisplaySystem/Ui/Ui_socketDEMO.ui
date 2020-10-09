@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>现场电磁干扰检测特征库系统</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -32,7 +32,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -48,7 +48,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-641</y>
+             <y>0</y>
              <width>1475</width>
              <height>1320</height>
             </rect>
