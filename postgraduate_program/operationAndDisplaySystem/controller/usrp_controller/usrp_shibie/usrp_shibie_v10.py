@@ -19,7 +19,7 @@ user_cuda = False
 currentPath = os.path.dirname(__file__)
 # fatherPath = os.path.dirname(currentPath)
 # model_path = os.path.join(fatherPath, r'component\model7.path')
-model_path = os.path.join(currentPath, 'component\model7.path')
+model_path = os.path.join(currentPath, 'component\model_new_6.path')
 
 classes = {0: '05pi8PSK', 1: '05piBPSK', 2: '05piQAM16', 3: '05piQPSK', 4: '16FSK', 5: '2FSK',
            6: '32FSK', 7: '4FSK', 8: '8FSK', 9: '8PSK', 10: 'AM', 11: 'BPSK', 12: 'FM',
