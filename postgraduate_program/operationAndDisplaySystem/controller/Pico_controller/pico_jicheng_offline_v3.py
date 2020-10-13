@@ -7,6 +7,7 @@ import os
 import datetime
 import warnings
 import shutil
+from function.filesOrDirsOperate import *
 from scipy.io import loadmat
 import logging
 
@@ -377,6 +378,7 @@ def delete_end_none(dir):
 
 
 def detect_file(dir):
+    makesureDirExist(dir)
     path_list = os.listdir(dir)
     data_path = [os.path.join(dir, file) for file in path_list]
     for path in data_path:

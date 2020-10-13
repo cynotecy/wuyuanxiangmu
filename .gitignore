@@ -28,6 +28,7 @@ PicoScope6_r6_13_6.exe
 /mat
 /postgraduate_program/*
 !/postgraduate_program/operationAndDisplaySystem/
+!/postgraduate_program/operationAndDisplaySystem/controller/Pico_controller/model_saved/*
 !/postgraduate_program/usrpCommunicationMiddlePlatform/
 !/postgraduate_program/README*
 !/postgraduate_program/data/EMCfile/data/sample_data

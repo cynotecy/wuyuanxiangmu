@@ -8,6 +8,7 @@ import datetime
 import warnings
 import shutil
 from scipy.io import loadmat
+from function.filesOrDirsOperate import *
 import logging
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -249,6 +250,7 @@ def max_voter(pre_result):
 
 # 检查文件夹内是否有txt
 def dectect_folder(data_path):
+    makesureDirExist(data_path)
     lists = os.listdir(data_path)
     txt_list = []
     for path in lists:
