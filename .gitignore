@@ -26,6 +26,8 @@ PicoScope6_r6_13_6.exe
 *.log
 /fakeData
 /mat
+**/demo
+**/__init__.py
 /postgraduate_program/*
 !/postgraduate_program/operationAndDisplaySystem/
 !/postgraduate_program/operationAndDisplaySystem/controller/Pico_controller/model_saved/*
