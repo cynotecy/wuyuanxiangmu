@@ -67,7 +67,7 @@ class ApplicationWindow(QWidget):
         # print(y[0:5])
         # x = range(len(y))
         x = np.array([float(x) for x in x])
-        y = np.array([float(y)-11 for y in y])
+        y = np.array([float(y) for y in y])
         return x, y
 
     def draw(self):

@@ -51,7 +51,7 @@ def dbUpload(dbField=['id','create_time', 'data_path']):
 
     return upload
 
-def dbDownload(dbConnection, tableName, createTime):
+def dbDownload():
     """
     :param:dbConnection, tableName, createTime
     :return:
