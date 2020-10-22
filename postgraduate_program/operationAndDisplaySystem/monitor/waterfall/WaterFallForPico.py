@@ -113,7 +113,6 @@ class ApplicationWindow(QWidget):
 
     def _update_canvas(self):
         self.draw()
-        # print(self.n)
 
     def drawFreq(self, event):  # 点击热力图重绘拼频谱图
         po = event.ydata
@@ -244,7 +243,6 @@ class ApplicationWindow(QWidget):
             x = "noFile"
             y = "noFile"
             return x, y
-
 
     @dbUpload()
     def draw(self):

@@ -20,7 +20,7 @@ from controller.usrp_controller.usrp_shibie import (oc_list_display_v1)
 from controller.usrp_controller.specEnvelope_shibie import specEnvelopeDrawpic
 from controller.usrp_controller.steadyStateInterference_shibie import display_v4
 from controller.Pico_controller.draw_pic import draw_pic
-from monitor.waterfall import waterfallDialogEngin, waterfallDialogEnginFor3900
+from monitor.waterfall import waterfallDialogEngin, waterfallDialogEnginFor3900, WaterFallForPico
 from monitor.spectrum_analyze import spec_analyze_v2
 from function.numOrLetters import *
 from communication import zmqLocal
@@ -133,6 +133,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_25.clicked.connect(self.on_pushButton_clicked_25)  # usrp3开始监测
         self.pushButton_26.clicked.connect(self.on_pushButton_clicked_26)  # usrp4开始监测
         self.pushButton_85.clicked.connect(self.on_pushButton_clicked_85)  # 3900开始监测
+        self.pushButton_42.clicked.connect(self.on_pushButton_clicked_42)  # 30MHz以下频谱监测
 
         # 第六页，时域监测
         self.pushButton_34.clicked.connect(self.on_pushButton_clicked_34)  # 采集
@@ -141,8 +142,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 第七页，实时分析
         # 实时频谱查看
-        self.pushButton_27.clicked.connect(self.on_pushButton_clicked_27)  # 单次扫频
-        self.pushButton_32.clicked.connect(self.on_pushButton_clicked_32)  # 连续扫频
+        # self.pushButton_27.clicked.connect(self.on_pushButton_clicked_27)  # 单次扫频
+        # self.pushButton_32.clicked.connect(self.on_pushButton_clicked_32)  # 连续扫频
 
         # 实时频谱分析
         # self.pushButton_37.clicked.connect(self.on_pushButton_clicked_37)  # 开始/停止绘图
@@ -165,10 +166,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_45.clicked.connect(self.on_pushButton_clicked_45)  # 离线比对
 
         # 第九页，信噪比分析
-        self.pushButton_36.clicked.connect(self.on_pushButton_clicked_36)  # 采集分析
-        self.pushButton_40.clicked.connect(self.on_pushButton_clicked_40)  # 保存数据
-        self.pushButton_38.clicked.connect(self.on_pushButton_clicked_38)  # 选择文件
-        self.pushButton_39.clicked.connect(self.on_pushButton_clicked_39)  # 离线分析
+        # self.pushButton_36.clicked.connect(self.on_pushButton_clicked_36)  # 采集分析
+        # self.pushButton_40.clicked.connect(self.on_pushButton_clicked_40)  # 保存数据
+        # self.pushButton_38.clicked.connect(self.on_pushButton_clicked_38)  # 选择文件
+        # self.pushButton_39.clicked.connect(self.on_pushButton_clicked_39)  # 离线分析
 
         self.updateFreqListTable()
 
@@ -1710,6 +1711,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 "请输入正确参数！",
                                 QMessageBox.Yes,
                                 QMessageBox.Yes)
+
+    def on_pushButton_clicked_42(self):
+        self.picoSpecWindow = WaterFallForPico.ApplicationWindow(os.path.join(self.fatherPath, r'pico-waterfall-data\\'),
+                                os.path.join(self.fatherPath, "EMCfile"))
+        self.picoSpecWindow.show()
 
     def waterfallDialogCloseSlot(self, signalContent):
         self.logger.info('瀑布图{}号子窗口关闭'.format(signalContent))
