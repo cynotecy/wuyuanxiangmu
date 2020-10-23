@@ -21,7 +21,7 @@ from controller.usrp_controller.specEnvelope_shibie import specEnvelopeDrawpic
 from controller.usrp_controller.steadyStateInterference_shibie import display_v4
 from controller.Pico_controller.draw_pic import draw_pic
 from monitor.waterfall import waterfallDialogEngin, waterfallDialogEnginFor3900, WaterFallForPico
-from monitor.spectrum_analyze import spec_analyze_v2
+from monitor.spectrum_analyze import spec_analyze_v3
 from function.numOrLetters import *
 from communication import zmqLocal
 from function.dbInfo import dbInfo
@@ -146,7 +146,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.pushButton_32.clicked.connect(self.on_pushButton_clicked_32)  # 连续扫频
 
         # 实时频谱分析
-        # self.pushButton_37.clicked.connect(self.on_pushButton_clicked_37)  # 开始/停止绘图
+        self.pushButton_37.clicked.connect(self.on_pushButton_clicked_37)  # 开始/停止绘图
 
         # 第八页，位置比对
         # 1，干扰对消
@@ -1904,7 +1904,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.pushButton_37.text() == "开始绘图":
             self.pushButton_37.setText("停止绘图")
             # 确认是否存储数据及存储路径初始化
-            if self.comboBox_11 == "是":
+            dirPath = ""
+            if self.comboBox_11.currentText() == "是":
                 self.realtimeSpecAnalyzeDataSaveFlag = 1
                 dirPath = os.path.join(self.fatherPath, "realtime_recvfiles")
             else:
@@ -1923,12 +1924,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                            + str(startfreq) + ";" + str(endfreq))
                     dataCach = queue.Queue()
                     condition = threading.Condition()
-                    waitNum = 4
+                    waitNum = sys.maxsize
                     notifyNum = 2
                     self.circultaionZmqThread = circulationZmqThread.CircultaionZmqThread(self.usrpCommu,
                                                                                           self.av3900Commu,
                                                                                           msg, dataCach,
-                                                                                          condition, waitNum)
+                                                                                          condition, waitNum,
+                                                                                          dataNumPerCell=5)
                     self.circultaionZmqThread.start()
                     # 开启绘图线程，使用Q作为异步数据池，暴露停止方法
                     ####################
@@ -1936,15 +1938,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.specAnalyze_fig._timer.stop()
                         # 标志位为1时清空图区
                         self.verticalLayout_35.removeWidget(self.specAnalyze_fig)
-                        self.specAnalyze_fig = spec_analyze_v2.ApplicationWindow(
-                            dirPath)
+                        self.specAnalyze_fig = spec_analyze_v3.ApplicationWindow(self.realtimeSpecAnalyzeDataSaveFlag,
+                                                                                 dirPath, condition, notifyNum, dataCach)
                         self.verticalLayout_35.addWidget(self.specAnalyze_fig)
-                        self.path = ''
+                        self.specAnalyze_fig._start()
                     else:
-                        self.specAnalyze_fig = spec_analyze_v2.ApplicationWindow(dirPath)
+                        self.specAnalyze_fig = spec_analyze_v3.ApplicationWindow(self.realtimeSpecAnalyzeDataSaveFlag,
+                                                                                 dirPath, condition, notifyNum, dataCach)
                         self.verticalLayout_35.addWidget(self.specAnalyze_fig)
+                        self.specAnalyze_fig._start()
                         self.specAnalyze_flag = 1
-                        self.path = ''
                     ####################
                     pass
                 else:
@@ -1963,6 +1966,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_37.setText("开始绘图")
             self.circultaionZmqThread.stop()
             # 绘图线程停止
+            if self.specAnalyze_flag:
+                self.specAnalyze_fig._stop()
 
     # 干扰对消在线
     def on_pushButton_clicked_29(self):

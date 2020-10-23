@@ -115,6 +115,8 @@ class WaterfallDialog(QDialog, Ui_Dialog):
                 # 生成DBPK
                 dbPk = str(uuid.uuid1())
                 # 开启压缩存储线程
+                # 应在此处切入时间戳存储，表名为pk为dbPk
+                pass
                 compressT = threading.Thread(target=compress, args=(dataForCompress, dbPk,
                                                                     self.cursor, self.conn,
                                                                     self.tableName, self.outputDir,

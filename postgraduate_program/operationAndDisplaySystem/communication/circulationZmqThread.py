@@ -23,6 +23,7 @@ class CircultaionZmqThread(Thread):
         self.setDaemon(True)
         self.q = ''
         self.comunicationThread = communicationProxy.CommunicationProxy(self.msg, self.q, usrpCommu, av3900Commu)
+
     def run(self):
         self.condition.acquire()
         while not self.stopFlag:
@@ -35,6 +36,8 @@ class CircultaionZmqThread(Thread):
                     endTime = datetime.datetime.now()
                     if (endTime - startTime).seconds.numerator < 1:
                         time.sleep(1)
+                    if self.stopFlag:
+                        return 0
                 self.dataCach.put(dataList)
                 self.recvNum = 0
             self.condition.wait()
@@ -48,9 +51,9 @@ class CircultaionZmqThread(Thread):
 
     def stop(self):
         self.stopFlag = 1
-        self.condition.acquire()
-        self.condition.notify()
-        self.condition.release()
+        # self.condition.acquire()
+        # self.condition.notify()
+        # self.condition.release()
 
 if __name__ == '__main__':
     from communication import zmqLocal
@@ -66,7 +69,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,
                         format=LOG_FORMAT, datefmt=DATE_FORMAT)
     usrpCommu = zmqLocal.localZMQ()
-    av3900Commu = ceyearProxy.CeyearProxy("172.141.11.202","")
+    av3900Commu = ceyearProxy.CeyearProxy("172.141.11.202", "")
     startfreq = 900*1000000
     endfreq = 950*1000000
     usrpNum = "USRP2"
@@ -74,7 +77,8 @@ if __name__ == '__main__':
     dataCach = queue.Queue()
     condition = threading.Condition()
     waitNum = 4
-    circultaionZmqThread = CircultaionZmqThread(usrpCommu, av3900Commu, msg, dataCach, condition, waitNum, dataNumPerCell=10)
+    circultaionZmqThread = CircultaionZmqThread(usrpCommu, av3900Commu, msg, dataCach,
+                                                condition, waitNum, dataNumPerCell=10)
     circultaionZmqThread.start()
     while 1:
         ipt = input()
