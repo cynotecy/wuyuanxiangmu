@@ -1972,7 +1972,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # 干扰对消在线
     def on_pushButton_clicked_29(self):
         if self.comboBox_7.currentText() == self.comboBox_12.currentText():
-            QMessageBox.warning(self, '提示', "请不同的一体化单元！")
+            QMessageBox.warning(self, '提示', "请选择不同的一体化单元！")
         else:
             deviceNum1 = self.comboBox_7.currentText()
             deviceNum2 = self.comboBox_12.currentText()
@@ -2105,7 +2105,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # 干扰对消选择文件1
     def on_pushButton_clicked_30(self):
         self.lineEdit_18.clear()
-        defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles\interface_cancellation')
+        defultPath = os.path.join(self.fatherPath, r'antenna_compare_recvfiles')
         filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
                                                   defultPath, "*.txt")
         self.logger.info("干扰对消选择文件1："+filename)
@@ -2114,7 +2114,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # 干扰对消选择文件2
     def on_pushButton_clicked_31(self):
         self.lineEdit_39.clear()
-        defultPath = os.path.join(self.fatherPath, r'usrp_recvfiles\interface_cancellation')
+        defultPath = os.path.join(self.fatherPath, r'antenna_compare_recvfiles')
         filename, _ = QFileDialog.getOpenFileName(self, "选择文件",
                                                   defultPath, "*.txt")
         self.logger.info("干扰对消选择文件2："+filename)

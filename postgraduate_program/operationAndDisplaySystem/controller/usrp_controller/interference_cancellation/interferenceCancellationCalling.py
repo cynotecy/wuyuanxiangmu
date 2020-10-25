@@ -37,13 +37,19 @@ def callInterferenceCancellation(arg):
 def getdata(paths):
     path1 = paths[0]
     path2 = paths[1]
-    x1 = np.loadtxt(path1, dtype=str, delimiter=' ')[0, 0:-1]  # 输出频率的一维数组
-    y1 = np.loadtxt(path1, dtype=str, delimiter=' ')[1, 0:-1]  # 输出幅度的一维数组
+    dataList1 = np.loadtxt(path1, dtype=str, delimiter=';')
+    # x1 = np.loadtxt(path1, dtype=str, delimiter=' ')[0, 0:-1]  # 输出频率的一维数组
+    # y1 = np.loadtxt(path1, dtype=str, delimiter=' ')[1, 0:-1]  # 输出幅度的一维数组
+    x1 = dataList1[0].split(" ")
+    y1 = dataList1[1].split(" ")
     x1 = np.asarray(np.float32(x1))
     y1 = np.asarray(np.float32(y1))
 
-    x2 = np.loadtxt(path2, dtype=str, delimiter=' ')[0, 0:-1]  # 输出频率的一维数组
-    y2 = np.loadtxt(path2, dtype=str, delimiter=' ')[1, 0:-1]  # 输出幅度的一维数组
+    dataList2 = np.loadtxt(path2, dtype=str, delimiter=';')
+    # x2 = np.loadtxt(path2, dtype=str, delimiter=' ')[0, 0:-1]  # 输出频率的一维数组
+    # y2 = np.loadtxt(path2, dtype=str, delimiter=' ')[1, 0:-1]  # 输出幅度的一维数组
+    x2 = dataList2[0].split(" ")
+    y2 = dataList2[1].split(" ")
     x2 = np.asarray(np.float32(x2))
     y2 = np.asarray(np.float32(y2))
 
