@@ -210,7 +210,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if isNum(startfreq) and isNum(endfreq):
             startfreq = float(startfreq)
             endfreq = float(endfreq)
-            if startfreq < endfreq and startfreq >= 30 and endfreq <= 5000:
+            if startfreq < endfreq and startfreq >= 30 and endfreq <= 6000:
                 startfreq = startfreq*1000000
                 endfreq = endfreq*1000000
                 deviceNum = self.comboBox_2.currentText()
