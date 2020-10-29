@@ -16,7 +16,7 @@ import pandas as pd
 from PyQt5.QtWidgets import *
 from matplotlib.backends.qt_compat import QtWidgets
 
-from plotTools.pico_specComponent import dataCorrection
+from plotTools.pico_specComponent import dataCorrection_v2
 
 matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -75,7 +75,7 @@ class ApplicationWindow(QWidget):
         data = pd.read_csv(self.path, skiprows=5)
         x = data.values[15:-3, 0]
         y = list(data.values[15:-3, 1])
-        x, y = dataCorrection.correct(x, y)
+        x, y = dataCorrection_v2.correct(x, y)
         return x, y
 
     def draw(self):

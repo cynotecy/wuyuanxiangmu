@@ -132,7 +132,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_24.clicked.connect(self.on_pushButton_clicked_24)  # usrp2开始监测
         self.pushButton_25.clicked.connect(self.on_pushButton_clicked_25)  # usrp3开始监测
         self.pushButton_26.clicked.connect(self.on_pushButton_clicked_26)  # usrp4开始监测
-        self.pushButton_85.clicked.connect(self.on_pushButton_clicked_85)  # 3900开始监测
+        # self.pushButton_85.clicked.connect(self.on_pushButton_clicked_85)  # 3900开始监测
         self.pushButton_42.clicked.connect(self.on_pushButton_clicked_42)  # 30MHz以下频谱监测
 
         # 第六页，时域监测
