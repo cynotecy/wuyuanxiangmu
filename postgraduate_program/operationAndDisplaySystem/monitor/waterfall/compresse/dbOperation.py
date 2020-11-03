@@ -17,7 +17,7 @@ def compress(data, dbPk, dbCursor, dbConn, dbTable, outputDir,
     try:
         insert = "INSERT INTO `{}`(`{}`,`{}`) VALUES ('{}','{}')".format(
             dbTable, dbField[0], dbField[1], dbPk, relativeOutputPath)
-        print('压缩', insert)
+        # print('压缩', insert)
         dbCursor.execute(insert)
         dbConn.commit()
     except:

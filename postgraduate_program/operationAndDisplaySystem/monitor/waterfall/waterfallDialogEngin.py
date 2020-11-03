@@ -58,7 +58,7 @@ class WaterfallDialog(QDialog, Ui_Dialog):
                                charset='utf8')  # 链接字符集
         self.cursor = self.conn.cursor()
         # 数据表检查
-        self.tableName, self.outputDir, self.relativeOutputDir = self.dbCheck()
+        self.tableName, self.timeTableName, self.outputDir, self.relativeOutputDir = self.dbCheck()
         # 实例化瀑布图装置对象并将其置入布局中pageLimit, dbTable, fatherFilePath, cursor
         self.waterfallWidget = WaterFall.ApplicationWindow(
             pageLimit, self.tableName, self.fatherFilePath, self.cursor, self.conn)
@@ -116,6 +116,7 @@ class WaterfallDialog(QDialog, Ui_Dialog):
                 dbPk = str(uuid.uuid1())
                 # 开启压缩存储线程
                 # 应在此处切入时间戳存储，表名为pk为dbPk
+
                 pass
                 compressT = threading.Thread(target=compress, args=(dataForCompress, dbPk,
                                                                     self.cursor, self.conn,
@@ -123,10 +124,17 @@ class WaterfallDialog(QDialog, Ui_Dialog):
                                                                     self.relativeOutputDir))
                 compressT.start()
                 # 调用画布刷新函数
-                print("画布刷新成功？", self.waterfallWidget._update_canvas(dbPk, [x, y]))
+                # print("画布刷新成功？", self.waterfallWidget._update_canvas(dbPk, [x, y]))
+                self.waterfallWidget._update_canvas(dbPk, [x, y])
                 # 等待存储线程结束
                 compressT.join()
-                # print(compressT.is_alive())
+                timeStamp = int(round(time.time() * 1000))
+                timeTableField = ["id", "time_stamp"]
+                insert = "INSERT INTO `{}`(`{}`,`{}`) VALUES ('{}','{}')".format(
+                    self.timeTableName, timeTableField[0], timeTableField[1], dbPk, timeStamp)
+                # print('压缩', insert)
+                self.cursor.execute(insert)
+                self.conn.commit()
 
             self.state = ''
 
@@ -250,24 +258,32 @@ class WaterfallDialog(QDialog, Ui_Dialog):
                         self.conn.commit()
                     except:
                         self.conn.rollback()
+                    try:
+                        timeTableDrop = ("DROP TABLE `waterfall_time_usrp{}_{}`".format(self.usrpNum, dir))
+                        self.cursor.execute(timeTableDrop)
+                        self.conn.commit()
+                    except:
+                        self.conn.rollback()
 
         # 新建表格和本地文件夹
         dirName = str(int(time.time()))
         relativeDirPath = os.path.join('waterfall', 'usrp{}'.format(self.usrpNum), dirName)
         dirPath = os.path.join(self.fatherFilePath, 'waterfall', 'usrp{}'.format(self.usrpNum), dirName)
         tableName = 'waterfall_data_usrp{}_{}'.format(self.usrpNum, dirName)
+        timeTableName = 'waterfall_time_usrp{}_{}'.format(self.usrpNum, dirName)
         try:
             # build the dir
             filesOrDirsOperate.makesureDirExist(dirPath)
             # build the table
             create = ("CREATE TABLE `waterfall_data_usrp{}_{}`(`id` varchar(40) primary key, `data_path` varchar(225))".format(self.usrpNum, dirName))
-            # print(create)
             self.cursor.execute(create)
+            timeCreate = ("CREATE TABLE `waterfall_time_usrp{}_{}`(`id` varchar(40) primary key, `time_stamp` bigint)".format(self.usrpNum, dirName))
+            self.cursor.execute(timeCreate)
             self.conn.commit()
         except:
             QMessageBox.warning(self, '错误：', '初始化失败！')
             self.closeEvent()
-        return tableName, dirPath, relativeDirPath
+        return tableName, timeTableName, dirPath, relativeDirPath
 
     def batchSelect(self, watchBackPage):
         """

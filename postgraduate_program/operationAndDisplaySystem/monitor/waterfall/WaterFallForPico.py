@@ -22,6 +22,7 @@ from matplotlib.backends.qt_compat import QtCore, QtWidgets, is_pyqt5
 import pandas as pd
 
 import matplotlib
+import logging
 import pymysql
 from scipy.io import loadmat
 
@@ -30,9 +31,11 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.collections import LineCollection
+
 from monitor.waterfall.annotation.dbOperation import *
 from function.dbInfo import dbInfo
 from function.filesOrDirsOperate import *
+logging.getLogger('matplotlib.font_manager').disabled = True
 
 class ApplicationWindow(QWidget):
     def __init__(self, path, fatherPath):
@@ -44,6 +47,12 @@ class ApplicationWindow(QWidget):
         self.fileNum = 0
         self.path = path# 传入pico保存的文件夹地址
         self.fatherPath = fatherPath
+        console = logging.StreamHandler()
+        console.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+        console.setFormatter(formatter)
+        self.logger = logging.getLogger("picoWaterfall")
+        self.logger.addHandler(console)
         # #####################
         # self.lists = os.listdir(self.path)
         # self.txt_list = []
@@ -118,11 +127,11 @@ class ApplicationWindow(QWidget):
         po = event.ydata
         # self.axs[1].set_ylim(-500, 0)
         if po == None:
-            print("提示:点击位置不对")
+            self.logger.info(u"提示:点击位置不对")
         elif -po > self.n or po > 0:
-            print("提示:该位置没有数据")
+            self.logger.info(u"提示:该位置没有数据")
         else:
-            print(int(-po))
+            self.logger.info(u"选中位置："+str(int(-po)))
             x, y = self.getOldData(int(-po))
             if x != "noFile":
                 self.axs[0].cla()
@@ -208,7 +217,7 @@ class ApplicationWindow(QWidget):
             dirList = list(os.walk(dirsPath))[0][1]
             # print(dirList)
         except Exception as e:
-            print(e)
+            self.logger.error(e)
         else:
             # 删除超出存储限度的表格和本地文件夹
             if len(dirList) > 4:
@@ -223,7 +232,7 @@ class ApplicationWindow(QWidget):
                         self.conn.commit()
                     except Exception as e:
                         self.conn.rollback()
-                        print(e)
+                        self.logger.error(e)
         self.initialDB()
 
     def getData(self):
@@ -237,7 +246,7 @@ class ApplicationWindow(QWidget):
                 data = pd.read_csv(path, skiprows=5)
                 x = data.values[15:-3, 0]
                 y = data.values[15:-3, 1]
-                # print(self.n)
+                self.logger.debug("get data: " + str(self.n))
                 return x, y
         else:
             x = "noFile"
@@ -246,7 +255,7 @@ class ApplicationWindow(QWidget):
 
     @dbUpload()
     def draw(self):
-        print("num: " + str(self.n))
+        self.logger.debug("draw num: " + str(self.n))
         if self.n >= -self.axs[1].get_ylim()[0]:
             self.axs[1].set_ylim(int(self.axs[1].get_ylim()[0] - 100), int(self.axs[1].get_ylim()[0]))
         try:
@@ -260,7 +269,7 @@ class ApplicationWindow(QWidget):
                 if self.bar:
                     self.bar.remove()
                 self.bar = 0
-                print('successfully getdata')
+                self.logger.info('successfully getdata')
                 self.axs[0].cla()
                 self.axs[0].plot(x, y)
                 self.axs[0].set_ylim(-140, -50)
@@ -291,10 +300,15 @@ class ApplicationWindow(QWidget):
                 # print('successful draw')
                 return line
         except Exception as e:
-            print(e)
+            self.logger.error(e)
 
 
 if __name__ == "__main__":
+    makesureDirExist("./logs")
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                        datefmt='%m/%d %H:%M:%S %p', filename='./logs/picoWaterfallDebugLog.log', filemode='w')
+    logging.info(u"日志记录开始")
+
     qapp = QtWidgets.QApplication(sys.argv)
     app = ApplicationWindow(r'D:\myPrograms\CASTProgram\postgraduate_program\data\pico-waterfall-data\\',
                             "D:\myPrograms\CASTProgram\postgraduate_program\data\EMCfile")

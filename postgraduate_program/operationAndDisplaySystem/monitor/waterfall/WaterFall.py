@@ -41,6 +41,9 @@ class ApplicationWindow(QWidget):
         self.dbTable = dbTable  # 数据库表
         self.dbField = dbField  # 存地址的数据库字段
         self.fatherFilePath = fatherFilePath  # 数据文件存储父地址，即EMCfile文件夹绝对地址
+
+        self.logger = logging.getLogger("usrpWaterfall")
+        # self.logger.addHandler(console)
         self.limit = pageLimit  # 每页条数
         self.drawingTimes = 1  # 普通模式绘图次数
         self.countLine = 1  # 当前页绘图条数
@@ -96,8 +99,9 @@ class ApplicationWindow(QWidget):
                 self.countLine += 1
                 self.drawingTimes += 1
             except Exception as e:
-                print('_update_')
-                print(repr(e))
+                # print('_update_')
+                self.logger.debug(u'_update_canvas error1')
+                self.logger.error(e)
                 reslt = False
 
         elif len(arg) == 1:
@@ -119,11 +123,11 @@ class ApplicationWindow(QWidget):
             x, y = self.getData(dataPath)
             try:
                 self.draw(x, y, self.countLine)
-                print("已画{}".format(self.countLine))
+                self.logger.debug(u"已画{}".format(self.countLine))
                 self.countLine += 1
             except Exception as e:
-                print('_update_')
-                print(repr(e))
+                self.logger.debug(u'_update_canvas error2')
+                self.logger.error(e)
                 reslt = False
 
         return reslt
@@ -138,18 +142,18 @@ class ApplicationWindow(QWidget):
         Returns:
         """
         po = event.ydata
-        print(po)
+        self.logger.info(u"选中位置："+str(int(-po)))
         # self.axs[1].set_ylim(-100, 0)
         if po == None:
-            print("提示:点击位置不对")
+            self.logger.info(u"提示:点击位置不对")
         elif self.figureKind == 'normal' and -po > self.drawingTimes or po > 0:
-            print("提示:该位置没有数据")
+            self.logger.info(u"提示:该位置没有数据")
         elif self.figureKind == 'watchback' and -po > self.countLine or po > 0:
-            print("提示:该位置没有数据")
+            self.logger.info(u"提示:该位置没有数据")
         else:
             try:
                 if self.figureKind == 'normal':
-                    print(self.y_pyDic.keys())
+                    # print(self.y_pyDic.keys())
                     dbPk = self.y_pyDic[math.ceil(-po)]
                     dataPathRelative = self.singleSelect(dbPk)
                     dataPath = self.addressResolution(dataPathRelative, self.fatherFilePath)  # 地址解析
@@ -163,24 +167,24 @@ class ApplicationWindow(QWidget):
                 self.axs[0].set_title('频谱图',fontsize=16)
                 self.axs[0].set_xlabel('频率/MHz',fontsize=14)
                 self.axs[0].set_ylabel('功率/dBm',fontsize=14)
-                print(self.axs[0].figure.canvas == self.axs[1].figure.canvas)
+                # print(self.axs[0].figure.canvas == self.axs[1].figure.canvas)
             except Exception as e:
-                print('单点回溯失败')
-                print('单点回溯错误:{}'.format(repr(e)))
+                # self.logger.info(u'单点回溯失败')
+                self.logger.info(u'单点回溯错误:{}'.format(repr(e)))
 
     # 输入单条回溯数据库主键，输出文件相对地址
     def singleSelect(self, dbPk):
         try:
             select = ("SELECT `{}` FROM `{}` WHERE `id`='{}'"
                       .format(self.dbField, self.dbTable, dbPk))
-            print(select)
+            self.logger.debug(select)
             self.cursor.execute(select)
             self.conn.commit()
             # 获取单条地址记录
             dataPath = tuple(i[0] for i in self.cursor.fetchall())[0]
-            print(dataPath)
+            self.logger.debug("singleSelect datapath: "+dataPath)
         except Exception as e:
-            print('single select exception:{}'.format(repr(e)))
+            self.logger.error('single select exception:{}'.format(repr(e)))
             dataPath = 0
         return dataPath
 
@@ -207,7 +211,7 @@ class ApplicationWindow(QWidget):
                 x, y = decompress(dataPath)  # decompress为引用的解压函数
                 x, y = np.array(x), np.array(y)
         except Exception as e:
-            print(repr(e))
+            self.logger.error(e)
         return x, y
 
     # 地址解析器，输入数据库中存的文件地址、父绝对地址，输出文件绝对地址
@@ -257,11 +261,10 @@ class ApplicationWindow(QWidget):
             self.bar = self.freqCanvas.figure.colorbar(line, ax=self.axs[1], norm=norm, orientation='horizontal')
             self.axs[1].figure.canvas.draw()
             self.axs[1].figure.canvas.flush_events()
-            print('successful draw')
+            self.logger.debug('successful draw: '+str(self.drawingTimes))
             return line
         except Exception as e:
-            print('draw')
-            print(repr(e))
+            self.logger.error(e)
 
     def deleteAll(self):
         self.countLine = 1

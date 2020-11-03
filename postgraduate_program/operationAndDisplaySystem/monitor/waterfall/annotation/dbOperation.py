@@ -27,7 +27,7 @@ def dbUpload(dbField=['id','create_time', 'data_path']):
                 dataPath = os.path.join(self.path, self.filePrefix+"({}).csv".format(self.n))
             if os.path.exists(dataPath) and self.fileNum>1:
                 ctime = int(os.stat(dataPath).st_ctime*1000)
-                shutil.move(dataPath, self.fileSavingPath)
+                shutil.copy(dataPath, self.fileSavingPath)
                 (path, filename) = os.path.split(dataPath)
 
                 # 数据地址记录入库

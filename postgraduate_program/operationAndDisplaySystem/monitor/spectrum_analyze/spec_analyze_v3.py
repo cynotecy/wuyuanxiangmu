@@ -38,10 +38,7 @@ from communication import zmqLocal, circulationZmqThread
 mpl_logger = logging.getLogger('matplotlib')
 mpl_logger.setLevel(logging.WARNING)
 
-logging.basicConfig(level=logging.DEBUG,  # 控制台打印的日志级别
-                    format=
-                    '%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s'  # 日志格式
-                    )
+logging.getLogger('matplotlib.font_manager').disabled = True
 #
 # filename = r'D:\ProgramData\spectrum_analyze\spectrum_analyze.log',
 # filemode = 'w',  # 模式，有w和a，w就是写模式，每次都会重新写日志，覆盖之前的日志

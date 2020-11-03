@@ -16,7 +16,7 @@ from loadingDialog import Message
 from function import plotWithCursor, filesOrDirsOperate, algorithmThreads
 from monitor.The48hRealPart import the_48h_realpart_inQt
 from Ui.UitoPy.Ui_socketDEMO import Ui_MainWindow
-from controller.usrp_controller.usrp_shibie import (oc_list_display_v1)
+from controller.usrp_controller.usrp_shibie import oc_list_display_v1
 from controller.usrp_controller.specEnvelope_shibie import specEnvelopeDrawpic
 from controller.usrp_controller.steadyStateInterference_shibie import display_v4
 from controller.Pico_controller.draw_pic import draw_pic
@@ -35,6 +35,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
+        filesOrDirsOperate.makesureDirExist("./logs")
         logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                             datefmt='%m/%d %H:%M:%S %p', filename='./logs/debugLog.log', filemode='w')
         console = logging.StreamHandler()
@@ -45,6 +46,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.logger = logging.getLogger("Main")
         self.logger.addHandler(console)
+        self.logger.debug("start")
         self.IQAccuracyLogger = logging.getLogger("IQAccuracy")
         fh = logging.FileHandler("./logs/IQAccuracyLog.log")
         # 识别结果日志格式：时间-[序号]-内容
