@@ -175,6 +175,6 @@ class WaterfallHistoryView(QWidget, Ui_Dialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ui = WaterfallHistoryView("D:\myPrograms\CASTProgram\postgraduate_program\data\EMCfile", 500)
+    ui = WaterfallHistoryView("F:\CASTProgram\postgraduate_program\data\EMCfile", 500)
     ui.show()
     app.exec_()

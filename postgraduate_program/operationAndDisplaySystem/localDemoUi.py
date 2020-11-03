@@ -1729,11 +1729,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             win32api.ShellExecute(0, "open", "controller\\Pico_controller\\PicoScope 6.lnk", "", "", 1)
             # time = QTimer(self)
         except Exception as e:
-            self.logger.error("时域监测采集："+e)
+            self.logger.error(e)
 
     # 时域图绘图
     def on_pushButton_clicked_35(self):
-        dirPath = r'D:\myPrograms\CASTProgram\postgraduate_program\data\realpart_recvfiles\pico'
+        dirPath = os.path.join(self.fatherPath, r'realpart_recvfiles')
         # 判断文件夹中是否有文件
         lists = os.listdir(dirPath)
         self.logger.debug("时域监测绘图文件数：" + str(len(lists)))
@@ -1764,11 +1764,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 时域图清空数据
     def on_pushButton_clicked_62(self):
-        dirPath = r'D:\myPrograms\CASTProgram\postgraduate_program\data\realpart_recvfiles\pico'
+        dirPath = os.path.join(self.fatherPath, r'realpart_recvfiles')
+        self.logger.info("时域监测数据清空，路径"+dirPath)
         shutil.rmtree(dirPath)
         time.sleep(1)
         os.mkdir(dirPath)
-        self.logger.info("时域监测数据清空，路径"+dirPath)
 
     # 实时频谱查看 单次扫频
     def on_pushButton_clicked_27(self):

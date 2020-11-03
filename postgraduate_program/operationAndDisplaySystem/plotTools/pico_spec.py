@@ -10,7 +10,9 @@ example) by setting the ``MPLBACKEND`` environment variable to "Qt4Agg" or
 """
 import os
 import sys
-
+curPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.split(curPath)[0]
+sys.path.append(rootPath)
 import matplotlib
 import pandas as pd
 from PyQt5.QtWidgets import *
@@ -102,4 +104,4 @@ if __name__ == "__main__":
     fatherPath = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
     app = ApplicationWindow(fatherPath)
     app.show()
-    qapp.exec_()
+    sys.exit(qapp.exec_())
