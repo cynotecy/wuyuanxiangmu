@@ -9,7 +9,7 @@ from multiprocessing import Queue as mq
 import threading
 from PyQt5.QtCore import Qt, QFileInfo, QTimer
 import logging
-from PyQt5.QtGui import QGuiApplication,QFont
+from PyQt5.QtGui import QGuiApplication, QFont
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTableWidgetItem, QFileDialog, QApplication
 
 from loadingDialog import Message

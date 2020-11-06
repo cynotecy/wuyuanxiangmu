@@ -205,15 +205,18 @@ class IQSingleProcess(Thread):
                     (endtime - starttime).seconds * 1000 + (endtime - starttime).microseconds / 1000)
             logger.debug(strTime)
             IQSNRResult = snrQ.get()
-            specSNRResult = timeSNRQ.get()
-            if type(specSNRResult) == type('str'):
+            timeSNRResult = timeSNRQ.get()
+            if type(timeSNRResult) == type('str'):
                 realSNR = IQSNRResult
                 rslt.append("%.2f" % realSNR)
                 rslt.append("IQSNR:%.2f, timeSNR:不可识别" % IQSNRResult)
             else:
-                realSNR = min(IQSNRResult, specSNRResult)
+                if abs((IQSNRResult - timeSNRResult)) > 5:
+                    realSNR = IQSNRResult
+                else:
+                    realSNR = min(IQSNRResult, timeSNRResult)
                 rslt.append("%.2f" % realSNR)
-                rslt.append("IQSNR:%.2f, timeSNR:%.2f" % (IQSNRResult, specSNRResult))
+                rslt.append("IQSNR:%.2f, timeSNR:%.2f" % (IQSNRResult, timeSNRResult))
             # rslt为一个长度为n的列表，倒数第一个元素表征两种算法信噪比值，倒二表征显示信噪比值
             self.q.put(rslt)
 

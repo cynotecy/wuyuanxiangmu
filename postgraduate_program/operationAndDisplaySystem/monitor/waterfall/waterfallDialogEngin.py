@@ -24,7 +24,6 @@ import logging
 class WaterfallDialog(QDialog, Ui_Dialog):
     signal = pyqtSignal(str)
     def __init__(self, usrpNum, socket, startfreq, endfreq, fatherFilePath, pageLimit=100, dbField = 'data_path',parent=None):
-    # def __init__(self, parent = None):
         super(WaterfallDialog, self).__init__(parent)
 
         self.logger = logging.getLogger("Main.WaterfallDialog")
