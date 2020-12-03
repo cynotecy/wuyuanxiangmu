@@ -164,7 +164,7 @@ class ApplicationWindow(QWidget):
                 self.axs[0].plot(x, y)
                 self.axs[0].figure.canvas.draw()
 
-                self.axs[0].set_title('频谱图',fontsize=16)
+                self.axs[0].set_title('功率谱图',fontsize=16)
                 self.axs[0].set_xlabel('频率/MHz',fontsize=14)
                 self.axs[0].set_ylabel('功率/dBm',fontsize=14)
                 # print(self.axs[0].figure.canvas == self.axs[1].figure.canvas)
@@ -241,7 +241,7 @@ class ApplicationWindow(QWidget):
         try:
             self.axs[0].cla()
             self.axs[0].plot(x, y)
-            self.axs[0].set_title('频谱图',fontsize=16)
+            self.axs[0].set_title('功率谱图',fontsize=16)
             self.axs[0].set_xlabel('频率/MHz',fontsize=14)
             self.axs[0].set_ylabel('功率/dBm',fontsize=14)
 

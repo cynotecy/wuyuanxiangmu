@@ -212,7 +212,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if isNum(startfreq) and isNum(endfreq):
             startfreq = float(startfreq)
             endfreq = float(endfreq)
-            if startfreq < endfreq and startfreq >= 30 and endfreq <= 6000:
+            if startfreq < endfreq and startfreq >= 25 and endfreq <= 40050:
                 startfreq = startfreq*1000000
                 endfreq = endfreq*1000000
                 deviceNum = self.comboBox_2.currentText()
@@ -514,7 +514,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 samprate = float(samprate)
                 # 为保证扫频不超限，这里的参数判断需算入扫频宽度
                 # if centrefreq <= 6000-6.25 and centrefreq >= 30+6.25:
-                if centrefreq < 6000 and centrefreq > 30:
+                if centrefreq < 40050 and centrefreq > 25:
                     # 获取IQ采集数据
                     centrefreq = centrefreq * 1000000
                     bdwidth = bdwidth * 1000000
@@ -1604,12 +1604,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     # 开启循环任务
                     self.circulateT = threading.Timer(1, self.childWindowDic[usrpNum].circulate)
                     self.circulateT.start()
-            # else:
-            # QMessageBox.warning(self,
-            #                     '错误',
-            #                     "请输入正确参数！",
-            #                     QMessageBox.Yes,
-            #                     QMessageBox.Yes)
+                    
         else:
             QMessageBox.warning(self,
                                 '错误',

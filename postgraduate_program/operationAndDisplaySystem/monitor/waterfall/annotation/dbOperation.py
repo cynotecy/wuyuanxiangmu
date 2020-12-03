@@ -19,20 +19,20 @@ def dbUpload(dbField=['id','create_time', 'data_path']):
         def load(self, *args, **kwds):
             # 调用被注解函数
             f(self, *args, **kwds)
+            filename = ''
+            try:
+                # 数据文件存储
+                if self.n == 1:
+                    dataPath = os.path.join(self.path, self.filePrefix.strip(" ") + ".csv")
+                else:
+                    dataPath = os.path.join(self.path, self.filePrefix + "({}).csv".format(self.n))
+                if os.path.exists(dataPath) and self.fileNum > 1:
+                    ctime = int(os.stat(dataPath).st_ctime * 1000)
+                    shutil.copy(dataPath, self.fileSavingPath)
+                    (path, filename) = os.path.split(dataPath)
 
-            # 数据文件存储
-            if self.n == 1:
-                dataPath = os.path.join(self.path, self.filePrefix.strip(" ") + ".csv")
-            else:
-                dataPath = os.path.join(self.path, self.filePrefix+"({}).csv".format(self.n))
-            if os.path.exists(dataPath) and self.fileNum>1:
-                ctime = int(os.stat(dataPath).st_ctime*1000)
-                shutil.copy(dataPath, self.fileSavingPath)
-                (path, filename) = os.path.split(dataPath)
-
-                # 数据地址记录入库
-                tableName = "waterfall_data_pico_{}".format(self.nowTime)
-                try:
+                    # 数据地址记录入库
+                    tableName = "waterfall_data_pico_{}".format(self.nowTime)
                     insert = "INSERT INTO `{}`(`{}`,`{}`,`{}`) VALUES ('{}',{},'{}')".format(
                         tableName, dbField[0], dbField[1], dbField[2], self.n,
                         ctime, ("/file/"+ self.relativeDirPath+"/"+ filename))
@@ -41,8 +41,10 @@ def dbUpload(dbField=['id','create_time', 'data_path']):
                     self.conn.commit()
                     self.n += 1
                     self.id += 1
-                except:
-                    self.conn.rollback()
+            except Exception as e:
+                # print(e)
+                self.conn.rollback()
+                if filename:
                     if os.path.exists(os.path.join(self.fileSavingPath, filename)):
                         os.remove(os.path.join(self.fileSavingPath, filename))
         # 更新包裹函数，使其更像被包裹函数（我理解为将被包裹函数的参数传给包裹函数）

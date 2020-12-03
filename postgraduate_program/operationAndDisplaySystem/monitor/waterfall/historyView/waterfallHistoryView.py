@@ -127,7 +127,7 @@ class WaterfallHistoryView(QWidget, Ui_Dialog):
         try:
             self.axs[0].cla()
             self.axs[0].plot(x, y)
-            self.axs[0].set_title('频谱图', fontsize=16)
+            self.axs[0].set_title('功率谱图', fontsize=16)
             self.axs[0].set_xlabel('频率/MHz', fontsize=14)
             self.axs[0].set_ylabel('功率/dBm', fontsize=14)
 

@@ -107,7 +107,7 @@ class ApplicationWindow(QWidget):
         # self.getFilePrefix()
 
         # 定时任务
-        self._timer = self.freqCanvas.new_timer(300, [(self._update_canvas, (), {})])
+        self._timer = self.freqCanvas.new_timer(500, [(self._update_canvas, (), {})])
 
     def _start(self):
         if self.filePrefix != "":
@@ -236,22 +236,27 @@ class ApplicationWindow(QWidget):
         self.initialDB()
 
     def getData(self):
-        if self.n == 1:
-            path = self.path + '\\' + self.filePrefix.strip(" ") +  '.csv'
-        else:
-            path = self.path + '\\'+ self.filePrefix+'(' + str(self.n) +').csv'
-        # print(path)
-        if not path == "noFile":
-            if os.path.exists(path):
-                data = pd.read_csv(path, skiprows=5)
-                x = data.values[15:-3, 0]
-                y = data.values[15:-3, 1]
-                self.logger.debug("get data: " + str(self.n))
-                return x, y
-        else:
-            x = "noFile"
-            y = "noFile"
-            return x, y
+        try:
+            if self.n == 1:
+                path = self.path + '\\' + self.filePrefix.strip(" ") + '.csv'
+            else:
+                path = self.path + '\\'+ self.filePrefix+'(' + str(self.n) + ').csv'
+            # print(path)
+            if not path == "noFile":
+                if os.path.exists(path):
+                    self.logger.debug("get data from path: " + path)
+                    data = pd.read_csv(path, skiprows=5, engine="python")
+                    x = data.values[15:-3, 0]
+                    y = data.values[15:-3, 1]
+                    self.logger.debug("get data: " + str(self.n))
+                    return x, y
+                else:
+                    x = "noFile"
+                    y = "noFile"
+                    return x, y
+        except IOError as e:
+            self.logger.error(e)
+            return 0
 
     @dbUpload()
     def draw(self):
@@ -266,6 +271,8 @@ class ApplicationWindow(QWidget):
             if self.fileNum > 1:
                 # print('start draw')
                 x, y = self.getData()
+                if x == "noFile":
+                    return 0
                 if self.bar:
                     self.bar.remove()
                 self.bar = 0
@@ -301,6 +308,7 @@ class ApplicationWindow(QWidget):
                 return line
         except Exception as e:
             self.logger.error(e)
+            return 0
 
 
 if __name__ == "__main__":
@@ -310,7 +318,7 @@ if __name__ == "__main__":
     logging.info(u"日志记录开始")
 
     qapp = QtWidgets.QApplication(sys.argv)
-    app = ApplicationWindow(r'D:\myPrograms\CASTProgram\postgraduate_program\data\pico-waterfall-data\\',
-                            "D:\myPrograms\CASTProgram\postgraduate_program\data\EMCfile")
+    app = ApplicationWindow(r'F:\CASTProgram\postgraduate_program\data\pico-waterfall-data\\',
+                            "F:\CASTProgram\postgraduate_program\data\EMCfile")
     app.show()
     qapp.exec_()
